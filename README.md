@@ -1,42 +1,31 @@
-# Website
+# Portal de Materiais Didáticos — Engenharia Mecânica
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Site pessoal para centralizar e disponibilizar materiais de aula (apostilas, slides, listas de exercícios, referências) das disciplinas do curso de Engenharia Mecânica ministradas pelo autor.
 
-## Installation
+Construído com [Docusaurus](https://docusaurus.io/), um gerador de sites estáticos moderno.
+
+## Disciplinas
+
+- [Programação Aplicada](docs/programacao-aplicada/)
+- [Desenho Técnico](docs/desenho-tecnico/)
+
+## Desenvolvimento
 
 ```bash
+# Instalar dependências
 yarn
-```
 
-## Local Development
-
-```bash
+# Iniciar servidor local
 yarn start
-```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
-
-```bash
+# Build de produção
 yarn build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+## Deploy
 
-## Deployment
+Publicado automaticamente via [Vercel](https://vercel.com) a partir do branch `main` do GitHub.
 
-Using SSH:
+---
 
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
-# aulas-docussaurus
+**Autor:** Edmundo Abreu e Lima

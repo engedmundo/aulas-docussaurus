@@ -390,6 +390,15 @@ operadores = {
 | Latão | 8500 | 100 000 | 250 | 19.0 |
 | Titânio Ti-6Al-4V | 4430 | 114 000 | 880 | 8.6 |
 
+## Resumo da aula
+
+- Listas `[]`: ordenadas, mutáveis, aceitam duplicatas — mais usadas no dia a dia
+- Tuplas `()`: ordenadas, imutáveis — ideais para coordenadas e dados fixos
+- Dicionários `{}`: chave → valor, acesso rápido por nome — ideais para propriedades de materiais
+- Conjuntos `{}`: não ordenados, sem duplicatas — úteis para comparar grupos
+- List comprehensions: `[x*2 for x in dados]` — forma concisa de criar listas
+- `enumerate()`: percorre lista com índice e valor simultaneamente
+
 ## Referências
 
 - **Python.org — Estruturas de dados** — https://docs.python.org/pt-br/3/tutorial/datastructures.html

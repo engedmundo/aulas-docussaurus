@@ -1,19 +1,19 @@
-# PRD — Portal de Materiais Didáticos - Prof. Dr. Edmundo Abreu e Lima 
+# PRD — Portal de Materiais Didáticos de Engenharia Mecânica
 
-**Produto:** Site Docusaurus para materiais didáticos
-**Autor:** Prof. Dr. Edmundo Abreu e Lima
+**Produto:** Site Docusaurus para disponibilização de materiais didáticos
+**Autor:** Edmundo Abreu e Lima
 **Versão:** 1.0
 
 ---
 
 ## 1. Objetivo
 
-Criar um portal wiki pessoal em Docusaurus para centralizar e distribuir materiais de aula (apostilas, slides, referências) das disciplinas ministradas pelo autor, com identidade visual profissional que remeta à área de engenharia mecânica.
+Criar um portal wiki pessoal em Docusaurus para centralizar e disponibilizar materiais de aula (apostilas, slides, listas de exercícios, referências) das disciplinas do curso de Engenharia Mecânica ministradas pelo autor. O projeto tem caráter pessoal e visa facilitar o acesso dos alunos aos conteúdos das disciplinas, além de servir como portfólio docente.
 
 ## 2. Público-Alvo
 
-- **Primário:** Alunos das disciplinas ministradas pelo autor
-- **Secundário:** Visitantes externos em busca de referência técnica
+- **Primário:** Alunos das disciplinas de Engenharia Mecânica ministradas pelo autor
+- **Secundário:** Visitantes externos em busca de referência técnica na área
 
 ## 3. Funcionalidades
 
@@ -21,12 +21,12 @@ Criar um portal wiki pessoal em Docusaurus para centralizar e distribuir materia
 
 | # | Funcionalidade | Descrição |
 |---|---------------|-----------|
-| F1 | Navegação por disciplina | Sidebar organizada por disciplinas (Cálculo, Resistência dos Materiais, Termodinâmica, etc.) |
+| F1 | Navegação por disciplina | Sidebar organizada por disciplinas (Programação Aplicada, Desenho Técnico, Cálculo, Resistência dos Materiais, etc.) |
 | F2 | Visualização de apostilas | Páginas em Markdown com suporte a equações (KaTeX), imagens, tabelas e diagramas |
 | F3 | Slides incorporados | Embed de slides Marp (HTML estático) ou link direto para PDF |
 | F4 | Busca全文 | Busca integrada do Docusaurus em todo o conteúdo |
 | F5 | Layout responsivo | Funciona em desktop, tablet e celular |
-| F6 | Design System próprio | Tema customizado com identidade de engenharia mecânica |
+| F6 | Design System próprio | Tema customizado com identidade visual de engenharia mecânica |
 
 ### 3.2. Desejáveis
 
@@ -51,14 +51,20 @@ Criar um portal wiki pessoal em Docusaurus para centralizar e distribuir materia
 Home (index)
 ├── Sobre
 ├── Disciplinas
+│   ├── Programação Aplicada
+│   │   ├── Aulas
+│   │   ├── Listas de Exercícios
+│   │   └── Projetos
+│   ├── Desenho Técnico
+│   │   ├── Aulas
+│   │   ├── Normas Técnicas
+│   │   └── Exercícios
 │   ├── Cálculo Diferencial e Integral
 │   │   ├── Apostilas
 │   │   │   ├── Capítulo 1 — Limites
 │   │   │   ├── Capítulo 2 — Derivadas
 │   │   │   └── ...
-│   │   └── Slides
-│   │       ├── Aula 1
-│   │       └── ...
+│   │   └── Listas de Exercícios
 │   ├── Resistência dos Materiais
 │   ├── Termodinâmica
 │   ├── Mecânica dos Fluidos
@@ -76,17 +82,19 @@ Home (index)
 | Equações | KaTeX | Renderização rápida de fórmulas |
 | Diagramas | Mermaid | Fluxogramas e esquemas técnicos |
 | Slides | Marp + export HTML | Aproveita conversão já iniciada |
-| Deploy | GitHub Pages | Gratuito, integração com git |
+| Deploy | Vercel | Deploy contínuo a partir do GitHub, gratuito |
 
 ## 6. Conteúdo Inicial
 
-Disciplinas a migrar para o MVP (ordem sugerida):
+Disciplinas previstas para o MVP (ordem sugerida):
 
-1. **Resistência dos Materiais** — apostila completa + slides
-2. **Cálculo Diferencial e Integral (parte 1 e 2)** — slides e listas de exercícios
-3. **Mecânica dos Fluidos** — materiais existentes
-4. **Termodinâmica** — materiais existentes
-5. **Ciência dos Materiais** — materiais existentes
+1. **Programação Aplicada** — aulas, listas de exercícios e projetos
+2. **Desenho Técnico** — aulas, normas e exercícios
+3. **Resistência dos Materiais** — apostila completa + slides
+4. **Cálculo Diferencial e Integral (parte 1 e 2)** — slides e listas de exercícios
+5. **Mecânica dos Fluidos** — materiais existentes
+6. **Termodinâmica** — materiais existentes
+7. **Ciência dos Materiais** — materiais existentes
 
 ## 7. Critérios de Sucesso
 

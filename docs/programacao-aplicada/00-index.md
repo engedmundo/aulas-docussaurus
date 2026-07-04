@@ -1,4 +1,4 @@
-# Programação Aplicada — MEC255
+# Informações Gerais
 
 **Professor:** Prof. Dr. Edmundo Abreu e Lima  
 **Semestre:** 2026
@@ -11,15 +11,20 @@ Introdução à programação com Python aplicada à Engenharia Mecânica. Algor
 
 | Módulo | Tópico |
 |--------|--------|
-| 01 | Introdução + Streamlit |
-| 02 | Conceitos Básicos + Apps Interativos |
-| 03 | Fluxo Condicional + Classificadores |
-| 04 | Estruturas de Dados + Laços + DataFrames |
-| 05 | Pandas + NumPy Essencial |
-| 06 | POO Essencial para Engenharia |
-| 07 | Pandas Aplicado + Visualização |
-| 08 | Plotly + Dashboards Interativos |
-| 09 | Projeto Final — Monitoramento de Sensores |
+| 01 | Setup + Algoritmos |
+| 02 | Conceitos Básicos + Streamlit |
+| 03 | Fluxo Condicional |
+| 04 | Funções em Python |
+| 05 | Estruturas de Dados |
+| 06 | Laços de Repetição |
+| 07 | Persistência + Tabelas |
+| 08 | NumPy Essencial |
+| 09 | POO Essencial para Engenharia |
+| 10 | Pandas Aplicado + Visualização |
+| 11 | Plotly + Dashboards Interativos |
+| 12 | Projeto Final — Monitoramento de Sensores |
+
+> **Apêndice:** [Introdução ao Git (opcional)](99-git-opcional)
 
 ## Bibliografia
 

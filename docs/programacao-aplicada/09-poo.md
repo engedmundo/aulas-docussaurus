@@ -3,16 +3,17 @@
 ## Roteiro
 
 1. O que é POO? Objetos vs. estruturada
-2. Classes, `__init__`, instâncias
-3. Métodos: comportamentos do objeto
-4. Múltiplas classes e relacionamentos
-5. Abstração
-6. Encapsulamento (`@property`, `_atributo`)
-7. Herança (`super()`)
-8. Polimorfismo (sobrescrita)
-9. Classes abstratas (ABC)
-10. POO + Streamlit: persistindo objetos com `st.session_state`
-11. Exercícios práticos
+2. Dataclasses: POO simplificada para dados
+3. Classes completas, `__init__`, instâncias
+4. Métodos: comportamentos do objeto
+5. Múltiplas classes e relacionamentos
+6. Abstração
+7. Encapsulamento (`@property`, `_atributo`)
+8. Herança (`super()`)
+9. Polimorfismo (sobrescrita)
+10. Classes abstratas (ABC)
+11. POO + Streamlit: persistindo objetos com `st.session_state`
+12. Exercícios práticos
 
 ## O que é POO?
 
@@ -32,9 +33,38 @@ Na **POO**, os programas são construídos a partir de **objetos** que interagem
 
 > Um **objeto** é uma entidade que possui **características** (atributos) e **comportamentos** (métodos).
 
-## Classe: o molde do objeto
+## Dataclasses — POO simplificada (antes de classes completas)
 
-Uma **classe** é um modelo (molde) para criar objetos.
+Se você só precisa de uma classe para **armazenar dados**, sem métodos complexos, Python oferece as **dataclasses** — uma forma mais curta e legível.
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Material:
+    nome: str
+    densidade: float
+    modulo_elasticidade: float
+    limite_escoamento: float
+
+# Criar objeto — sem __init__ manual
+aco = Material("Aço 1020", 7850, 210e9, 350e6)
+aluminio = Material("Alumínio 6061", 2700, 69e9, 276e6)
+
+print(aco)              # Material(nome='Aço 1020', densidade=7850, ...)
+print(aco.densidade)    # 7850
+```
+
+Vantagens das dataclasses:
+- Sem `__init__` para escrever — o `@dataclass` gera automaticamente
+- `print()` já mostra os atributos de forma legível
+- Ideal para representar entidades: materiais, sensores, peças, ensaios
+
+> Dataclasses são o ponto de partida ideal para POO em engenharia: você modela dados primeiro, e depois adiciona comportamento (métodos) quando necessário.
+
+## Classe completa: o molde do objeto
+
+Quando você precisa de **comportamento** (métodos) além de dados, usa-se a sintaxe completa de classes:
 
 ```python
 class Aluno:
@@ -417,6 +447,17 @@ Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tr
 - `st.button` "Cadastrar"
 - Listagem com máquinas e datas da próxima manutenção
 - Destacar máquinas com manutenção atrasada (`st.warning`)
+
+## Resumo da aula
+
+- Dataclasses (`@dataclass`): forma simplificada de criar classes para armazenar dados — sem `__init__` manual
+- Classe: molde que define atributos (dados) e métodos (comportamento)
+- Objeto: instância concreta de uma classe
+- `__init__`: construtor chamado automaticamente ao criar um objeto
+- `@property`: encapsula atributos com getter/setter
+- Herança: `class BombaCentrifuga(Pump)` herda atributos e métodos da classe pai
+- Polimorfismo: mesmo método (`calcular_vazao`) com comportamentos diferentes em cada classe filha
+- ABC (Abstract Base Class): define interface obrigatória para classes filhas
 
 ## Referências
 

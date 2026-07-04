@@ -379,6 +379,14 @@ if __name__ == "__main__":
 - Usar `pd.concat()` para adicionar linhas, não `df.append()`
 - Plotly: usar `st.plotly_chart(fig)`, não `st.pyplot(fig)`
 
+## Resumo da aula
+
+- Planeje a arquitetura antes de codificar: componentes separados por responsabilidade
+- Dados sintéticos com NumPy simulam cenários reais de sensoriamento industrial
+- CRUD via DataFrames + `st.session_state` + CSV = sistema funcional sem banco de dados
+- Regras de negócio (normal/alerta/crítico) tornam o app inteligente
+- Documentação e apresentação são parte da entrega — trate o código como produto
+
 ## Referências
 
 - **Streamlit** — https://docs.streamlit.io/

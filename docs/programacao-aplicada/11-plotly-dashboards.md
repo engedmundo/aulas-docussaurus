@@ -778,6 +778,14 @@ st.dataframe(df_filtrado)
 - Botão "Regenerar dados" com `st.rerun()`
 - Layout responsivo com `use_container_width=True`
 
+## Resumo da aula
+
+- Plotly Express: `px.line()`, `px.bar()`, `px.scatter()` — gráficos interativos com 1 linha
+- Personalização: `fig.update_layout()`, `fig.update_traces()`, templates (`plotly_dark`, `ggplot2`)
+- Subplots: `make_subplots()` com `colspan` para dashboards complexos
+- `st.plotly_chart(fig)` renderiza gráficos Plotly no Streamlit
+- Layout de dashboard: containers, colunas, métricas, abas (`st.tabs`)
+
 ## Referências
 
 - **Plotly Express** — https://plotly.com/python/plotly-express/

@@ -2,8 +2,9 @@
 
 ## Roteiro
 
-1. Revisão pandas: DataFrame, Series, index
-2. Explorando um DataFrame: head, info, describe, isna
+1. Pandas: DataFrame, Series, index
+2. Pandas + NumPy
+3. Explorando um DataFrame: head, info, describe, isna
 3. Carregar dados reais: CSV de materiais/ensaios
 4. Limpeza de dados: dropna, fillna, rename, astype
 5. Filtros avançados: query, loc, iloc, isin, between
@@ -16,7 +17,7 @@
 12. Persistência de DataFrames com `st.session_state`
 13. Exercícios práticos
 
-## Revisão: DataFrame e Series
+## DataFrame e Series
 
 Pandas é a biblioteca do Python para manipulação de dados tabulares. Pense nela como uma **planilha do Excel dentro do Python**, mas com poder de programação.
 
@@ -82,6 +83,59 @@ print(df.dtypes)    # material      object
 | `df.columns` | Nomes das colunas | Renomear, verificar |
 | `df.dtypes` | Tipo de cada coluna | Detectar erros de tipo |
 | `df.index` | Índice das linhas | Reindexar |
+
+## Primeiro contato: Pandas + NumPy (da aula 08)
+
+Pandas trabalha naturalmente com arrays NumPy. Este é o ponto de partida:
+
+```python
+import numpy as np
+import pandas as pd
+
+# Gerar dados com numpy
+nomes = np.array(["Aço", "Alumínio", "Latão", "Titânio", "PVC"])
+densidade = np.array([7850, 2700, 8500, 4430, 1380])
+modulo_E = np.array([210, 69, 97, 116, 3])  # GPa
+
+# Criar DataFrame diretamente de arrays numpy
+df = pd.DataFrame({
+    "material": nomes,
+    "densidade": densidade,
+    "modulo_E": modulo_E
+})
+
+# Coluna calculada
+df["relacao"] = df["modulo_E"] / df["densidade"] * 1000
+print(df)
+```
+
+> Pandas aceita arrays numpy diretamente como colunas.
+
+### Estatísticas Descritivas
+
+```python
+print(df.describe())
+```
+
+```
+       densidade    modulo_E     relacao
+count   5.000000    5.000000    5.000000
+mean 4972.000000   99.000000   28.462713
+std  3074.529800   74.900947   17.425529
+min  1380.000000    3.000000    2.173913
+25%  2700.000000   69.000000   13.446081
+50%  4430.000000   97.000000   26.189228
+75%  7850.000000  116.000000   46.242774
+max  8500.000000  210.000000   50.955556
+```
+
+Também por coluna:
+```python
+df["densidade"].mean()     # 4972
+df["densidade"].std()      # 3074.5
+df["densidade"].max()      # 8500
+```
+
 
 ## Explorando um DataFrame: Primeiros Passos
 
@@ -976,6 +1030,51 @@ $Cpk = \min\left(\frac{media - LIE}{3\sigma}, \frac{LSE - media}{3\sigma}\right)
 - Scatter plot tensão × alongamento (matplotlib/seaborn)
 - Heatmap de correlação (seaborn)
 - Export CSV filtrado (`st.download_button`)
+
+## Exercício 10.1 — DataFrame de Materiais a partir de NumPy
+
+**Dados:**
+```python
+nomes = ["Aço", "Alumínio", "Latão", "Titânio", "PVC"]
+densidade = [7850, 2700, 8500, 4430, 1380]
+modulo_E = [210, 69, 97, 116, 3]  # GPa
+```
+
+**O que o app deve ter:**
+- Criar DataFrame com colunas: `material`, `densidade`, `modulo_E`
+- Adicionar coluna calculada: `relacao = modulo_E / densidade * 1000`
+- Ordenar por `relacao` decrescente (`df.sort_values`)
+- Exibir `df.describe()` com `st.dataframe`
+- Gráfico de barras com `st.bar_chart`
+
+## Exercício 10.2 — Dashboard de Materiais com GroupBy
+
+**Contexto:** Gerar dados sintéticos de ensaios de tração para 4 materiais e construir um dashboard analítico.
+
+| Material | Tensão μ/σ (MPa) | Módulo E μ/σ (GPa) | Densidade (kg/m³) |
+|---|---|---|---|
+| Aço | 420 / 25 | 210 / 10 | 7850 |
+| Alumínio | 280 / 20 | 70 / 8 | 2700 |
+| Latão | 350 / 30 | 100 / 12 | 8500 |
+| Titânio | 520 / 35 | 115 / 10 | 4430 |
+
+**Funcionalidades obrigatórias:**
+- Gerar 20 amostras por material com `np.random.normal`
+- Tabela interativa com `st.dataframe`
+- Estatísticas por material com `groupby`
+- Coluna calculada: resistência específica = tensão / densidade
+- Gráfico de barras com `st.bar_chart`
+- Botão "Regenerar dados" com `st.session_state` + `st.rerun()`
+- Exportar dados filtrados como CSV (`st.download_button`)
+
+## Resumo da aula
+
+- `groupby()` agrupa dados por categoria e aplica agregacões (`mean`, `sum`, `count`)
+- `merge()` combina DataFrames como JOIN em SQL — essencial para dados relacionais
+- `pivot_table()` reorganiza dados em formato de tabela dinâmica
+- matplotlib: `plt.plot()`, `plt.scatter()`, `plt.bar()` — gráficos estáticos customizáveis
+- seaborn: `sns.boxplot()`, `sns.heatmap()` — gráficos estatísticos com pouco código
+- Use `st.pyplot(fig)` para exibir gráficos matplotlib/seaborn no Streamlit
 
 ## Referências
 

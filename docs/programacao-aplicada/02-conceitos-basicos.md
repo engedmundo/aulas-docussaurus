@@ -7,9 +7,12 @@
 3. Conversão de tipos
 4. Entrada e saída (`print` / `input`)
 5. Operadores matemáticos
-6. Widgets Streamlit: `st.number_input`, `st.slider`, `st.selectbox`, `st.button`
-7. Exercícios em Streamlit
-8. **Mini-projeto:** Calculadora de Usinagem
+6. Instalação do Streamlit
+7. Streamlit: primeiros passos (anatomia, elementos básicos, métricas)
+8. Widgets Streamlit: `st.number_input`, `st.slider`, `st.selectbox`, `st.button`
+9. Exemplo completo: Calculadora de Tensão
+10. Exercícios em Streamlit
+11. **Mini-projeto:** Calculadora de Usinagem
 
 ## Pensamento Computacional
 
@@ -26,7 +29,7 @@ Ele se apoia em quatro pilares:
 
 ### Da aula 01 para a aula 02
 
-Na aula 01 você viu esse algoritmo para calcular tensão:
+Na aula 01 você escreveu seu primeiro algoritmo para calcular tensão:
 
 ```
 1. Receber F (N)
@@ -237,12 +240,9 @@ print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
 A precedência em Python segue a matemática: `()` > `**` > `*` `/` > `+` `-`
 
 ```python
-# Cálculo da área de um círculo: A = π * r²
-r = 0.025  # raio em metros
-
-# ERRADO — multiplica π por r, depois eleva ao quadrado
-A_errado = math.pi * r ** 2   # isto está CORRETO de boa — ** tem prioridade sobre *
-                               # mas veja o próximo exemplo:
+# Correto: ** tem prioridade sobre *, então π * (r²)
+r = 0.025
+A = math.pi * r ** 2   # equivale a math.pi * (r ** 2) → CERTO
 
 # Erro clássico com parênteses — tensão em viga composta
 F = 1000
@@ -250,15 +250,11 @@ b = 0.05
 h = 0.10
 
 # Intenção: σ = F / (b * h)
-sigma_errado = F / b * h       # executa F/b primeiro, depois × h → ERRADO
-sigma_certo  = F / (b * h)    # usa parênteses para forçar a ordem → CERTO
+sigma_errado = F / b * h       # executa (F/b) primeiro, depois × h → 2.000 Pa
+sigma_certo  = F / (b * h)    # parênteses forçam b*h primeiro → 200.000 Pa
 
-print(f"Errado: {sigma_errado:.2f} Pa")   # 200000.00 Pa
-print(f"Certo:  {sigma_certo:.2f} Pa")    # 200000.00 Pa... espera, vamos checar
-
-# Valores reais:
-# sigma_errado = 1000 / 0.05 * 0.10 = 20000 * 0.10 = 2000 Pa
-# sigma_certo  = 1000 / (0.05 * 0.10) = 1000 / 0.005 = 200000 Pa
+print(f"Sem parênteses: {sigma_errado:.0f} Pa")   # 2000 Pa — ERRADO
+print(f"Com parênteses:  {sigma_certo:.0f} Pa")    # 200000 Pa — CERTO
 ```
 
 **Regra prática:** em fórmulas com divisão seguida de multiplicação, use parênteses sempre que houver ambiguidade.
@@ -280,9 +276,134 @@ V = (4/3) * math.pi * r**3
 print(f"Volume: {V:.6f} m³")
 ```
 
+## Instalação do Streamlit
+
+Antes de criar apps web, instale o Streamlit:
+
+```bash
+pip install streamlit
+```
+
+Verifique:
+
+```bash
+streamlit hello
+```
+
+Isso abre um app de demonstração no navegador em `http://localhost:8501`. Explore à vontade — a seguir você criará o seu próprio.
+
+## Streamlit — Apps Web com Python
+
+Até agora os programas rodaram no terminal com `print()` e `input()`. Mas e se você quiser criar uma **interface gráfica** que qualquer pessoa possa usar sem instalar Python?
+
+Streamlit é um framework que transforma scripts Python em **aplicações web interativas** sem escrever HTML, CSS ou JavaScript.
+
+**Tradicional:**
+```
+HTML ──> CSS ──> JavaScript ──> Backend → meses de aprendizado → App Web
+```
+
+**Streamlit:**
+```
+Python puro ──> App Web (em segundos)
+```
+
+### Por que Streamlit na Engenharia?
+
+| Problema | Solução Tradicional | Com Streamlit |
+|---|---|---|
+| Dashboard de sensores | Node.js + React + API | **30 linhas de Python** |
+| Calculadora técnica | HTML + JavaScript | **15 linhas de Python** |
+| Visualizar ensaio | Exportar → Excel → Gráfico | **Automatizado** |
+| Compartilhar ferramenta | Servidor web complexo | **Um comando** |
+
+### Anatomia de um App Streamlit
+
+```python
+import streamlit as st
+st.title("Meu App")
+st.write("Olá!")
+     ↓
+Python executa de cima para baixo
+     ↓
+Interface Web (título + texto)
+```
+
+- Cada **execução** do script recria a página
+- Você só escreve Python — o Streamlit cuida da web
+- Toda interação do usuário reexecuta o script
+
+### Primeiro App Streamlit
+
+Crie `app.py`:
+
+```python
+import streamlit as st
+
+st.title("Meu Primeiro App")
+st.write("Olá, turma de Eng. Mecânica!")
+st.write("Bem-vindos à Programação Aplicada.")
+```
+
+Execute:
+
+```bash
+streamlit run app.py
+```
+
+### Elementos básicos
+
+```python
+import streamlit as st
+
+# Títulos
+st.title("Título principal")
+st.header("Cabeçalho")
+st.subheader("Subcabeçalho")
+
+# Texto formatado
+st.write("Texto com **negrito** e *itálico*")
+st.markdown("Texto em **Markdown**")
+
+# Linha separadora
+st.divider()
+
+# Código formatado
+codigo = "print('Olá')"
+st.code(codigo, language="python")
+```
+
+### Exibindo métricas e resultados
+
+O Streamlit possui componentes específicos para exibir resultados de forma clara:
+
+```python
+import streamlit as st
+
+st.header("Resultado do Cálculo")
+
+# Métricas destacadas
+col1, col2, col3 = st.columns(3)
+col1.metric("Tensão", "250 MPa")
+col2.metric("Deformação", "0.12%")
+col3.metric("Fator de Segurança", "2.5")
+
+# Caixa de informação
+st.info("O material está dentro dos limites de segurança.")
+
+# Caixa de alerta
+st.warning("A temperatura está próxima do limite.")
+
+# Caixa de erro
+st.error("Tensão acima do limite de escoamento!")
+
+# Caixa de sucesso
+st.success("Cálculo concluído com sucesso!")
+```
+
 ## Streamlit — Widgets de Entrada
 
-Na aula 01 você viu o Streamlit em ação. Agora vamos aprofundar os widgets de entrada que substituem o `input()` nos apps.
+Agora que você já viu como criar um app Streamlit, vamos aprofundar os widgets de entrada que substituem o `input()` nos apps.
 
 ### Comparação: console vs. Streamlit
 
@@ -380,7 +501,7 @@ if st.button("Calcular tensão"):
 
 ### `st.columns` — layout lado a lado
 
-Distribui widgets e resultados em colunas, como foi visto na calculadora de tensão da aula 01:
+Distribui widgets e resultados em colunas:
 
 ```python
 col1, col2 = st.columns(2)
@@ -391,6 +512,44 @@ with col1:
 with col2:
     area = st.number_input("Área (m²):", value=0.002, format="%.4f")
 ```
+
+### Exemplo completo: Calculadora de Tensão
+
+Veja como integrar widgets, colunas e métricas em um app funcional de engenharia:
+
+```python
+import streamlit as st
+import math
+
+st.title("Calculadora de Tensão Normal")
+st.write("Calcula a tensão em barras sob carregamento axial: σ = F / A")
+
+st.divider()
+
+# Entradas do usuário
+col1, col2 = st.columns(2)
+
+with col1:
+    F = st.number_input("Força aplicada F (N)", min_value=0.0, value=5000.0, step=100.0)
+
+with col2:
+    diametro = st.number_input("Diâmetro da barra (mm)", min_value=0.1, value=50.0, step=1.0)
+
+# Cálculo
+A = math.pi * (diametro / 1000) ** 2 / 4
+sigma = F / A
+
+st.divider()
+st.subheader("Resultado")
+
+col3, col4 = st.columns(2)
+col3.metric("Área da seção (mm²)", f"{A * 1e6:.2f}")
+col4.metric("Tensão normal (MPa)", f"{sigma / 1e6:.2f}")
+```
+
+Execute com `streamlit run calculadora.py` e experimente alterar os valores — o resultado atualiza instantaneamente!
+
+> Na aula 03 você aprenderá `if/elif/else` e poderá adicionar a verificação do fator de segurança: se σ está abaixo do limite de escoamento, o app exibirá aprovado ou reprovado automaticamente.
 
 ---
 
@@ -412,24 +571,6 @@ $$media = \frac{d_1 + d_2 + d_3}{3}$$
 
 > **Próxima aula:** em `03 — Condicionais` você adicionará a aprovação/rejeição do lote com `if media >= 40: st.success(...) else: st.error(...)`, e um campo opcional de 4ª medição com `st.checkbox`.
 
-## Exercício 2.2 — IMC do Operador
-
-**Contexto:** A NR-17 (Norma Regulamentadora de Ergonomia) recomenda que empresas monitorem as condições físicas dos operadores de máquinas industriais. O setor de segurança do trabalho da empresa quer uma ferramenta simples para calcular o IMC dos operadores durante os exames admissionais e periódicos.
-
-**Fórmula:**
-
-$$IMC = \frac{peso}{altura^2}$$
-
-**O que o app deve ter:**
-- Título com referência à NR-17
-- Dois campos de entrada lado a lado: peso (kg) e altura (m)
-- Um botão "Calcular IMC"
-- Exibição do resultado com `st.metric`
-
-**Valores de teste:** `peso = 82.0 kg`, `altura = 1.75 m` → `IMC = 26.78`
-
-> **Próxima aula:** em `03 — Condicionais` você adicionará a classificação (Abaixo do peso / Normal / Sobrepeso / Obesidade) usando `if/elif/else`.
-
 ## Exercício 2.3 — Relação de Transmissão
 
 **Contexto:** Uma indústria de papel e celulose precisa projetar um redutor de velocidade para um transportador de rolos que leva bobinas de papel entre as seções da máquina. O motor elétrico disponível opera a 1750 RPM, mas o transportador precisa girar a uma velocidade bem menor para não danificar o material. O engenheiro de manutenção precisa calcular a relação de transmissão e a rotação de saída do redutor.
@@ -446,93 +587,29 @@ $$i = \frac{z_{movida}}{z_{motriz}} \qquad n_{saida} = \frac{n_{motor}}{i}$$
 
 **Valores de teste:** `z_motriz = 20 dentes`, `z_movida = 70 dentes`, `n_motor = 1750 RPM` → `i = 3.50`, `n_saída = 500.00 RPM`
 
-## Exercício 2.4 — Cilindro com Desperdício de Material
+> **Desafios opcionais:** pratique mais com os exercícios a seguir:
+> - **IMC do Operador** — mesmo padrão da calculadora de tensão, aplicado à ergonomia (NR-17)
+> - **Cilindro com Desperdício** — combine geometria, densidade e custo em um único app
+> - **Dilatação Térmica** — adicione `st.selectbox` para selecionar material automaticamente
+> - **Custo Operacional de Fresadora** — use `st.slider` para horas/dia e calcule impostos
 
-**Contexto:** Uma oficina de usinagem fabrica cilindros maciços de aço a partir de blocos prismáticos (tarugos quadrados). O material excedente é removido como cavaco durante o torneamento. O gerente de produção quer saber quanto material é desperdiçado e qual o custo real de cada lote, incluindo o valor do material que vira cavaco — informação essencial para precificação correta dos produtos.
+## Exercício 2.7 — Pressão de Pistão Hidráulico
 
-**Fórmulas:**
-
-$$V_{cil} = \pi \cdot r^2 \cdot h \qquad V_{bloco} = (2r)^2 \cdot h$$
-
-$$m_{final} = V_{cil} \cdot \rho \qquad m_{cavaco} = (V_{bloco} - V_{cil}) \cdot \rho$$
-
-$$aproveitamento = \frac{m_{final}}{m_{final} + m_{cavaco}} \times 100$$
-
-**O que o app deve ter:**
-- Campos de entrada para: raio (m), altura (m), densidade (kg/m³), preço (R$/kg) e quantidade de peças
-- Um botão "Calcular"
-- Resultados: volume do cilindro, volume do bloco, massa final, massa de cavaco, custo total, valor perdido e aproveitamento
-
-**Valores de teste:** `r = 0.05 m`, `h = 0.10 m`, `ρ = 7850 kg/m³`, `preço = 15 R$/kg`, `qtd = 10`
-
-**Saída esperada:**
-```
-Volume do cilindro:     0.000785 m³
-Volume do bloco:        0.001000 m³
-Massa final:            6.16 kg
-Massa de cavaco:        1.69 kg
-Custo total:         R$ 924,00
-Valor perdido:       R$ 253,50
-Aproveitamento:        78.5%
-```
-
-## Exercício 2.5 — Dilatação Térmica
-
-**Contexto:** Uma viga de aço sustenta a estrutura de um forno industrial que opera em ciclos: durante o dia atinge 100 °C, e à noite esfria até 25 °C. O engenheiro de estruturas precisa prever a dilatação linear da viga para dimensionar corretamente as juntas de expansão — se as juntas forem menores que a dilatação, a viga pode empenar ou causar trincas na estrutura.
+**Contexto:** Uma empresa de equipamentos hidráulicos precisa de uma ferramenta rápida para que seus técnicos dimensionem pistões. O engenheiro responsável pelo setor de projetos quer que os técnicos consigam verificar a pressão de trabalho de qualquer pistão apenas informando a força aplicada e o diâmetro do êmbolo — sem precisar abrir uma planilha ou fazer contas no papel.
 
 **Fórmulas:**
 
-$$\Delta T = T_f - T_0 \qquad \Delta L = L_0 \cdot \alpha \cdot \Delta T \qquad L_f = L_0 + \Delta L$$
+$$P = \frac{F}{A} \qquad A = \frac{\pi \cdot d^2}{4}$$
 
 **O que o app deve ter:**
-- Uma nota informativa sobre o coeficiente de dilatação do aço
-- Três campos de entrada lado a lado: comprimento inicial (m), temperatura inicial (°C) e temperatura final (°C)
-- Um botão "Calcular dilatação"
-- Resultados: variação de temperatura, dilatação total (mm), comprimento final (m) e variação percentual
+- Um título e uma breve descrição do cálculo
+- Dois campos de entrada lado a lado: força `F` (N) e diâmetro `d` (mm)
+- Dois resultados lado a lado: área da seção (mm²) e pressão (MPa)
+- Use `st.number_input`, `st.columns` e `st.metric`
 
-**Valores de teste:** `L₀ = 1.00 m`, `T₀ = 25 °C`, `Tf = 100 °C`, `α = 11.7×10⁻⁶ m/(m·°C)`
+**Valores de teste:** `F = 12 000 N`, `d = 40 mm` → `A = 1 256.64 mm²`, `P = 9.55 MPa`
 
-**Saída esperada:**
-```
-ΔT = 75.0 °C
-ΔL = 0.878 mm
-Lf = 1.000878 m
-Variação: 0.088%
-```
-
-**Desafio:** adicione um `st.selectbox` para escolher o material e ajuste o `alpha` automaticamente:
-
-| Material | α (×10⁻⁶ m/(m·°C)) |
-|---|---|
-| Aço carbono | 11.7 |
-| Alumínio | 23.1 |
-| Cobre | 17.0 |
-| Latão | 19.0 |
-
-## Exercício 2.6 — Custo Operacional de Fresadora
-
-**Contexto:** O departamento de custos de uma indústria metalúrgica precisa calcular o custo mensal de energia elétrica de uma fresadora CNC para incluir no rateio de custos de produção. A máquina opera em turnos e o custo da energia varia conforme a tarifa da concessionária local. O resultado será usado para definir o preço-hora da máquina.
-
-**Fórmulas:**
-
-$$E = P \cdot h_{dia} \cdot d_{mes} \qquad custo_{bruto} = E \cdot tarifa \qquad custo_{total} = custo_{bruto} \times 1{,}27$$
-
-**O que o app deve ter:**
-- Campos de entrada para: potência (kW), horas/dia, dias/mês e tarifa (R$/kWh)
-- Use `st.slider` para as horas de operação por dia (1 a 24)
-- Um botão "Calcular custo mensal"
-- Resultados: consumo mensal (kWh), custo bruto, impostos (27%), custo total e custo por hora
-
-**Valores de teste:** `P = 15 kW`, `h/dia = 8 h`, `dias = 30`, `tarifa = 0.70 R$/kWh`
-
-**Saída esperada:**
-```
-Consumo mensal:     3.600 kWh
-Custo bruto:     R$ 2.520,00
-Impostos (27%):  R$   680,40
-Custo total:     R$ 3.200,40
-Custo por hora:  R$    16,00/h
-```
+**Dica:** importe `math` para usar `math.pi`, e lembre de converter `d` de mm para m antes de calcular a área em m².
 
 ## Mini-Projeto — Calculadora de Usinagem
 
@@ -577,6 +654,17 @@ Custo total:          R$ 8,90
 densidades = {"Aço 1020 (7850)": 7850, "Alumínio 6061 (2700)": 2700, "Latão (8500)": 8500}
 rho = densidades[material]
 ```
+
+## Resumo da aula
+
+- Pensamento computacional: decomposição, padrões, abstração, algoritmos
+- Variáveis guardam valores na memória; tipos básicos: `int`, `float`, `str`, `bool`
+- Use `int()`, `float()`, `str()`, `round()` para converter entre tipos
+- `input()` sempre retorna `str` — converta para número antes de calcular
+- f-strings formatam saída: `f"Valor: {variavel:.2f}"`
+- Precedência: `()` > `**` > `*` `/` > `+` `-` — use parênteses para evitar ambiguidade
+- Streamlit transforma scripts Python em apps web: `st.title()`, `st.write()`, `st.metric()`
+- Widgets de entrada: `st.number_input`, `st.slider`, `st.selectbox`, `st.button`
 
 ## Referências
 
