@@ -18,14 +18,21 @@ const DisciplineList: DisciplineItem[] = [
     code: 'MEC255',
     description: 'Python, Streamlit, Pandas, NumPy, Plotly e POO aplicados à engenharia.',
     icon: '🐍',
-    link: '/docs/programacao-aplicada',
+    link: '/docs/category/programação-aplicada-mec255',
   },
   {
-    title: 'Desenho Técnico',
-    code: 'DESENHO',
-    description: 'Projeções, cortes, tolerâncias e CAD.',
+    title: 'Desenho Técnico CAD',
+    code: 'EMC',
+    description: 'Cotagem, cortes, tolerâncias, conjuntos e modelamento 3D.',
     icon: '📐',
-    link: '/docs/desenho-tecnico',
+    link: '/docs/category/desenho-técnico-cad',
+  },
+  {
+    title: 'Dinâmica das Máquinas',
+    code: 'MA2',
+    description: 'Atrito, leis de Newton e métodos de trabalho-energia aplicados à dinâmica das máquinas.',
+    icon: '⚙️',
+    link: '/docs/category/dinâmica-das-máquinas',
   },
 ];
 

@@ -19,7 +19,7 @@ function HomepageHeader() {
           </Heading>
           <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
           <div className={styles.buttons}>
-            <Link className={styles.heroButton} to="/docs/programacao-aplicada">
+            <Link className={styles.heroButton} to="/docs/category/programação-aplicada-mec255">
               Ver disciplinas
             </Link>
             <Link className={styles.heroButtonSecondary} to="/sobre">

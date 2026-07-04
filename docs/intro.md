@@ -6,6 +6,6 @@ Use a sidebar à esquerda para navegar pelas disciplinas.
 
 ## Disciplinas disponíveis
 
-- [Programação Aplicada](/docs/programacao-aplicada/)
-- [Desenho Técnico](/docs/desenho-tecnico)
-- [Desenho Técnico CAD](/docs/desenho-tecnico-cad/)
+- [Programação Aplicada](/docs/category/programação-aplicada-mec255)
+- [Desenho Técnico CAD](/docs/category/desenho-técnico-cad)
+- [Dinâmica das Máquinas](/docs/category/dinâmica-das-máquinas)

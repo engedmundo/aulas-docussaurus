@@ -86,15 +86,14 @@ export default async function createConfig(): Promise<Config> {
           {
             title: 'Disciplinas',
             items: [
-              {label: 'Programação Aplicada', to: '/docs/programacao-aplicada'},
-              {label: 'Desenho Técnico', to: '/docs/desenho-tecnico'},
-              {label: 'Desenho Técnico CAD', to: '/docs/desenho-tecnico-cad'},
+              {label: 'Programação Aplicada', to: '/docs/category/programação-aplicada-mec255'},
+              {label: 'Desenho Técnico CAD', to: '/docs/category/desenho-técnico-cad'},
+              {label: 'Dinâmica das Máquinas', to: '/docs/category/dinâmica-das-máquinas'},
             ],
           },
           {
             title: 'Navegação',
             items: [
-              {label: 'Todas as disciplinas', to: '/docs/programacao-aplicada'},
               {label: 'Sobre o projeto', to: '/sobre'},
             ],
           },

@@ -35,6 +35,8 @@
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/02.png)
 
+Exemplos de tipos de linha, de acordo com a NBR:
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/02B.PNG)
 
 ### Ordem de prioridade de linhas coincidentes
