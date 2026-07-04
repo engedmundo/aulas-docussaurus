@@ -8,3 +8,4 @@ Use a sidebar à esquerda para navegar pelas disciplinas.
 
 - [Programação Aplicada](/docs/programacao-aplicada/)
 - [Desenho Técnico](/docs/desenho-tecnico)
+- [Desenho Técnico CAD](/docs/desenho-tecnico-cad/)

@@ -88,6 +88,7 @@ export default async function createConfig(): Promise<Config> {
             items: [
               {label: 'Programação Aplicada', to: '/docs/programacao-aplicada'},
               {label: 'Desenho Técnico', to: '/docs/desenho-tecnico'},
+              {label: 'Desenho Técnico CAD', to: '/docs/desenho-tecnico-cad'},
             ],
           },
           {
