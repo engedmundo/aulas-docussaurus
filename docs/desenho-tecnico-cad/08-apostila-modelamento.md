@@ -67,73 +67,125 @@ Existem muitas outras opções que podem ser personalizadas de acordo com normas
 
 ## Peças Básicas
 
-Nas páginas a seguir são apresentados exemplos de peças, componentes e conjuntos mecânicos que poderão ser desenvolvidos durante o curso.
+A seguir são apresentados exemplos de peças, componentes e conjuntos mecânicos que poderão ser desenvolvidos durante o curso.
 
-MEC239EF01 e MEC239EF02
+---
+
+*MEC239EF01*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/002.png)
+
+---
+
+*MEC239EF02*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/003.png)
 
-MEC239EF03 e MEC239EF04
+---
+
+*MEC239EF03*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/001.png)
+
+---
+
+*MEC239EF04*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/004.png)
 
-MEC239EF05 e MEC239EF06
+---
+
+*MEC239EF05*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/005.png)
+
+---
+
+*MEC239EF06*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/006.png)
 
-MEC239EF07 e MEC239EF08
+---
+
+*MEC239EF07*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/007.png)
+
+---
+
+*MEC239EF08*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/008.png)
 
-MEC239EF09
+---
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/009.png)
+*MEC239EF09*
 
-MEC239EF10
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/009.PNG)
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/010.png)
+---
 
-MEC239EF11
+*MEC239EF10*
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/011.png)
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/010.PNG)
 
-MEC239EF12
+---
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/012.png)
+*MEC239EF11*
 
-MEC239EF13
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/011.PNG)
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/013.png)
+---
 
-MEC239EF14
+*MEC239EF12*
+
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/012.PNG)
+
+---
+
+*MEC239EF13*
+
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/013.PNG)
+
+---
+
+*MEC239EF14*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/202.png)
 
-MEC239EF15
+---
+
+*MEC239EF15*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/101.png)
 
-MEC239EF16
+---
+
+*MEC239EF16*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/114.png)
 
-MEC239EF17
+---
+
+*MEC239EF17*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/115.png)
 
-MEC239EF18
+---
+
+*MEC239EF18*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/102.png)
 
-MEC239EF19
+---
+
+*MEC239EF19*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/105.png)
 
-MEC239EF20
+---
+
+*MEC239EF20*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/020.png)
 
@@ -141,28 +193,45 @@ MEC239EF20
 
 ## Estratégias Especiais de Modelagem
 
-MEC239EF21
+---
+
+*MEC239EF21*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/021.png)
 
-MEC239EF22
+---
+
+*MEC239EF22*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/022.png)
 
-MEC239EF23
+---
+
+*MEC239EF23*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/023.png)
 
-MEC239EF24 e MEC239EF25
+---
+
+*MEC239EF24*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/027.png)
+
+---
+
+*MEC239EF25*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/028.png)
 
-MEC239EF26
+---
+
+*MEC239EF26*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/024.png)
 
-MEC239EF27
+---
+
+*MEC239EF27*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/025.png)
 
@@ -170,84 +239,129 @@ MEC239EF27
 
 ## Peças de Revolução
 
-MEC239EF28
+---
+
+*MEC239EF28*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/029.png)
 
-MEC239EF29
+---
+
+*MEC239EF29*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/030.png)
 
-MEC239EF30
+---
+
+*MEC239EF30*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/031.png)
 
-MEC239EF31
+---
+
+*MEC239EF31*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/032.png)
 
-MEC239EF32
+---
+
+*MEC239EF32*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/033.png)
 
-MEC239EF33
+---
+
+*MEC239EF33*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/034.png)
 
-MEC239EF34
+---
+
+*MEC239EF34*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/035.png)
 
-MEC239EF35
+---
+
+*MEC239EF35*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/036.png)
 
-MEC239EF36
+---
+
+*MEC239EF36*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/037.png)
 
-MEC239EF37
+---
+
+*MEC239EF37*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/039.png)
 
-MEC239EF38
+---
+
+*MEC239EF38*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/040.png)
 
-MEC239EF39
+---
+
+*MEC239EF39*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/130.png)
 
-MEC239EF40
+---
+
+*MEC239EF40*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/131.png)
 
-MEC239EF41
+---
+
+*MEC239EF41*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/132.png)
 
-MEC239EF42
+---
+
+*MEC239EF42*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/133.png)
 
-MEC239EF43
+---
+
+*MEC239EF43*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/134.png)
+
+---
+
+*MEC239EF43*
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/135.png)
 
-MEC239EF44
+---
+
+*MEC239EF44*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/136.png)
 
-MEC239EF44
+---
+
+*MEC239EF44*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/137.png)
 
-MEC239EF44
+---
+
+*MEC239EF44*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/138.png)
 
-MEC239EF45
+---
+
+*MEC239EF45*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/139.png)
 
@@ -255,27 +369,39 @@ MEC239EF45
 
 ## Vistas Auxiliares
 
-MEC239EF46
+---
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/064.png)
+*MEC239EF46*
 
-MEC239EF47
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/064.PNG)
+
+---
+
+*MEC239EF47*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/065.png)
 
-MEC239EF48
+---
+
+*MEC239EF48*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/090.png)
 
-MEC239EF49
+---
+
+*MEC239EF49*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/091.png)
 
-MEC239EF50
+---
+
+*MEC239EF50*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/092.png)
 
-MEC239EF51
+---
+
+*MEC239EF51*
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/093.png)
 
@@ -286,39 +412,60 @@ MEC239EF51
 ### Projeto Grampo — MEC239GRA
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/073B.png)
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/074C.png)
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/073C.png)
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/074B.png)
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/075.png)
+
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/075.PNG)
+
+---
 
 ### Projeto Torninho Paralelo — MEC239TOR
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/070.png)
+
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/070.PNG)
+
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/071B.png)
 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/071C.png)
 
-![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/072.png)
+
+![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/072.PNG)
+
+---
 
 ### Projeto Macaco Parafuso — MEC239MAC
 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/077.png)
+
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/078.png)
 
+---
+
 ### Projeto Alavanca de Comando — MEC239ALA
+
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/079.png)
 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/080.png)
+
+---
 
 ### Projeto Contraponta Giratória — MEC239CON
 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/081.png)
 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/082.png)
+
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/apostilas/img/083.png)

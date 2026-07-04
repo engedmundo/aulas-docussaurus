@@ -243,6 +243,16 @@ article > hr {
   opacity: 0.4;
 }
 
+article img {
+  max-width: 100%;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 1rem auto;
+}
+
 article > div[role="alert"] {
   margin: 1rem 0;
 }
