@@ -116,12 +116,17 @@ Arestas não visíveis **NÃO PODEM** ser cotadas!
 
 A cotagem entre vistas deve ser **evitada**.
 
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/09.jpg)
+
+**CORRETO:** evite posicionar cotas entre as vistas quando houver espaço disponível
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/010.jpg)
 
 Cotar somente o necessário para descrever o objeto ou produto acabado. **Nenhum elemento deve ser definido por mais de uma cota.**
 
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/011.jpg)
+**CORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/012.jpg)
 
 A cotagem funcional deve ser escrita diretamente no desenho.
@@ -168,7 +173,10 @@ A linha de centro e a linha de contorno não devem ser usadas como linha de cota
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/020.jpg)
 
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/022.jpg)
+
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/021.jpg)
 
 ### Limites da Linha de Cota
@@ -197,9 +205,16 @@ As cotas devem ser alinhadas a partir da linha mais afastada da vista em questã
 
 As setas acompanham os números. Se o número é colocado para fora dos limites da cota, as setas obrigatoriamente também saem para fora das linhas de extensão.
 
+**CORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/029.jpg)
+
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/030.jpg)
+
+**CORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/031.jpg)
+
+**INCORRETO:**
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/01-cotagem/img/032.jpg)
 
 ### Raios

@@ -1,4 +1,4 @@
-# Desenho de Elementos de Máquinas — Parte 1
+# Desenho de Elementos de Máquinas
 
 ## Roteiro
 

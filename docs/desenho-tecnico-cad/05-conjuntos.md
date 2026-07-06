@@ -33,9 +33,15 @@ Nos desenhos das peças são cotados todos os detalhes pertinentes à fabricaç�
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/05-conjuntos/03.png)
 
+--- 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/05-conjuntos/04.png)
 
+--- 
+
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/05-conjuntos/05.png)
+
+--- 
 
 ![](https://materiais-aula-upf-eng-mecanica.s3-sa-east-1.amazonaws.com/static/cad/05-conjuntos/06.png)
 
