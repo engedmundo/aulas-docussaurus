@@ -125,12 +125,7 @@ A habilidade de programar não substitui o conhecimento de engenharia — ela **
 ## Ecossistema Python para Engenharia
 
 ```
-  ┌─────────────────────────────────────┐
-  │           Streamlit                 │  ← Interface
-  │      Dashboards & Apps Web          │
-  └────────────────┬────────────────────┘
-                   │
-          ┌────────┴──────────────────┐
+          ┌───────────────────────────┐
           │  Matplotlib / Plotly      │
           │  Gráficos 2D interativos  │  ← Visualização
           └────────┬──────────────────┘
@@ -148,9 +143,23 @@ A habilidade de programar não substitui o conhecimento de engenharia — ela **
           └─────────────────┘
 ```
 
-Cada camada depende da anterior. No decorrer da disciplina, você aprenderá a usar todas elas — começando pela base (esta aula) e chegando até apps web interativos (a partir da aula 02).
+Cada camada depende da anterior. No decorrer da disciplina, você aprenderá a usar todas elas — começando pela base (esta aula) e chegando até a análise e visualização de dados com Pandas e Matplotlib (a partir da aula 02).
 
 ## Instalação e Configuração do Ambiente
+
+### Google Colab (recomendado)
+
+Para esta disciplina usaremos o **Google Colab**, que roda Python no navegador sem nenhuma instalação local. Python, NumPy, Pandas e Matplotlib já vêm prontos. Basta criar um notebook e começar.
+
+1. Acesse [colab.research.google.com](https://colab.research.google.com/) e faça login com sua conta Google
+2. Clique em **Novo notebook** (ou File → New notebook)
+3. Em cada célula você escreve código Python e pressiona **Shift + Enter** para executar
+
+> O Colab é ideal para a sala de aula: não precisa instalar Python, bibliotecas ou ambientes virtuais. Cada aluno abre o notebook do navegador e já está programando.
+
+### Instalação local (opcional)
+
+Caso prefira programar em seu próprio computador, o procedimento a seguir instala Python + VS Code localmente.
 
 ### Python
 
@@ -193,7 +202,17 @@ O terminal mostrará `(venv)` — sinal de que o ambiente está ativo. Quando te
 
 ## Primeiro programa — Hello World
 
-Crie um arquivo `hello.py`:
+No Colab, clique na primeira célula do notebook, digite o código abaixo e pressione **Shift + Enter**:
+
+```python
+# Meu primeiro programa
+print("Hello, World!")
+print("Bem-vindo à Programação Aplicada!")
+```
+
+> A função `print()` escreve o valor dos argumentos fornecidos na tela.
+>
+> Se estiver programando localmente, crie um arquivo `hello.py` e execute no terminal:
 
 ```python
 # Meu primeiro programa
@@ -231,7 +250,7 @@ $$P = \frac{F}{A} \qquad A = \frac{\pi \cdot d^2}{4}$$
 
 ## Exercício 1.2 — Execute o código de tensão
 
-Crie um arquivo `tensao.py` com o código de cálculo de tensão visto nesta aula. Execute e confirme que a saída é:
+No Colab, crie uma nova célula com o código de cálculo de tensão visto nesta aula e execute com **Shift + Enter**. Confirme que a saída é:
 
 ```
 Tensão normal: 2500000.0 Pa
@@ -247,13 +266,14 @@ Em seguida, altere os valores de `F` e `A` para `F = 8000 N` e `A = 0.004 m²` e
 - Programação é traduzir problemas em algoritmos e algoritmos em código
 - Um algoritmo é uma sequência finita e bem definida de passos
 - Python é gratuito, de baixa curva de aprendizado e ideal para engenharia
-- Use `print()` para exibir resultados no terminal
-- Ambiente virtual (`venv`) isola dependências entre projetos
+- Use `print()` para exibir resultados no notebook ou no terminal
+- O **Google Colab** roda Python no navegador, sem instalação (recomendado)
+- Ambiente virtual (`venv`) isola dependências entre projetos (opcional, para uso local)
 
 ## Referências
 
 - **Python.org — Tutorial oficial (pt-BR)** — https://docs.python.org/pt-br/3/tutorial/
 - **Python.org — Função print()** — https://docs.python.org/3/library/functions.html#print
 - **Python.org — Ambientes virtuais (venv)** — https://docs.python.org/pt-br/3/tutorial/venv.html
-- **Streamlit Docs — Get Started** — https://docs.streamlit.io/get-started
+- **Google Colab — Documentação** — https://colab.research.google.com/notebooks/intro.ipynb
 - **VS Code — Python extension** — https://code.visualstudio.com/docs/languages/python

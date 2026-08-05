@@ -1,202 +1,201 @@
-# Plotly + Dashboards Interativos
+# Análise Visual com matplotlib no Google Colab
 
 ## Roteiro
 
-1. Plotly Express vs matplotlib: por que interativo?
-2. `st.plotly_chart`: renderizando gráficos no Streamlit
-3. `px.scatter`: cores, tamanhos, hover
-4. `px.line`: séries temporais de sensores
-5. `px.bar`: comparações entre categorias
-6. `px.histogram` / `px.box`: distribuições
-7. `px.imshow`: heatmaps interativos
-8. Subplots: `make_subplots`
-9. Layout: columns, expander, tabs, container
-10. Customizações úteis do Plotly
-11. Dashboard patterns: sidebar + gráficos
-12. Persistência de dados com `st.session_state`
+1. matplotlib no Google Colab: por que usar?
+2. `plt.show()`: exibindo gráficos no notebook
+3. `plt.scatter`: cores, tamanhos, labels
+4. `plt.plot`: séries temporais de sensores
+5. `plt.bar`: comparações entre categorias
+6. `plt.hist` / `plt.boxplot`: distribuições
+7. `plt.imshow`: heatmaps
+8. Subplots: `plt.subplots`
+9. Layout: células Markdown e seções
+10. Customizações úteis do matplotlib
+11. Estrutura de análise: filtros + gráficos
+12. Persistência de dados no kernel
 13. Exercícios práticos
 
-## Plotly Express vs matplotlib: Por que Interativo?
+## matplotlib no Google Colab: Por que Usar?
 
-Até agora usamos **matplotlib** para gráficos estáticos. Ele funciona bem para relatórios impressos, mas em aplicações web perdemos uma vantagem enorme: a **interatividade**.
+Até agora usamos **matplotlib** para gráficos estáticos. Ele funciona bem para relatórios impressos, e no **Google Colab** é a escolha certa: roda direto no navegador, sem instalação.
 
-### O problema dos gráficos estáticos
+### O problema da instalação local
 
-Imagine que você gera um gráfico de dispersão com 200 pontos de dados de sensores. No matplotlib, você vê uma imagem fixa. Se quiser saber o valor exato de um ponto específico, precisa estimar visualmente. Se quiser ver apenas um período de tempo, precisa gerar outro gráfico.
+Ferramentas de dashboard interativo como Streamlit exigem instalação local (`pip install streamlit`) e podem falhar em laboratórios com rede restrita. No Colab, você só precisa de um navegador — todos os pacotes (matplotlib, pandas, numpy) já vêm prontos.
 
-### A solução: Plotly Express
+### A solução: matplotlib
 
-**Plotly Express** gera gráficos em HTML/JavaScript. O resultado é interativo por padrão:
+**matplotlib** gera figuras estáticas em cada célula do notebook:
 
-- **Zoom**: clique e arraste para ampliar uma região
-- **Pan**: segure e arraste para navegar
-- **Hover**: passe o mouse sobre um ponto para ver todos os dados
-- **Legenda clicável**: clique em um item da legenda para mostrar/esconder
-- **Download**: botão para salvar como PNG
-- **Reset**: botão para voltar ao zoom original
+- **Renderização imediata**: cada célula mostra o gráfico na hora
+- **Controle total**: você decide cada detalhe da figura
+- **Sem dependências extras**: já instalado no Colab
+- **Exportação**: salve como PNG/PDF com `plt.savefig`
 
 ```python
-import plotly.express as px
+import matplotlib.pyplot as plt
 
-# Uma linha gera um gráfico interativo completo
-fig = px.scatter(df, x="densidade", y="modulo_E", color="material")
+# Uma linha gera um gráfico
+plt.scatter(df["densidade"], df["modulo_E"])
+plt.show()
 ```
 
-### Comparação detalhada
+### Funções básicas do matplotlib
 
-| Característica | matplotlib | Plotly Express |
-|---|---|---|
-| Saída | Imagem estática (.png) | HTML interativo |
-| Zoom/Pan | Não | ✅ Sim |
-| Tooltip (hover) | Não | ✅ Dados ao passar o mouse |
-| Legenda interativa | Não | ✅ Clique para filtrar |
-| Download | Programático | ✅ Botão embutido |
-| Código | Verboso (5-10 linhas) | Conciso (1-3 linhas) |
-| Curva de aprendizado | Média | Baixa |
-| Customização avançada | ✅ Total | Parcial (mas suficiente) |
+| Função | Uso |
+|---|---|
+| `plt.scatter(x, y)` | Dispersão |
+| `plt.plot(x, y)` | Linha |
+| `plt.bar(x, y)` | Barras |
+| `plt.hist(x, bins)` | Histograma |
+| `plt.boxplot(x)` | Boxplot |
+| `plt.imshow(matriz)` | Heatmap |
 
 ### Quando usar cada um
 
 | Situação | Recomendação |
 |---|---|
 | Relatório impresso / PDF | matplotlib |
-| Dashboard web interativo | Plotly Express |
+| Análise em notebook (Colab) | matplotlib |
 | Publicação científica | matplotlib |
-| Apresentação para cliente | Plotly Express |
-| Heatmap de correlação rápido | Plotly Express |
-| Gráfico com customização extrema | matplotlib |
+| Apresentação para cliente | matplotlib + PNG |
+| Heatmap de correlação rápido | matplotlib |
 
-> **Neste curso:** usamos Plotly Express para dashboards Streamlit e matplotlib quando precisamos de controle total ou gráficos para publicação.
+> **Neste curso:** usamos matplotlib no Google Colab, que roda no navegador sem instalação. Interatividade (zoom, hover) é feita ao vivo na célula: você reexecuta com outros parâmetros.
 
-## `st.plotly_chart`: Renderizando no Streamlit
+## `plt.show()`: Exibindo Gráficos no Colab
 
-No Streamlit, **nunca** usamos `fig.show()`. O método correto é `st.plotly_chart()`.
+No Colab, **sempre** usamos `plt.show()` para exibir o gráfico ao final da célula.
 
 ### Exemplo básico
 
 ```python
-import streamlit as st
-import plotly.express as px
+import matplotlib.pyplot as plt
 
 # Criar o gráfico
-fig = px.scatter(df, x="sepal_width", y="sepal_length",
-                 color="species", size="petal_length")
-
-# Renderizar no Streamlit
-st.plotly_chart(fig, use_container_width=True)
+plt.scatter(df["sepal_width"], df["sepal_length"])
+plt.title("Sepal Width x Sepal Length")
+plt.show()
 ```
 
-### Parâmetros de `st.plotly_chart`
+### Funções de configuração da figura
 
-| Parâmetro | Tipo | Descrição | Recomendado |
-|---|---|---|---|
-| `use_container_width` | `bool` | Ajusta largura ao container pai | `True` |
-| `theme` | `str` | Tema do gráfico | `"streamlit"` |
-| `scrolling` | `bool` | Rolagem vertical se gráfico for alto | `False` |
-| `config` | `dict` | Configurações da barra de ferramentas | Ver abaixo |
-| `key` | `str` | Identificador único (para reruns) | Opcional |
+| Função | Descrição |
+|---|---|
+| `plt.figure(figsize=(w, h))` | Tamanho da figura |
+| `plt.title("...")` | Título |
+| `plt.xlabel("...")` / `plt.ylabel("...")` | Rótulos dos eixos |
+| `plt.legend()` | Mostra a legenda |
+| `plt.tight_layout()` | Ajusta o espaçamento automaticamente |
+| `plt.show()` | Exibe o gráfico na célula |
+| `plt.savefig("grafico.png", dpi=300)` | Salva em arquivo |
 
-### Configurações da barra de ferramentas
-
-A barra de ferramentas do Plotly (modebar) tem botões como zoom, pan, download. Você pode customizá-la:
+### Salvando o gráfico
 
 ```python
-config = {
-    "displayModeBar": True,        # Mostrar barra de ferramentas
-    "modeBarButtonsToRemove": ["lasso2d", "select2d"],  # Remover botões
-    "displaylogo": False,          # Remover logo do Plotly
-}
-
-st.plotly_chart(fig, use_container_width=True, config=config)
+plt.scatter(df["densidade"], df["modulo_E"])
+plt.title("Dispersão de Materiais")
+plt.savefig("dispersao.png", dpi=300)  # Salva sem precisar de plt.show()
 ```
 
-> **Regra de ouro:** sempre use `st.plotly_chart(fig, use_container_width=True)` no Streamlit. Nunca use `fig.show()`.
+> **Regra de ouro:** no Colab, sempre use `plt.show()` para exibir o gráfico no final da célula. Sem `plt.show()`, a última linha da célula é exibida automaticamente se for uma figura.
 
-## `px.scatter` — Gráfico de Dispersão Interativo
+## `plt.scatter` — Gráfico de Dispersão
 
 O scatter plot mostra a relação entre **duas variáveis numéricas**. É o gráfico mais usado em engenharia para identificar correlações.
 
 ### Sintaxe completa
 
 ```python
-import plotly.express as px
+import matplotlib.pyplot as plt
 
-fig = px.scatter(
-    df,                    # DataFrame
-    x="densidade",         # Coluna do eixo X
-    y="modulo_E",          # Coluna do eixo Y
-    color="tipo",          # Cor por categoria
-    size="dureza",         # Tamanho dos pontos por valor
-    hover_data=["escoamento", "dureza"],  # Dados extras no tooltip
-    title="Materiais — Módulo E x Densidade",
-    labels={"densidade": "Densidade (kg/m³)",
-            "modulo_E": "Módulo de Elasticidade (GPa)"},
+plt.scatter(
+    df["densidade"],                # Eixo X
+    df["modulo_E"],                 # Eixo Y
+    c=df["dureza"],                 # Cor por valor
+    s=df["dureza"] / df["dureza"].max() * 200,  # Tamanho dos pontos
+    cmap="viridis",                 # Escala de cor
+    alpha=0.7,                      # Transparência
 )
-st.plotly_chart(fig, use_container_width=True)
+plt.colorbar(label="Dureza")
+plt.title("Materiais — Módulo E x Densidade")
+plt.xlabel("Densidade (kg/m³)")
+plt.ylabel("Módulo de Elasticidade (GPa)")
+plt.show()
 ```
 
 ### Parâmetros principais
 
 | Parâmetro | O que faz | Exemplo |
 |---|---|---|
-| `x`, `y` | Colunas numéricas dos eixos | `x="densidade"`, `y="modulo_E"` |
-| `color` | Coluna categórica para cores | `color="material"` |
-| `size` | Coluna numérica para tamanho | `size="dureza"` |
-| `hover_data` | Colunas extras no tooltip | `hover_data=["escoamento"]` |
-| `title` | Título do gráfico | `title="Tensão × Dureza"` |
-| `labels` | Renomear eixos e legendas | `labels={"x": "Novo nome"}` |
-| `trendline` | Linha de tendência | `trendline="ols"` |
-| `opacity` | Transparência dos pontos | `opacity=0.7` |
+| `x`, `y` | Dados dos eixos | `plt.scatter(x, y)` |
+| `c` | Cor por valor ou categoria | `c=df["material"].astype("category").cat.codes` |
+| `cmap` | Escala de cor | `cmap="viridis"` |
+| `s` | Tamanho dos pontos | `s=df["dureza"]` |
+| `alpha` | Transparência dos pontos | `alpha=0.7` |
+| `label` | Nome para a legenda | `label="Aço"` |
+| `marker` | Formato do ponto | `marker="o"` |
 
 ### Exemplo com linha de tendência
 
 ```python
-fig = px.scatter(df, x="densidade", y="modulo_E",
-                 color="material", trendline="ols")
-st.plotly_chart(fig, use_container_width=True)
+import numpy as np
+
+# Dispersão
+plt.scatter(df["densidade"], df["modulo_E"], alpha=0.6, label="Dados")
+
+# Regressão linear (OLS) manual
+coef = np.polyfit(df["densidade"], df["modulo_E"], 1)
+x_line = np.linspace(df["densidade"].min(), df["densidade"].max(), 100)
+plt.plot(x_line, np.polyval(coef, x_line), color="red", label="Tendência (OLS)")
+
+plt.legend()
+plt.show()
 ```
 
-> `trendline="ols"` adiciona uma regressão linear (Ordinary Least Squares) para cada categoria.
+> `np.polyfit` calcula a regressão linear (Ordinary Least Squares) e `np.polyval` avalia a linha ajustada.
 
-## `px.line` — Séries Temporais de Sensores
+## `plt.plot` — Séries Temporais de Sensores
 
 O gráfico de linha mostra como uma variável muda ao longo do **tempo** ou de uma sequência ordenada.
 
 ### Exemplo básico
 
 ```python
-fig = px.line(
-    df_sensor,
-    x="timestamp",
-    y="valor",
-    color="sensor_id",
-    title="Leituras do Sensor ao Longo do Tempo",
-    markers=True,  # Mostrar pontos
-)
-st.plotly_chart(fig, use_container_width=True)
+fig, ax = plt.subplots(figsize=(10, 4))
+
+for sensor_id, dados in df_sensor.groupby("sensor_id"):
+    ax.plot(dados["timestamp"], dados["valor"],
+            label=sensor_id, marker="o", markersize=3)
+
+ax.set_title("Leituras do Sensor ao Longo do Tempo")
+ax.set_xlabel("timestamp")
+ax.set_ylabel("valor")
+ax.legend()
+plt.show()
 ```
 
-### Range slider: zoom em séries temporais
+### Zoom em séries temporais
 
-Para séries longas, o `rangeslider` permite zoom interativo:
+Para séries longas, defina os limites do eixo X com `set_xlim`:
 
 ```python
-fig = px.line(df_sensor, x="timestamp", y="valor", color="sensor_id")
-fig.update_xaxes(rangeslider_visible=True)
-st.plotly_chart(fig, use_container_width=True)
+plt.plot(df_sensor["timestamp"], df_sensor["valor"])
+plt.xlim("2024-01-01", "2024-01-03")   # Zoom no período
+plt.xticks(rotation=45)
+plt.show()
 ```
-
-O rangeslider aparece como uma barra na parte inferior do gráfico. Arraste as alças para selecionar um período.
 
 ### Preenchimento de área
 
 ```python
-fig = px.line(df, x="timestamp", y="valor", color="sensor_id")
-fig.update_traces(fill="tozeroy")  # Preencher até o eixo X
-st.plotly_chart(fig, use_container_width=True)
+plt.plot(df["timestamp"], df["valor"])
+plt.fill_between(df["timestamp"], df["valor"], alpha=0.3)  # Preenche até o eixo X
+plt.show()
 ```
 
-### Quando usar `px.line`
+### Quando usar `plt.plot`
 
 | Situação | Exemplo |
 |---|---|
@@ -204,79 +203,95 @@ st.plotly_chart(fig, use_container_width=True)
 | Evolução de produção | Peças produzidas por dia |
 | Comparação de múltiplas séries | 3 sensores no mesmo gráfico |
 
-## `px.bar` — Comparações entre Categorias
+## `plt.bar` — Comparações entre Categorias
 
 O gráfico de barras compara **valores entre categorias**.
 
 ### Barras agrupadas vs empilhadas
 
 ```python
+import numpy as np
+
+# Tabela pivot: linhas = máquina, colunas = mês
+pivot = df.pivot_table(index="maquina", columns="mes",
+                       values="pecas", aggfunc="sum")
+
 # Barras agrupadas (lado a lado)
-fig = px.bar(df, x="maquina", y="pecas", color="mes",
-             barmode="group", title="Produção por Máquina e Mês")
+pivot.plot(kind="bar", title="Produção por Máquina e Mês")
+plt.show()
 
 # Barras empilhadas
-fig = px.bar(df, x="maquina", y="pecas", color="mes",
-             barmode="stack", title="Produção Total por Máquina")
+pivot.plot(kind="bar", stacked=True, title="Produção Total por Máquina")
+plt.show()
 ```
 
-| `barmode` | Visualização | Quando usar |
+| Visualização | matplotlib | Quando usar |
 |---|---|---|
-| `"group"` | Barras lado a lado | Comparar valores individuais |
-| `"stack"` | Barras empilhadas | Ver o total e a contribuição de cada parte |
-| `"relative"` | Barras empilhadas com negativos | Dados com valores positivos e negativos |
+| Lado a lado | `plot(kind="bar")` | Comparar valores individuais |
+| Empilhadas | `plot(kind="bar", stacked=True)` | Ver o total e a contribuição de cada parte |
+| Horizontais | `plot(kind="barh")` | Categorias com nomes longos |
 
-### Valores nos barras
+### Valores nas barras
 
 ```python
-fig = px.bar(df, x="maquina", y="pecas", color="mes",
-             barmode="group", text_auto=True)
+ax = pivot.plot(kind="bar")
+for container in ax.containers:
+    ax.bar_label(container, fmt="%.0f")  # Mostra os valores sobre as barras
+plt.show()
 ```
-
-`text_auto=True` mostra os valores diretamente sobre as barras.
 
 ### Barras horizontais
 
 ```python
-fig = px.bar(df, x="pecas", y="maquina", orientation="h",
-             color="mes", barmode="group")
+pivot.plot(kind="barh")
+plt.show()
 ```
 
-> Use `orientation="h"` quando os nomes das categorias são longos.
+> Use `kind="barh"` quando os nomes das categorias são longos.
 
-## `px.histogram` / `px.box` — Distribuições
+## `plt.hist` / `plt.boxplot` — Distribuições
 
 ### Histograma: distribuição de uma variável
 
 O histograma mostra **como os valores estão distribuídos**.
 
 ```python
-fig = px.histogram(df, x="dureza", nbins=20,
-                   title="Distribuição de Dureza",
-                   color="material",  # Histogramas empilhados por categoria
-                   barmode="overlay",  # Sobrepostos com transparência
-                   opacity=0.7)
-st.plotly_chart(fig, use_container_width=True)
+plt.hist(df["dureza"], bins=20, alpha=0.5, label="todos")
+
+for material in df["material"].unique():
+    plt.hist(df[df["material"] == material]["dureza"],
+             bins=20, alpha=0.5, label=material)
+
+plt.xlabel("Dureza")
+plt.ylabel("Frequência")
+plt.legend()
+plt.title("Distribuição de Dureza")
+plt.show()
 ```
 
 | Parâmetro | O que faz |
 |---|---|
-| `nbins` | Número de barras |
-| `histfunc` | Função de agregação: `"count"`, `"sum"`, `"avg"` |
-| `color` | Separa por categoria |
-| `barmode="overlay"` | Sobreposição com transparência |
-| `marginal` | Adiciona gráfico marginal: `"rug"`, `"box"`, `"violin"` |
+| `bins` | Número de barras |
+| `density` | Normaliza (frequência relativa) |
+| `alpha` | Transparência (sobreposição) |
+| `cumulative` | Distribuição acumulada |
+| `histtype` | `"bar"`, `"step"`, `"stepfilled"` |
 
 ### Boxplot: resumo visual da distribuição
 
 O boxplot mostra mediana, quartis e outliers em um único gráfico.
 
 ```python
-fig = px.box(df, x="material", y="dureza",
-             title="Distribuição de Dureza por Material",
-             points="all",  # Mostrar todos os pontos
-             color="material")
-st.plotly_chart(fig, use_container_width=True)
+# Boxplot simples
+plt.boxplot(df["dureza"].values, showmeans=True)
+plt.title("Distribuição de Dureza")
+plt.show()
+
+# Boxplot por material
+grupos = [df[df["material"] == m]["dureza"] for m in df["material"].unique()]
+plt.boxplot(grupos, labels=df["material"].unique())
+plt.title("Distribuição de Dureza por Material")
+plt.show()
 ```
 
 ### Como ler um boxplot
@@ -300,7 +315,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 > **Dica de engenharia:** outliers em ensaios mecânicos podem indicar defeitos no corpo de prova ou erro de medição.
 
-## `px.imshow` — Heatmaps Interativos
+## `plt.imshow` — Heatmaps
 
 Heatmaps (mapas de calor) representam valores como **cores em uma matriz**. São ideais para matrizes de correlação.
 
@@ -311,14 +326,18 @@ Heatmaps (mapas de calor) representam valores como **cores em uma matriz**. São
 corr = df[["densidade", "modulo_E", "escoamento", "dureza"]].corr()
 
 # Criar heatmap
-fig = px.imshow(
-    corr,
-    text_auto=True,           # Mostrar valores nas células
-    color_continuous_scale="RdBu_r",  # Vermelho-Azul (invertido)
-    title="Matriz de Correlação — Propriedades dos Materiais",
-    labels={"color": "Correlação"}    # Legenda da cor
-)
-st.plotly_chart(fig, use_container_width=True)
+fig, ax = plt.subplots(figsize=(8, 6))
+im = ax.imshow(corr, cmap="RdBu_r", vmin=-1, vmax=1)
+ax.set_xticks(range(len(corr)), corr.columns, rotation=45)
+ax.set_yticks(range(len(corr)), corr.columns)
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        ax.text(j, i, f"{corr.iloc[i, j]:.2f}",
+                ha="center", va="center")  # Mostra os valores nas células
+plt.colorbar(im, label="Correlação")
+plt.title("Matriz de Correlação — Propriedades dos Materiais")
+plt.tight_layout()
+plt.show()
 ```
 
 ### Escalas de cor comuns
@@ -326,10 +345,10 @@ st.plotly_chart(fig, use_container_width=True)
 | Escala | Uso |
 |---|---|
 | `"RdBu_r"` | Correlação (vermelho = negativo, azul = positivo) |
-| `"Viridis"` | Dados gerais (perceptualmente uniforme) |
+| `"viridis"` | Dados gerais (perceptualmente uniforme) |
 | `"YlOrRd"` | Intensidade (amarelo → laranja → vermelho) |
 | `"Blues"` | Dados sequenciais |
-| `"PiYG"` | Divergente (rosa → verde) |
+| `"coolwarm"` | Divergente (azul → vermelho) |
 
 ### Como interpretar a correlação
 
@@ -345,9 +364,9 @@ st.plotly_chart(fig, use_container_width=True)
 
 > **Cuidado:** correlação não implica causalidade. Duas variáveis podem estar correlacionadas por causa de uma terceira variável não observada.
 
-## Subplots com `make_subplots`
+## Subplots com `plt.subplots`
 
-Quando você precisa combinar **múltiplos gráficos em uma única figura**, usa `make_subplots`. Diferente do Plotly Express, aqui usamos `plotly.graph_objects` para adicionar traces individualmente.
+Quando você precisa combinar **múltiplos gráficos em uma única figura**, usa `plt.subplots`. Cada subplot é um objeto `Axes` acessado por índice.
 
 ### Conceito
 
@@ -356,8 +375,7 @@ Quando você precisa combinar **múltiplos gráficos em uma única figura**, usa
   │              Figura (fig)                │
   ├─────────────────┬────────────────────────┤
   │   Subplot 1     │     Subplot 2          │
-  │   (row=1,       │     (row=1,            │
-  │    col=1)       │      col=2)            │
+  │   (axs[0])      │     (axs[1])           │
   │                 │                        │
   └─────────────────┴────────────────────────┘
 ```
@@ -365,224 +383,202 @@ Quando você precisa combinar **múltiplos gráficos em uma única figura**, usa
 ### Exemplo passo a passo
 
 ```python
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
+# 1. Criar a estrutura de subplots (1 linha, 2 colunas)
+fig, axs = plt.subplots(1, 2, figsize=(10, 4))
 
-# 1. Criar a estrutura de subplots
-fig = make_subplots(
-    rows=1, cols=2,                    # 1 linha, 2 colunas
-    subplot_titles=("Histograma", "Boxplot"),  # Títulos de cada subplot
-    column_widths=[0.5, 0.5],          # Largura relativa de cada coluna
-)
+# 2. Desenhar cada subplot
+axs[0].hist(df["dureza"], bins=20)
+axs[0].set_title("Histograma")
+axs[0].set_xlabel("Dureza")
 
-# 2. Adicionar traces (gráficos) em cada posição
-fig.add_trace(go.Histogram(x=df["dureza"], nbinsx=20), row=1, col=1)
-fig.add_trace(go.Box(y=df["dureza"], name="Dureza"), row=1, col=2)
+axs[1].boxplot(df["dureza"].values)
+axs[1].set_title("Boxplot")
+axs[1].set_ylabel("Dureza")
 
-# 3. Customizar layout geral
-fig.update_layout(title="Distribuição de Dureza", showlegend=False)
-st.plotly_chart(fig, use_container_width=True)
+# 3. Ajustar layout geral
+plt.tight_layout()
+plt.show()
 ```
 
 ### Múltiplas linhas e colunas
 
 ```python
-fig = make_subplots(
-    rows=2, cols=2,
-    subplot_titles=("Dispersão", "Histograma", "Boxplot", "Linha"),
-    specs=[[{"type": "scatter"}, {"type": "histogram"}],
-           [{"type": "box"}, {"type": "scatter"}]]
-)
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
 
-fig.add_trace(go.Scatter(x=df["x"], y=df["y"]), row=1, col=1)
-fig.add_trace(go.Histogram(x=df["x"]), row=1, col=2)
-fig.add_trace(go.Box(y=df["y"]), row=2, col=1)
-fig.add_trace(go.Scatter(x=df["time"], y=df["value"]), row=2, col=2)
+axs[0, 0].scatter(df["x"], df["y"])
+axs[0, 0].set_title("Dispersão")
+
+axs[0, 1].hist(df["x"], bins=20)
+axs[0, 1].set_title("Histograma")
+
+axs[1, 0].boxplot(df["y"].values)
+axs[1, 0].set_title("Boxplot")
+
+axs[1, 1].plot(df["time"], df["value"])
+axs[1, 1].set_title("Linha")
+
+plt.tight_layout()
+plt.show()
 ```
 
-### Tipos de trace disponíveis
+### Métodos de desenho disponíveis
 
-| Trace | Uso |
+| Método | Uso |
 |---|---|
-| `go.Scatter` | Dispersão / linha |
-| `go.Histogram` | Histograma |
-| `go.Box` | Boxplot |
-| `go.Bar` | Barras |
-| `go.Heatmap` | Mapa de calor |
-| `go.Pie` | Pizza |
-| `go.Violin` | Violin plot |
+| `ax.scatter(...)` | Dispersão / linha |
+| `ax.hist(...)` | Histograma |
+| `ax.boxplot(...)` | Boxplot |
+| `ax.bar(...)` | Barras |
+| `ax.imshow(...)` | Mapa de calor |
+| `ax.pie(...)` | Pizza |
 
-> **Regra:** `make_subplots` cria a estrutura. `add_trace` adiciona gráficos. `update_layout` customiza o visual geral.
+> **Regra:** `plt.subplots` cria a estrutura. `axs[...]` acessa cada subplot. `plt.tight_layout()` ajusta o espaçamento.
 
-## Layout: `st.columns`, `st.expander`, `st.tabs`
+## Layout: Células Markdown e Seções
 
-Um bom dashboard não é só sobre gráficos — é sobre **organização visual**.
+Um bom notebook não é só sobre gráficos — é sobre **organização visual**. No Colab, usamos células Markdown com cabeçalhos (`##`, `###`) para estruturar a análise.
 
-### `st.columns`: lado a lado
+### Gráficos lado a lado
 
 ```python
-col1, col2 = st.columns(2)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
 
-with col1:
-    fig1 = px.histogram(df, x="dureza", nbins=20)
-    st.plotly_chart(fig1, use_container_width=True)
+ax1.hist(df["dureza"], bins=20)
+ax1.set_title("Histograma de Dureza")
 
-with col2:
-    fig2 = px.box(df, y="dureza")
-    st.plotly_chart(fig2, use_container_width=True)
+ax2.boxplot(df["dureza"].values)
+ax2.set_title("Boxplot de Dureza")
+
+plt.tight_layout()
+plt.show()
 ```
 
-**Proporções customizadas:**
+### Seções colapsáveis (expandir/ocultar)
 
-```python
-col1, col2, col3 = st.columns([2, 1, 1])  # col1 é 2x mais larga
+Células Markdown com detalhes que nem todos precisam ver. No Colab, separe o trecho colapsável em uma célula Markdown com cabeçalho:
+
+```markdown
+## Resultados Principais
 ```
 
-### `st.expander`: seções colapsáveis
 
-Útil para esconder detalhes que nem todos precisam ver:
+### Abas de navegação (tabs)
+
+No Colab, dividimos em células separadas com cabeçalhos:
 
 ```python
-st.subheader("Resultados Principais")
-st.metric("Média", f"{df['dureza'].mean():.1f}")
-
-with st.expander("Ver dados brutos"):
-    st.dataframe(df)
-    st.write(f"Total de registros: {len(df)}")
+# ── Célula 1 ──
+# ## Gráficos
+fig, ax = plt.subplots()
+ax.scatter(df["x"], df["y"])
+plt.show()
 ```
 
-### `st.tabs`: abas de navegação
-
-Ideal para dashboards com muitas seções:
+```python
+# ── Célula 2 ──
+# ## Tabela
+print(df)
+```
 
 ```python
-tab1, tab2, tab3 = st.tabs(["Gráficos", "Tabela", "Estatísticas"])
-
-with tab1:
-    fig = px.scatter(df, x="x", y="y")
-    st.plotly_chart(fig, use_container_width=True)
-
-with tab2:
-    st.dataframe(df)
-
-with tab3:
-    st.write(df.describe())
+# ── Célula 3 ──
+# ## Estatísticas
+print(df.describe())
 ```
 
 ### Quando usar cada elemento
 
-| Elemento | Quando usar |
+| Elemento | No Colab |
 |---|---|
-| `st.columns` | Gráficos lado a lado, métricas em linha |
-| `st.expander` | Detalhes opcionais, dados brutos, código |
-| `st.tabs` | Seções distintas do dashboard, views alternativas |
+| `st.columns` | `plt.subplots(1, N)` para gráficos lado a lado |
+| `st.expander` | Células Markdown com cabeçalho (`##`) para trechos colapsáveis |
+| `st.tabs` | Seções `##` do notebook, uma célula por seção |
 
-## Customizações Úteis do Plotly
+## Customizações Úteis do matplotlib
 
-Plotly permite customizar quase tudo via `update_layout`, `update_traces`, e métodos `add_*`.
+matplotlib permite customizar quase tudo: título, eixos, grid, estilos, cores e anotações.
 
-### `update_layout`: configuração geral
+### Configuração geral da figura
 
 ```python
-fig.update_layout(
-    title="Título do Gráfico",
-    xaxis_title="Eixo X",
-    yaxis_title="Eixo Y",
-    legend_title="Legenda",
-    template="plotly_dark",       # Tema escuro
-    hovermode="x unified",        # Tooltip unificado no eixo X
-    showlegend=True,
-    font=dict(size=14),
-    margin=dict(l=40, r=40, t=40, b=40),
-)
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(df["x"], df["y"], alpha=0.8, color="steelblue",
+           edgecolors="darkblue", s=40)
+ax.set_title("Título do Gráfico", fontsize=14)
+ax.set_xlabel("Eixo X")
+ax.set_ylabel("Eixo Y")
+ax.grid(True, linestyle="--", color="lightgray")
+ax.legend()
+plt.tight_layout()
+plt.show()
 ```
 
-### Templates disponíveis
+### Estilos disponíveis
 
-| Template | Aparência |
+| Estilo | Aparência |
 |---|---|
-| `"plotly"` | Padrão (fundo branco) |
-| `"plotly_dark"` | Fundo escuro |
-| `"plotly_white"` | Fundo branco com grid |
-| `"ggplot2"` | Estilo R/ggplot2 |
-| `"seaborn"` | Estilo Python/seaborn |
-| `"simple_white"` | Minimalista |
-
-### `update_traces`: customizar elementos visuais
+| `"ggplot"` | Estilo R/ggplot2 |
+| `"seaborn-v0_8"` | Estilo Python/seaborn |
+| `"dark_background"` | Fundo escuro |
+| `"default"` | Padrão (fundo branco) |
 
 ```python
-fig.update_traces(
-    marker=dict(size=8, line=dict(width=1, color="DarkSlateGrey")),
-    opacity=0.8,
-)
+plt.style.use("ggplot")
 ```
 
-### Linhas e formas de referência
+### Linhas e regiões de referência
 
 ```python
 # Linha horizontal (ex: limite de especificação)
-fig.add_hline(y=100, line_dash="dash", line_color="red",
-              annotation_text="Limite Superior")
+plt.axhline(y=100, linestyle="--", color="red", label="Limite Superior")
 
 # Linha vertical (ex: média)
-fig.add_vline(x=50, line_dash="dot", line_color="green")
+plt.axvline(x=50, linestyle=":", color="green")
 
-# Retângulo vertical (ex: período de interesse)
-fig.add_vrect(x0="2024-01", x1="2024-03",
-              fillcolor="red", opacity=0.2,
-              annotation_text="Período de manutenção")
+# Região vertical (ex: período de manutenção)
+plt.axvspan(10, 30, color="red", alpha=0.2, label="Manutenção")
 
-# Retângulo horizontal (ex: zona de alerta)
-fig.add_hrect(y0=90, y1=110, fillcolor="yellow", opacity=0.15)
+# Região horizontal (ex: zona de alerta)
+plt.axhspan(90, 110, color="yellow", alpha=0.15, label="Zona de alerta")
+
+plt.legend()
+plt.show()
 ```
 
 ### Eixos customizados
 
 ```python
-fig.update_xaxes(
-    title="Tempo (h)",
-    range=[0, 100],          # Limites do eixo
-    tickformat=".1f",        # Formato dos números
-    showgrid=True,           # Mostrar grid
-    gridcolor="lightgray",
-)
-
-fig.update_yaxes(
-    title="Temperatura (°C)",
-    scaleanchor="x",         # Escala igual ao eixo X
-    scaleratio=1,
-)
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(df["time"], df["value"])
+ax.set_xlim(0, 100)             # Limites do eixo
+ax.set_xlabel("Tempo (h)")
+ax.set_ylabel("Temperatura (°C)")
+ax.grid(True, color="lightgray")
+plt.xticks(rotation=45)         # Rotaciona rótulos longos
+plt.show()
 ```
 
-## Dashboard Patterns: Sidebar + Gráficos
+## Estrutura de Análise: Filtros + Gráficos
 
-O padrão mais comum de dashboard em Streamlit separa **filtros** (sidebar) de **resultados** (área principal).
+O padrão mais comum separa **filtros** (variáveis no topo da célula) de **resultados** (gráficos e `print()`).
 
 ### Estrutura típica
 
 ```python
-import streamlit as st
-import plotly.express as px
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
 # ──────────────────────────────────────────
-# SIDEBAR: Filtros e controles
+# FILTROS: valores definidos como variáveis
 # ──────────────────────────────────────────
-st.sidebar.header("🔍 Filtros")
-
-tipo = st.sidebar.selectbox("Tipo de material:",
-                            ["Todos", "Aço", "Alumínio", "Latão"])
-faixa = st.sidebar.slider("Faixa de tensão (MPa):",
-                          0, 600, (100, 500))
-mostrar_outliers = st.sidebar.checkbox("Mostrar outliers")
+tipo = "Aço"                  # ["Todos", "Aço", "Alumínio", "Latão"]
+faixa = (100, 500)            # Faixa de tensão (MPa)
+mostrar_outliers = True
 
 # ──────────────────────────────────────────
 # MAIN: Dados + Gráficos
 # ──────────────────────────────────────────
-st.title("📊 Dashboard de Materiais")
-
-# Gerar/carregar dados
 df = gerar_dados()
 
 # Aplicar filtros
@@ -591,99 +587,69 @@ if tipo != "Todos":
 df = df[df["tensao_max"].between(*faixa)]
 
 # Métricas
-col1, col2, col3 = st.columns(3)
-col1.metric("Materiais", len(df))
-col2.metric("Tensão média", f"{df['tensao_max'].mean():.0f} MPa")
-col3.metric("Dureza média", f"{df['dureza'].mean():.0f} HB")
+print(f"Materiais: {len(df)}")
+print(f"Tensão média: {df['tensao_max'].mean():.0f} MPa")
+print(f"Dureza média: {df['dureza'].mean():.0f} HB")
 
-# Gráficos
-c1, c2 = st.columns(2)
-with c1:
-    fig1 = px.scatter(df, x="densidade", y="modulo_E", color="material")
-    st.plotly_chart(fig1, use_container_width=True)
-with c2:
-    fig2 = px.histogram(df, x="tensao_max", color="material")
-    st.plotly_chart(fig2, use_container_width=True)
+# Gráficos lado a lado
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+ax1.scatter(df["densidade"], df["modulo_E"],
+            c=df["material"].astype("category").cat.codes)
+ax1.set_title("Densidade x Módulo E")
+ax2.hist(df["tensao_max"], bins=20)
+ax2.set_title("Histograma de Tensão")
+plt.tight_layout()
+plt.show()
 
 # Tabela
-st.dataframe(df, use_container_width=True)
+print(df)
 ```
 
 ### Princípios de design
 
 | Princípio | Descrição |
 |---|---|
-| Filtros na sidebar | Mantém a área principal limpa |
-| Métricas no topo | KPIs visíveis antes dos gráficos |
-| Gráficos em colunas | Aproveita a largura da tela |
-| Tabela no final | Detalhes depois da visão geral |
-| `use_container_width=True` | Gráficos responsivos |
+| Filtros no topo | Variáveis definidas no início da célula |
+| Métricas no topo | `print()` com KPIs antes dos gráficos |
+| Gráficos em subplots | Aproveita a largura da figura |
+| Tabela no final | `print(df)` depois da visão geral |
+| `plt.show()` no final | Exibe a figura na célula |
 
-## Persistência de Dados com `st.session_state`
+## Persistência de Dados no Kernel
 
-Em dashboards com geração de dados ou filtros complexos, os dados precisam persistir entre interações.
+No Colab, as variáveis de célula persistem no kernel entre execuções. Não é preciso re-criar os dados a cada célula.
 
 ### O problema
 
 ```python
-# Sem session_state — dados são regenerados a cada interação!
-df = gerar_dados()  # Roda de novo a cada clique, slider, etc.
+# Sem persistência — dados são regenerados a cada execução da célula!
+df = gerar_dados()  # Roda de novo toda vez que a célula é executada
 ```
 
 ### A solução
 
-```python
-if "df_dashboard" not in st.session_state:
-    st.session_state.df_dashboard = gerar_dados()
-
-df = st.session_state.df_dashboard
-
-if st.sidebar.button("Regenerar dados"):
-    st.session_state.df_dashboard = gerar_dados()
-    st.rerun()
-```
-
-### Padrão completo para dashboards
+Separe a geração dos dados em uma célula própria e execute-a uma única vez:
 
 ```python
-import streamlit as st
-import pandas as pd
-import numpy as np
-
-# 1. Inicializar dados
-if "df" not in st.session_state:
-    np.random.seed(42)
-    st.session_state.df = pd.DataFrame({
-        "material": np.random.choice(["Aço", "Al", "Latão"], 100),
-        "tensao_max": np.random.normal(350, 50, 100),
-        "dureza": np.random.normal(180, 30, 100),
-    })
-
-df = st.session_state.df
-
-# 2. Sidebar: filtros
-st.sidebar.header("Filtros")
-material = st.sidebar.selectbox("Material:", ["Todos"] + sorted(df["material"].unique()))
-
-# 3. Botão de regeneração
-if st.sidebar.button("Regenerar dados"):
-    st.session_state.df = pd.DataFrame({
-        "material": np.random.choice(["Aço", "Al", "Latão"], 100),
-        "tensao_max": np.random.normal(350, 50, 100),
-        "dureza": np.random.normal(180, 30, 100),
-    })
-    st.rerun()
-
-# 4. Aplicar filtros
-df_filtrado = df.copy()
-if material != "Todos":
-    df_filtrado = df_filtrado[df_filtrado["material"] == material]
-
-# 5. Exibir
-st.dataframe(df_filtrado)
+# ── Célula 1: gerar dados (rode uma vez) ──
+np.random.seed(42)
+df = pd.DataFrame({
+    "material": np.random.choice(["Aço", "Al", "Latão"], 100),
+    "tensao_max": np.random.normal(350, 50, 100),
+    "dureza": np.random.normal(180, 30, 100),
+})
 ```
 
-> **Dica:** use `.copy()` ao filtrar para não modificar o DataFrame original no `session_state`.
+```python
+# ── Célula 2: usar os dados (sem regenerar) ──
+print(df.head())
+df.plot.scatter(x="tensao_max", y="dureza")
+plt.show()
+```
+
+Para **regenerar** os dados, reexecute a Célula 1 (por exemplo com `np.random.seed()` diferente).
+
+> **Dica:** no Colab, variáveis de célula persistem no kernel. Use `.copy()` ao filtrar para não modificar o DataFrame original.
 
 ## Exercício 9.1 — Scatter Plot de Materiais
 
@@ -691,104 +657,105 @@ st.dataframe(df_filtrado)
 
 **Base:** 80 amostras com material, densidade, modulo_E, escoamento, dureza.
 
-**O que o app deve ter:**
+**O que a análise deve ter:**
 
-- `st.selectbox` para escolher eixo X (densidade, dureza, escoamento)
-- `st.selectbox` para escolher eixo Y (modulo_E, escoamento, dureza)
-- `px.scatter` com `color=material`, `size=dureza`, `hover_data` completo
-- `st.plotly_chart(fig, use_container_width=True)`
+- Variáveis `eixo_x` e `eixo_y` no topo da célula para escolher as colunas
+- `plt.scatter` com `c=material` (categorias), tamanho por dureza, transparência
+- Título, rótulos dos eixos e legenda
+- `plt.show()`
 
 ## Exercício 9.2 — Série Temporal de Sensor
 
 **Contexto:** 500 leituras de 3 sensores ao longo de 7 dias.
 
-**O que o app deve ter:**
+**O que a análise deve ter:**
 
-- `st.selectbox` para selecionar sensor
-- `st.slider` duplo para intervalo de datas
-- `px.line` com `rangeslider_visible=True`
-- `st.metric` com média do período selecionado
-- Persistir dados em `st.session_state`
+- Variável `sensor_id` para selecionar o sensor (filtre o DataFrame)
+- Variáveis `data_inicio` e `data_fim` para o intervalo de datas
+- `plt.plot` com limites no eixo X
+- `print(f"Média do período: {…}")`
+- Dados persistindo no kernel (célula de geração separada)
 
 ## Exercício 9.3 — Produção por Máquina (Bar)
 
 **Contexto:** Dados de produção mensal por máquina (CNC-1, CNC-2, Torno, Fresa).
 
-**O que o app deve ter:**
+**O que a análise deve ter:**
 
-- `st.radio` para modo agrupado/empilhado (`barmode` dinâmico)
-- `px.bar` com `text_auto=True`
-- `st.plotly_chart` responsivo
+- Variável `modo` com valores `"agrupado"` ou `"empilhado"`
+- `pivot.plot(kind="bar")` ou `stacked=True` conforme o modo
+- Valores sobre as barras com `ax.bar_label()`
+- `plt.show()`
 
 ## Exercício 9.4 — Histograma + Boxplot de Dureza
 
 **Contexto:** 200 medidas de dureza.
 
-**O que o app deve ter:**
+**O que a análise deve ter:**
 
-- `make_subplots(rows=1, cols=2)` com histograma e boxplot
-- `st.slider` para número de bins
-- Checkbox para adicionar linha vertical na média
-- `st.plotly_chart(fig, use_container_width=True)`
+- `plt.subplots(1, 2)` com histograma e boxplot
+- Variável `n_bins` para o número de bins
+- Variável `mostrar_media` (True/False) para adicionar `axvline` na média
+- `plt.tight_layout()` e `plt.show()`
 
 ## Exercício 9.5 — Heatmap de Correlação
 
 **Contexto:** DataFrame de materiais com 5+ propriedades.
 
-**O que o app deve ter:**
+**O que a análise deve ter:**
 
-- `df.corr()` + `px.imshow` com `text_auto=True`
-- `st.selectbox` para filtrar por tipo de material
-- `st.caption` com interpretação das correlações mais fortes
-- `color_continuous_scale="RdBu_r"`
+- `df.corr()` + `plt.imshow` com valores nas células
+- Variável `tipo` para filtrar por tipo de material
+- `print()` com as correlações mais fortes
+- `cmap="RdBu_r"` e `colorbar`
 
-## Exercício 9.6 — Dashboard de Monitoramento
+## Exercício 9.6 — Análise de Monitoramento
 
-**Contexto:** Dashboard multi-aba para monitoramento de sensores.
+**Contexto:** Notebook multi-seção para monitoramento de sensores.
 
-**Abas (use `st.tabs`):**
+**Seções (use `##` do Markdown):**
 
-1. **Leituras:** `px.line` + `st.dataframe` filtrado
-2. **Estatísticas:** `st.metric` + `px.box`
+1. **Leituras:** `plt.plot` + `print(df_filtrado)` 
+2. **Estatísticas:** `print()` + `plt.boxplot`
 3. **Alarmes:** leituras > threshold destacadas em vermelho
 
-**Sidebar:**
+**Filtros no topo da célula:**
 
-- `st.selectbox` (sensor)
-- `st.slider` duplo (data range)
-- `st.slider` (threshold)
-- Botão "Atualizar dados"
+- Variável `sensor_id`
+- Variáveis `data_inicio` e `data_fim`
+- Variável `threshold`
+- Para atualizar dados, reexecute a célula de geração
 
-## Mini-Projeto 9 — Dashboard de Controle de Qualidade
+## Mini-Projeto 9 — Análise de Controle de Qualidade
 
-**Contexto:** Dashboard para linha de produção com 1000 amostras.
+**Contexto:** Análise para linha de produção com 1000 amostras.
 
 **Dados:** Parafuso M8 (alvo 8.0 mm, tol 0.15), Porca M8 (alvo 8.2 mm, tol 0.12), Arruela (alvo 2.0 mm, tol 0.10). ~5% outliers.
 
-**Abas obrigatórias:**
+**Seções obrigatórias:**
 
-1. **Visão Geral:** métricas, `px.bar` produção por linha, `px.pie` taxa aprovação
-2. **Análise por Produto:** `px.scatter` medida vs alvo, `px.histogram` com LSL/USL, `px.box` por linha
-3. **Série Temporal:** `px.line` com limites, realçar pontos reprovados com cor
-4. **Detalhes:** `st.dataframe` com dados completos, `st.download_button` para CSV
+1. **Visão Geral:** `print()` com métricas, `plt.bar` produção por linha, `plt.pie` taxa de aprovação
+2. **Análise por Produto:** `plt.scatter` medida vs alvo, `plt.hist` com LSL/USL, `plt.boxplot` por linha
+3. **Série Temporal:** `plt.plot` com limites, realçar pontos reprovados com cor
+4. **Detalhes:** `print(df)` com dados completos, `df.to_csv("dados.csv")` para exportar
 
 **Requisitos técnicos:**
 
-- Persistir dados em `st.session_state`
-- Botão "Regenerar dados" com `st.rerun()`
-- Layout responsivo com `use_container_width=True`
+- Persistir dados no kernel (variáveis entre células)
+- Reexecutar a célula de geração para "regenerar" os dados
+- Figuras com `figsize` e `plt.show()` no final de cada célula
 
 ## Resumo da aula
 
-- Plotly Express: `px.line()`, `px.bar()`, `px.scatter()` — gráficos interativos com 1 linha
-- Personalização: `fig.update_layout()`, `fig.update_traces()`, templates (`plotly_dark`, `ggplot2`)
-- Subplots: `make_subplots()` com `colspan` para dashboards complexos
-- `st.plotly_chart(fig)` renderiza gráficos Plotly no Streamlit
-- Layout de dashboard: containers, colunas, métricas, abas (`st.tabs`)
+- matplotlib: `plt.plot()`, `plt.bar()`, `plt.scatter()`, `plt.hist()`, `plt.boxplot()`, `plt.imshow()`
+- Personalização: `plt.title()`, `plt.xlabel()`, `plt.ylabel()`, `plt.legend()`, `plt.tight_layout()`
+- Subplots: `plt.subplots()` com `axs[i, j]`
+- `plt.show()` exibe gráficos no Colab
+- Estrutura de análise: variáveis de filtro + `print()` + figuras com `plt.show()`
 
 ## Referências
 
-- **Plotly Express** — https://plotly.com/python/plotly-express/
-- **Plotly Subplots** — https://plotly.com/python/subplots/
-- **Streamlit + Plotly** — https://docs.streamlit.io/develop/api-reference/charts/st.plotly_chart
-- **Plotly Themes** — https://plotly.com/python/templates/
+- **matplotlib Quick Start** — https://matplotlib.org/stable/tutorials/introductory/quick_start.html
+- **matplotlib Subplots** — https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subplots_demo.html
+- **matplotlib Colormaps** — https://matplotlib.org/stable/users/explain/colors/colormaps.html
+- **matplotlib Style Sheets** — https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html

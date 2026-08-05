@@ -13,8 +13,8 @@
 8. Pivot tables: melt, pivot_table, cross-tabulation
 9. matplotlib básico: plt.plot, plt.scatter, plt.hist
 10. seaborn: scatterplot, boxplot, heatmap
-11. Streamlit charts: line_chart, bar_chart, area_chart
-12. Persistência de DataFrames com `st.session_state`
+11. Visualização com pandas plot e matplotlib
+12. Persistência de variáveis no kernel do Colab
 13. Exercícios práticos
 
 ## DataFrame e Series
@@ -233,16 +233,22 @@ df = pd.read_csv("dados.csv", encoding="utf-8")
 df = pd.read_csv("dados.csv", encoding="latin1")  # arquivos Windows antigos
 ```
 
-### Upload no Streamlit
+### Upload de arquivos no Google Colab
+
+No Colab, o arquivo é carregado pelo menu lateral (ícone de pasta → ícone de upload) ou via código:
 
 ```python
-import streamlit as st
+from google.colab import files
 
-arquivo = st.file_uploader("Carregar CSV", type="csv")
-if arquivo:
-    df = pd.read_csv(arquivo)
-    st.dataframe(df.head())
+uploaded = files.upload()  # abre a janela de seleção de arquivo
+nome_arquivo = list(uploaded.keys())[0]  # primeiro arquivo enviado
+
+import pandas as pd
+df = pd.read_csv(nome_arquivo)
+df.head()
 ```
+
+Depois de carregado, o arquivo fica no diretório do notebook e pode ser lido normalmente com `pd.read_csv("nome.csv")`.
 
 ### Parâmetros úteis do `read_csv`
 
@@ -676,7 +682,7 @@ pivot = producao.pivot_table(
 )
 ```
 
-## matplotlib Básico no Streamlit
+## matplotlib Básico
 
 matplotlib é a biblioteca de gráficos mais antiga e fundamental do Python. Ela usa uma interface orientada a objetos baseada em **figura** (`fig`) e **eixos** (`ax`).
 
@@ -698,18 +704,17 @@ fig, ax = plt.subplots(figsize=(8, 4))
 
 ### Por que usar `fig, ax` e não `plt.plot()` direto?
 
-| Abordagem | Problema no Streamlit |
+| Abordagem | Resultado |
 |---|---|
-| `plt.plot()` + `plt.show()` | `plt.show()` não funciona no Streamlit |
-| `fig, ax = plt.subplots()` + `st.pyplot(fig)` | ✅ Funciona corretamente |
+| `plt.plot()` + `plt.show()` | ✅ Funciona, mas cria a figura fora do controle do notebook |
+| `fig, ax = plt.subplots()` + `fig` na última linha | ✅ Ideal no Colab: a figura é exibida como saída da célula |
 
-**Regra de ouro:** no Streamlit, **sempre** use `fig, ax = plt.subplots()` e `st.pyplot(fig)`.
+**Regra de ouro:** no Colab, crie `fig, ax = plt.subplots()`, desenhe no `ax` e deixe o `fig` como **última linha da célula** (ou use `plt.show()`) para exibir o gráfico.
 
 ### Tipos de gráficos
 
 ```python
 import matplotlib.pyplot as plt
-import streamlit as st
 
 # 1. Gráfico de linha
 fig, ax = plt.subplots(figsize=(8, 4))
@@ -718,7 +723,7 @@ ax.set_xlabel("Material")
 ax.set_ylabel("Tensão Máxima (MPa)")
 ax.set_title("Tensão por Material")
 ax.grid(True, alpha=0.3)
-st.pyplot(fig)
+fig
 ```
 
 ```python
@@ -729,7 +734,7 @@ scatter = ax.scatter(df["alongamento"], df["tensao_max"],
 ax.set_xlabel("Alongamento (%)")
 ax.set_ylabel("Tensão Máxima (MPa)")
 fig.colorbar(scatter, label="Dureza (HB)")
-st.pyplot(fig)
+fig
 ```
 
 ```python
@@ -738,7 +743,7 @@ fig, ax = plt.subplots(figsize=(8, 4))
 ax.hist(df["tensao_max"], bins=10, edgecolor="black", color="steelblue")
 ax.set_xlabel("Tensão Máxima (MPa)")
 ax.set_ylabel("Frequência")
-st.pyplot(fig)
+fig
 ```
 
 ### Múltiplos gráficos na mesma figura
@@ -752,7 +757,7 @@ axes[0].set_title("Tensão")
 axes[1].hist(df["tensao_max"], bins=10, edgecolor="black")
 axes[1].set_title("Distribuição")
 
-st.pyplot(fig)
+fig
 ```
 
 ### Linhas de referência
@@ -769,7 +774,7 @@ media = df["tensao_max"].mean()
 ax.axvline(x=media, color="green", linestyle="-", label=f"Média = {media:.0f}")
 
 ax.legend()
-st.pyplot(fig)
+fig
 ```
 
 ## seaborn: Estatística Visual
@@ -785,7 +790,7 @@ fig, ax = plt.subplots(figsize=(8, 4))
 sns.scatterplot(data=df, x="alongamento", y="tensao_max",
                 hue="material", ax=ax)
 ax.set_title("Tensão × Alongamento por Material")
-st.pyplot(fig)
+fig
 ```
 
 ### Boxplot por grupo
@@ -796,7 +801,7 @@ O boxplot mostra a distribuição: mediana, quartis, e outliers.
 fig, ax = plt.subplots(figsize=(8, 4))
 sns.boxplot(data=df, x="material", y="tensao_max", ax=ax)
 ax.set_title("Distribuição de Tensão por Material")
-st.pyplot(fig)
+fig
 ```
 
 ### Heatmap de correlação
@@ -807,7 +812,7 @@ corr = df.select_dtypes("number").corr()
 fig, ax = plt.subplots(figsize=(6, 5))
 sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
 ax.set_title("Matriz de Correlação")
-st.pyplot(fig)
+fig
 ```
 
 **Como ler o heatmap:**
@@ -815,89 +820,68 @@ st.pyplot(fig)
 - Valores próximos de **-1**: correlação negativa forte (quando um sobe, o outro desce)
 - Valores próximos de **0**: sem correlação linear
 
-> **Importante:** seaborn pode emitir warnings no Streamlit sobre figuras. Sempre crie `fig, ax` antes e passe `ax=` nos gráficos seaborn.
+> **Importante:** crie sempre `fig, ax` antes e passe `ax=` nos gráficos seaborn. No Colab, deixe o `fig` como última linha da célula para exibir.
 
-## Streamlit Charts (nativos)
+## Visualização com pandas plot e matplotlib
 
-Streamlit tem métodos de gráfico embutidos que são mais simples que matplotlib, mas com menos customização.
+O pandas tem métodos de gráfico nativos (`.plot()`) que usam matplotlib por trás — mais simples, mas com menos customização que `fig, ax` manual.
 
 ### Quando usar cada um
 
-| Método | Quando usar | Vantagem | Limitação |
+| Abordagem | Quando usar | Vantagem | Limitação |
 |---|---|---|---|
-| `st.line_chart` | Séries temporais rápidas | Zero configuração | Pouca customização |
-| `st.bar_chart` | Comparações simples | Rápido e limpo | Sem cores por categoria |
-| `st.area_chart` | Acumulado/stacked | Visual bonito | Sem parâmetros avançados |
-| `st.pyplot(fig)` | Controle total | matplotlib completo | Mais código |
-| `st.plotly_chart(fig)` | Interatividade | Zoom, hover, tooltips | Requer Plotly |
+| `df.plot(kind="line")` | Séries temporais rápidas | Zero código extra | Pouca customização |
+| `df.plot(kind="bar")` | Comparações simples | Rápido e limpo | Sem cores por categoria |
+| `df.plot(kind="area")` | Acumulado/stacked | Visual bonito | Sem parâmetros avançados |
+| `fig, ax = plt.subplots()` | Controle total | matplotlib completo | Mais código |
+
+> O método `.plot()` do pandas retorna a figura, então basta deixá-lo como última linha da célula para exibir o gráfico no Colab.
 
 ### Exemplos
 
 ```python
 # Line chart (índice como eixo x)
-st.line_chart(df.set_index("material")["tensao_max"])
+df.set_index("material")["tensao_max"].plot(kind="line")
 
 # Bar chart
-st.bar_chart(df.groupby("material")["tensao_max"].mean())
+df.groupby("material")["tensao_max"].mean().plot(kind="bar")
 
 # Area chart com múltiplas colunas
-st.area_chart(df.set_index("material")[["tensao_max", "modulo_E"]])
+df.set_index("material")[["tensao_max", "modulo_E"]].plot(kind="area")
 ```
 
-> **Limitação:** `st.line_chart` e `st.bar_chart` aceitam menos parâmetros que matplotlib. Para controle total, use `st.pyplot(fig)` ou `st.plotly_chart(fig)`.
+> **Limitação:** os métodos `.plot()` do pandas aceitam menos parâmetros que matplotlib puro. Para controle total, use `fig, ax = plt.subplots()` e deixe o `fig` na última linha.
 
-## Persistência de DataFrames com `st.session_state`
+## Persistência de variáveis no kernel do Colab
 
-DataFrames criados como variáveis locais são **perdidos** a cada rerun do Streamlit. Para manter dados entre interações (filtros, limpeza, merge), use `st.session_state`.
+Em interfaces web (tipo um dashboard), cada interação roda o script do zero e variáveis locais se perdem. No **Colab** isso não é um problema: as variáveis de uma célula **persistem no kernel** enquanto o notebook estiver aberto.
 
-### O problema
+### O que significa persistência
 
 ```python
-import streamlit as st
 import pandas as pd
 
 df = pd.DataFrame({"material": ["Aço", "Al"], "tensao": [350, 240]})
 
-if st.button("Filtrar"):
-    df = df[df["tensao"] > 300]
+df = df[df["tensao"] > 300]  # modifica a variável
 
-st.dataframe(df)  # Sempre volta ao original!
+print(df)  # o valor modificado permanece na memória
 ```
 
-### A solução
+### Re-executar células
+
+Diferente dos widgets de uma interface, no Colab o fluxo é **célula por célula**: defina parâmetros em uma célula, rode as células seguintes quando quiser. Para "refazer" os dados, basta **re-executar a célula** que os gera:
 
 ```python
-if "df_ensaios" not in st.session_state:
-    st.session_state.df_ensaios = pd.DataFrame({
-        "material": ["Aço", "Alumínio", "Latão"],
-        "tensao_max": [350, 240, 200],
-    })
+import numpy as np
+import pandas as pd
 
-df = st.session_state.df_ensaios
-
-# Filtrar — o DataFrame original persiste
-filtrado = df[df["tensao_max"] > 250]
-st.dataframe(filtrado)
+dados = np.random.normal(420, 25, 20)  # re-executar esta célula refaz os dados
+df = pd.DataFrame({"tensao_max": dados, "material": "Aço"})
+print(df.head())
 ```
 
-### Padrão completo com limpeza
-
-```python
-if "df_raw" not in st.session_state:
-    st.session_state.df_raw = carregar_dados()
-
-df = st.session_state.df_raw.copy()
-
-if st.checkbox("Remover nulos"):
-    df = df.dropna()
-
-if st.button("Aplicar filtro"):
-    df = df[df["tensao_max"] > 300]
-
-st.dataframe(df)
-```
-
-> **Dica:** use `.copy()` para não modificar o DataFrame original no `session_state`.
+> **Dica:** facilita o uso das linhas separadas: deixe a parte de geração de dados e a parte de análise em células separadas. Re-executar a célula de geração atualiza os dados para as células seguintes.
 
 ## Exercício 8.1 — Carregar e Limpar Dados de Ensaios
 
@@ -916,14 +900,13 @@ dados = {
 df = pd.DataFrame(dados)
 ```
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
-- Exibir dados originais com `st.dataframe` e destacar nulos com `df.isna().sum()`
-- Checkbox "Remover linhas com nulos" (usa `dropna()`)
-- Radio "Preencher nulos" com opções: Média / Zero / Não preencher
-- Multiselect para escolher colunas a preencher
-- Exibir resultado da limpeza com `st.dataframe`
-- Persistir DataFrame em `st.session_state`
+- Exibir dados originais (`df.head()`) e destacar nulos com `df.isna().sum()`
+- Definir variáveis no topo da célula: `remover_nulos = True` (usa `dropna()`) e `preencher = "media"` (opções: `"media"` / `"zero"` / `"nenhum"`)
+- Preencher nulos de colunas selecionadas com `fillna()`
+- Exibir resultado da limpeza (`df.head()` ou `df`)
+- Como no Colab as variáveis persistem no kernel, os dados limpos ficam disponíveis nas células seguintes
 
 ## Exercício 8.2 — Filtrar Materiais por Propriedade
 
@@ -931,25 +914,25 @@ df = pd.DataFrame(dados)
 
 **Dados:** DataFrame com 15+ materiais (Aço, Alumínio, Latão, Titânio, PVC, Cobre, Bronze).
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
-- `st.slider` duplo para faixa de tensão (min/max)
-- `st.selectbox` para tipo de material (Todos / Aço / Alumínio / Outros)
+- Definir no topo da célula: `tensao_min = 200` e `tensao_max = 400`
+- Definir `tipo = "Aço"` (valores: "Todos" / "Aço" / "Alumínio" / "Outros")
 - Aplicar `between()` + `str.contains()` para filtrar
-- Exibir resultados com `st.dataframe`
-- `st.metric` com quantidade de materiais encontrados
+- Exibir resultados com `df.head()` ou `df`
+- `print(f"Materiais encontrados: {len(resultado)}")`
 
 ## Exercício 8.3 — Estatísticas por Grupo (GroupBy)
 
 **Contexto:** Dados de ensaios de tração de vários materiais (15-20 amostras, 3+ materiais).
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
 - Gerar dados sintéticos com `np.random.normal` para cada material
-- `st.selectbox` para coluna alvo (tensao_max, modulo_E, alongamento)
+- Definir `coluna_alvo = "tensao_max"` no topo da célula (valores: tensao_max, modulo_E, alongamento)
 - Tabela com `groupby().agg()` (mean, std, min, max, count)
-- `st.bar_chart` da média por material
-- Interpretação textual: qual material tem melhor desempenho?
+- `df.groupby("material")[coluna_alvo].mean().plot(kind="bar")` da média por material
+- `print()` com interpretação: qual material tem melhor desempenho?
 
 ## Exercício 8.4 — Merge de Dados de Material + Fornecedor
 
@@ -970,36 +953,35 @@ fornecedores = pd.DataFrame({
 })
 ```
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
 - Fazer merge com `left_on` / `right_on`
 - Calcular `custo_peca = densidade * preco_kg / 1000`
 - Exibir colunas: nome, fornecedor, densidade, preco_kg, custo_peca, prazo_dias
-- Destacar mais barato e mais caro por cm³ com `st.success` / `st.warning`
+- `print(f"Mais barato: {df_enriquecido['custo_peca'].min()}")` / `print(f"Mais caro: {df_enriquecido['custo_peca'].max()}")` para destacar os extremos de custo
 
 ## Exercício 8.5 — Pivot Table de Produção Mensal
 
 **Contexto:** Produção diária de 3 máquinas (90 linhas simulando 3 meses).
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
 - Gerar dados sintéticos: mes, maquina, pecas (90 linhas)
 - `pivot_table` com mes × maquina
 - Coluna "Total" por mês
-- Heatmap do pivot com `sns.heatmap` (matplotlib + seaborn)
-- Destacar máquina mais produtiva por mês
+- Heatmap do pivot com `sns.heatmap` (matplotlib + seaborn), deixando o `fig` na última linha da célula
+- `print()` com a máquina mais produtiva por mês
 
 ## Exercício 8.6 — Correlação de Propriedades (seaborn)
 
 **Contexto:** 50 materiais com densidade, módulo_E, tensão_escoamento, dureza, alongamento.
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
 - Gerar dados sintéticos com correlações realistas
-- `sns.heatmap` da matriz de correlação com `annot=True`
-- `st.pyplot(fig)` para exibir
+- `sns.heatmap` da matriz de correlação com `annot=True` (deixar `fig` na última linha)
 - Interpretação textual: quais pares têm maior correlação positiva e negativa?
-- Opcional: `sns.pairplot` com `st.pyplot`
+- Opcional: `sns.pairplot` (o Colab exibe o pairplot diretamente como saída da célula)
 
 ## Exercício 8.7 — Dashboard de Qualidade (CEP)
 
@@ -1011,25 +993,25 @@ $Cp = \frac{LSE - LIE}{6\sigma}$
 
 $Cpk = \min\left(\frac{media - LIE}{3\sigma}, \frac{LSE - media}{3\sigma}\right)$
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 
 - Gerar 50+ medidas com `np.random.normal(loc=50, scale=0.03)`
 - Histograma com linhas LIE/LSE/target (matplotlib)
 - Boxplot por batch
-- Calcular e exibir Cp e Cpk com `st.metric`
+- Calcular e exibir Cp e Cpk com `print(f"Cp = {cp:.2f}")` / `print(f"Cpk = {cpk:.2f}")`
 - Interpretação: Cp > 1.33 = processo capaz
 
 ## Mini-Projeto 8 — Analisador de Ensaios Mecânicos
 
 **Funcionalidades obrigatórias:**
 
-- Upload CSV via `st.file_uploader` (ou dados de exemplo)
-- Opções de limpeza (fillna / dropna)
-- Filtros interativos (slider + select)
+- Upload CSV via `from google.colab import files` (ou dados de exemplo)
+- Opções de limpeza (fillna / dropna) — defina as escolhas como variáveis no topo da célula
+- Filtros por variáveis definidas no topo da célula (faixa de tensão + tipo)
 - GroupBy stats por material
 - Scatter plot tensão × alongamento (matplotlib/seaborn)
 - Heatmap de correlação (seaborn)
-- Export CSV filtrado (`st.download_button`)
+- Export CSV filtrado (`from google.colab import files` + `files.download("resultado.csv")`)
 
 ## Exercício 10.1 — DataFrame de Materiais a partir de NumPy
 
@@ -1040,12 +1022,12 @@ densidade = [7850, 2700, 8500, 4430, 1380]
 modulo_E = [210, 69, 97, 116, 3]  # GPa
 ```
 
-**O que o app deve ter:**
+**O que o notebook deve ter:**
 - Criar DataFrame com colunas: `material`, `densidade`, `modulo_E`
 - Adicionar coluna calculada: `relacao = modulo_E / densidade * 1000`
 - Ordenar por `relacao` decrescente (`df.sort_values`)
-- Exibir `df.describe()` com `st.dataframe`
-- Gráfico de barras com `st.bar_chart`
+- Exibir `df.describe()`
+- Gráfico de barras com `df.plot(kind="bar")`
 
 ## Exercício 10.2 — Dashboard de Materiais com GroupBy
 
@@ -1060,12 +1042,12 @@ modulo_E = [210, 69, 97, 116, 3]  # GPa
 
 **Funcionalidades obrigatórias:**
 - Gerar 20 amostras por material com `np.random.normal`
-- Tabela interativa com `st.dataframe`
+- Exibir os dados com `df.head()`
 - Estatísticas por material com `groupby`
 - Coluna calculada: resistência específica = tensão / densidade
-- Gráfico de barras com `st.bar_chart`
-- Botão "Regenerar dados" com `st.session_state` + `st.rerun()`
-- Exportar dados filtrados como CSV (`st.download_button`)
+- Gráfico de barras com `df.plot(kind="bar")`
+- Re-executar a célula de geração de dados para "regenerar" os dados (variáveis persistem no kernel do Colab)
+- Exportar dados filtrados como CSV (`df.to_csv("resultado.csv")` + `files.download("resultado.csv")`)
 
 ## Resumo da aula
 
@@ -1074,12 +1056,12 @@ modulo_E = [210, 69, 97, 116, 3]  # GPa
 - `pivot_table()` reorganiza dados em formato de tabela dinâmica
 - matplotlib: `plt.plot()`, `plt.scatter()`, `plt.bar()` — gráficos estáticos customizáveis
 - seaborn: `sns.boxplot()`, `sns.heatmap()` — gráficos estatísticos com pouco código
-- Use `st.pyplot(fig)` para exibir gráficos matplotlib/seaborn no Streamlit
+- No Colab, deixe o `fig` como última linha da célula (ou `plt.show()`) para exibir gráficos matplotlib/seaborn
 
 ## Referências
 
 - **Pandas documentation** — https://pandas.pydata.org/docs/
 - **matplotlib documentation** — https://matplotlib.org/stable/contents.html
 - **seaborn documentation** — https://seaborn.pydata.org/
-- **Streamlit Chart docs** — https://docs.streamlit.io/develop/api-reference/charts
+- **pandas.DataFrame.plot** — https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html
 - **Montgomery, D. C.** Introduction to Statistical Quality Control. Wiley, 2019.

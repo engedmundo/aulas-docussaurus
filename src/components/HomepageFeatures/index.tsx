@@ -16,7 +16,7 @@ const DisciplineList: DisciplineItem[] = [
   {
     title: 'Programação Aplicada',
     code: 'MEC255',
-    description: 'Python, Streamlit, Pandas, NumPy, Plotly e POO aplicados à engenharia.',
+    description: 'Python, NumPy, Pandas, Matplotlib e POO aplicados à engenharia, no Google Colab.',
     icon: '🐍',
     link: '/docs/category/programação-aplicada-mec255',
   },

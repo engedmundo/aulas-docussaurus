@@ -83,21 +83,17 @@ for chave, valor in material.items():
     print(f"{chave}: {valor}")
 ```
 
-### `for` no contexto Streamlit
+### `for` no contexto de monitoramento
 
 ```python
-import streamlit as st
-
-st.title("Monitor de Sensores")
-
 sensores = ["PT-01", "PT-02", "PT-03"]
 leituras = [150.0, 162.5, 148.3]
 
 for nome, valor in zip(sensores, leituras):
     if valor > 160:
-        st.warning(f"{nome}: {valor} °C — acima do limite!")
+        print(f"{nome}: {valor} °C — acima do limite!")
     else:
-        st.success(f"{nome}: {valor} °C — normal")
+        print(f"{nome}: {valor} °C — normal")
 ```
 
 ## Loop `while` — repetição condicional
@@ -191,7 +187,7 @@ print(f"Média: {sum(validas)/len(validas):.2f} °C")
 
 **Contexto:** Uma tubulação industrial de 300 metros possui sensores de temperatura instalados a cada 3 metros, começando na posição 0 m. O engenheiro de instrumentação precisa gerar a lista completa de posições dos sensores e analisar as leituras.
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Gerar a lista de posições usando `range(0, 301, 3)`
 - Exibir a quantidade total de sensores
 - Exibir os 10 primeiros sensores (usando slicing)
@@ -204,15 +200,14 @@ print(f"Média: {sum(validas)/len(validas):.2f} °C")
 
 **Contexto:** Uma célula robotizada de soldagem exige que o técnico insira um PIN de 6 dígitos para iniciar o programa. O sistema permite no máximo 3 tentativas. Após 3 falhas, o acesso é bloqueado.
 
-**O que o app deve ter:**
-- Campo de entrada para o PIN (use `st.text_input` com `type="password"`)
-- Botão "Tentar acesso"
+**O que o programa deve ter:**
+- Campo de entrada para o PIN com `input("Digite o PIN: ")`
 - Contador de tentativas restantes
 - Se o PIN estiver correto (`"123456"`): mensagem de sucesso
 - Se o PIN estiver errado: mensagem de erro com tentativas restantes
 - Se esgotar as tentativas: mensagem de bloqueio
 
-**Dica:** use `st.session_state` para manter o contador de tentativas entre execuções do script.
+**Dica:** use um loop `while` com contador `tentativas` para controlar as no máximo 3 tentativas.
 
 **Valores de teste:**
 - PIN correto: `123456` → Acesso autorizado
@@ -226,13 +221,12 @@ print(f"Média: {sum(validas)/len(validas):.2f} °C")
 
 **Contexto:** O engenheiro de processos precisa de uma ferramenta para simular o aquecimento de um forno industrial. O usuário informa a temperatura inicial, a temperatura alvo e a taxa de aquecimento, e o app exibe a evolução passo a passo.
 
-**O que o app deve ter:**
-- Campos de entrada para temperatura inicial (°C), temperatura alvo (°C) e taxa (°C/min)
-- Botão "Simular aquecimento"
+**O que o programa deve ter:**
+- Variáveis de entrada para temperatura inicial (°C), temperatura alvo (°C) e taxa (°C/min)
 - Loop `while` que executa enquanto `temp_atual < temp_alvo`
-- A cada passo: incrementar temperatura, registrar timestamp
-- Exibir evolução em uma tabela (passo, temperatura, tempo acumulado)
-- Ao final: exibir tempo total e gráfico simples da evolução
+- A cada passo: incrementar temperatura e registrar o tempo acumulado
+- Exibir a evolução em uma tabela (passo, temperatura, tempo acumulado)
+- Ao final: exibir tempo total e um gráfico simples da evolução (com Matplotlib)
 
 **Valores de teste:** `T_inicial = 25 °C`, `T_alvo = 350 °C`, `taxa = 5 °C/min` → 65 passos, 65 minutos
 

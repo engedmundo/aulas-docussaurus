@@ -8,8 +8,8 @@
 4. Operações vetorizadas (+, -, *, /, **) — sem loops!
 5. Funções estatísticas
 6. Números aleatórios
-7. Persistência com `st.session_state`
-8. Streamlit + NumPy
+7. Persistência de variáveis no kernel do Colab
+8. NumPy + Matplotlib
 9. Exercícios
 10. **Mini-projeto:** Analisador de Ensaios Mecânicos
 
@@ -190,7 +190,7 @@ tensao = forca / area    # [100. 160. 120.] MPa
 dados = np.array([410, 425, 395, 430, 415, 420, 405, 435, 400, 418])
 
 print(np.mean(dados))    # 415.3
-print(np.std(dados))     # 12.82
+print(np.std(dados))     # 12.28
 print(np.max(dados))     # 435
 print(np.min(dados))     # 395
 print(np.sum(dados))     # 4153
@@ -226,109 +226,48 @@ ids = np.random.randint(1, 6, size=50)
 | `uniform(low, high, size)` | Uniforme | Pressão, ruído |
 | `randint(low, high, size)` | Inteiros discretos | IDs, classificações |
 
-## Persistência com `st.session_state`
+## Persistência de dados no notebook
 
-Streamlit reexecuta o script inteiro a cada interação (botão, slider, etc.). Isso significa que **variáveis locais são perdidas** a cada rerun. Para manter dados entre interações, usamos `st.session_state`.
-
-### O problema
+Nos apps Streamlit, o script era reexecutado a cada interação e as variáveis locais se perdiam — por isso precisávamos de `st.session_state`. **No Colab isso não é necessário**: as variáveis definidas em uma célula **permanecem no kernel** enquanto o notebook estiver aberto. Se você executar uma célula, depois outra, a segunda ainda "enxerga" as variáveis da primeira.
 
 ```python
-import streamlit as st
-import numpy as np
-
-# Sem session_state — dados mudam a cada interação!
+# Célula 1 — gera os dados uma única vez
 dados = np.random.normal(100, 5, 50)
-st.line_chart(dados)
-
-if st.button("Calcular média"):
-    st.write(f"Média: {np.mean(dados):.2f}")
 ```
 
-Cada vez que o usuário clica no botão, o script roda de novo e `dados` recebe novos valores aleatórios. O gráfico e a média **não correspondem**.
+```python
+# Célula 2 — usa os dados da célula 1
+print(f"Média: {np.mean(dados):.2f}")
+```
 
-### A solução: `st.session_state`
+Para **regenerar** os dados, basta executar a célula 1 novamente — ela sobrescreve a variável `dados` com novos valores aleatórios.
+
+> **Resumo:** no Colab, a variável persiste enquanto o kernel estiver ativo. Não existe "rerun" — você controla a execução célula a célula.
+
+## NumPy + Matplotlib
+
+Exemplo completo combinando NumPy com visualização em Matplotlib:
 
 ```python
-import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Inicializa apenas na primeira execução
-if "leituras" not in st.session_state:
-    st.session_state.leituras = np.random.normal(100, 5, 50)
+dados = np.random.normal(100, 5, size=50)
 
-# Usa os dados persistidos
-dados = st.session_state.leituras
-st.line_chart(dados)
+plt.figure(figsize=(8, 4))
+plt.plot(dados, marker="o", linestyle="-", color="#1a365d")
+plt.title("Leituras de Sensores")
+plt.xlabel("Amostra")
+plt.ylabel("Valor")
+plt.grid(True)
+plt.show()
 
-if st.button("Calcular média"):
-    st.write(f"Média: {np.mean(dados):.2f}")
+print(f"Média: {np.mean(dados):.2f}")
+print(f"Desvio: {np.std(dados):.2f}")
+print(f"Máximo: {np.max(dados):.2f}")
 ```
 
-Agora os dados são gerados **uma vez** e mantidos entre interações.
-
-### Regenerar dados com `st.rerun()`
-
-Para forçar novos dados, sobrescrevemos o `session_state` e chamamos `st.rerun()`:
-
-```python
-if st.button("Gerar novas leituras"):
-    st.session_state.leituras = np.random.normal(100, 5, 50)
-    st.rerun()  # Recarrega o app com os novos dados
-```
-
-### Padrão completo
-
-```python
-import streamlit as st
-import numpy as np
-
-st.title("Gerador de Leituras")
-
-if "leituras" not in st.session_state:
-    st.session_state.leituras = np.random.normal(100, 5, 50)
-
-if st.button("Gerar novas leituras"):
-    st.session_state.leituras = np.random.normal(100, 5, 50)
-    st.rerun()
-
-dados = st.session_state.leituras
-st.line_chart(dados)
-
-col1, col2, col3 = st.columns(3)
-col1.metric("Média", f"{np.mean(dados):.2f}")
-col2.metric("Desvio", f"{np.std(dados):.2f}")
-col3.metric("Máximo", f"{np.max(dados):.2f}")
-```
-
-> **Resumo:** `st.session_state` persiste dados entre reruns. `st.rerun()` recarrega o app. Use sempre que precisar manter estado (leituras, seleções, resultados).
-
-## Streamlit + NumPy
-
-Exemplo completo combinando tudo:
-
-```python
-import streamlit as st
-import numpy as np
-
-st.title("Dashboard de Sensores")
-
-if "dados" not in st.session_state:
-    st.session_state.dados = np.random.normal(100, 5, size=50)
-
-if st.button("Gerar novos dados"):
-    st.session_state.dados = np.random.normal(100, 5, size=50)
-    st.rerun()
-
-dados = st.session_state.dados
-st.line_chart(dados)
-
-col1, col2, col3 = st.columns(3)
-col1.metric("Média", f"{np.mean(dados):.1f}")
-col2.metric("Desvio", f"{np.std(dados):.1f}")
-col3.metric("Máximo", f"{np.max(dados):.1f}")
-```
-
-> `st.line_chart()` aceita arrays 1D do numpy diretamente.
+> No Colab, `plt.show()` exibe o gráfico logo abaixo da célula. Também é possível usar `df.plot(kind="line")` com um DataFrame do Pandas.
 
 ---
 
@@ -336,11 +275,11 @@ col3.metric("Máximo", f"{np.max(dados):.1f}")
 
 **Contexto:** Um laboratório precisa posicionar sensores ao longo de uma viga de 300 m.
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - `np.arange()` para gerar 11 sensores (0 a 300 m, passo 30)
 - `np.linspace()` para gerar 5 pontos igualmente espaçados na mesma viga
 - Exibir valores, `shape`, `size` e `dtype` de cada array
-- Usar `st.metric` ou `st.write` para mostrar os resultados
+- Usar `print()` para mostrar os resultados
 
 **Valores de teste:**
 - `arange(0, 301, 30)` → `[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300]`
@@ -350,12 +289,12 @@ col3.metric("Máximo", f"{np.max(dados):.1f}")
 
 **Contexto:** Simular 100 leituras de temperatura de um termopar em um forno industrial.
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Gerar leituras: `np.random.normal(loc=100, scale=5, size=100)`
 - Calcular com NumPy: média, desvio padrão, máximo, mínimo
-- Exibir gráfico com `st.line_chart`
-- Botão "Gerar novas leituras" que usa `st.session_state` + `st.rerun()`
-- Métricas em `st.columns`
+- Exibir gráfico com Matplotlib (`plt.plot`)
+- Regenerar as leituras re-executando a célula
+- Exibir métricas com `print()`
 
 ## Exercício 8.3 — Operações Vetorizadas (Conversão de Unidades)
 
@@ -366,11 +305,11 @@ col3.metric("Máximo", f"{np.max(dados):.1f}")
 temp_C = np.array([25, 100, 200, 350, 500])
 ```
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Converter para Kelvin: `K = C + 273`
 - Converter para Fahrenheit: `F = C * 9/5 + 32`
 - **Sem loops** — operações vetorizadas!
-- Exibir tabela comparativa com `st.dataframe` ou `st.table`
+- Exibir tabela comparativa com Pandas (`pd.DataFrame`)
 
 ## Exercício 8.4 — Estatísticas de Tração com NumPy
 
@@ -382,10 +321,10 @@ tensao_max = [410, 425, 395, 430, 415, 420, 405, 435, 400, 418]
 alongamento = [18, 20, 16, 22, 19, 21, 17, 23, 15, 20]
 ```
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Calcular e exibir: média, desvio padrão, máximo, mínimo, mediana de `tensao_max`
 - Calcular e exibir os mesmos indicadores para `alongamento`
-- Usar `st.metric` em colunas para os resultados
+- Usar `print()` para os resultados
 - Interpretar: o material atende especificação de 400 ± 20 MPa?
 
 ## Exercício 8.5 — Simulação de Monte Carlo (Tensão × Carga)
@@ -398,30 +337,28 @@ alongamento = [18, 20, 16, 22, 19, 21, 17, 23, 15, 20]
 | Área da seção | Normal(μ=200, σ=10) | mm² |
 | Limite de escoamento | 300 (fixo) | MPa |
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Simular 1000 cenários com `np.random.normal`
 - Calcular tensão atuante com operações vetorizadas: σ = (F × 1000) / A
-- Exibir histograma das tensões (use `st.bar_chart` ou converta para DataFrame)
+- Exibir histograma das tensões com Matplotlib (`plt.hist`)
 - Calcular e exibir P(σ > 300) — fração de cenários que falham
 - Métricas: média da tensão, desvio padrão, probabilidade de falha
 
-## Exercício 8.6 — Dashboard de Sensores com NumPy + Streamlit
+## Exercício 8.6 — Monitor de Sensores com NumPy
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 
-| Widget | Função |
+| Variável | Função |
 |---|---|
-| `st.selectbox` | Tipo de sensor: temperatura / pressão / vibração |
-| `st.slider` | Quantidade de pontos (10 a 500) |
-| `st.button` | "Gerar leituras" |
+| `tipo_sensor` | Tipo de sensor: temperatura / pressão / vibração |
+| `n_pontos` | Quantidade de pontos (ex.: 100) |
 
 - Cada tipo de sensor com distribuição adequada (normal para temperatura, uniforme para pressão, etc.)
-- Exibir gráfico, métricas e dataframe
-- Usar `st.session_state` para persistir as leituras entre interações
+- Exibir gráfico com Matplotlib, métricas com `print()` e tabela com Pandas
 
 ## Mini-Projeto — Analisador de Ensaios Mecânicos
 
-**Contexto:** Gerar dados sintéticos de ensaios de tração para 4 materiais e construir um dashboard analítico usando NumPy + Streamlit.
+**Contexto:** Gerar dados sintéticos de ensaios de tração para 4 materiais e construir uma análise com NumPy + Matplotlib.
 
 | Material | Tensão μ/σ (MPa) | Módulo E μ/σ (GPa) | Densidade (kg/m³) |
 |---|---|---|---|
@@ -432,21 +369,19 @@ alongamento = [18, 20, 16, 22, 19, 21, 17, 23, 15, 20]
 
 **Funcionalidades obrigatórias:**
 - Gerar 20 amostras por material com `np.random.normal`
-- Tabela interativa com `st.dataframe`
+- Tabela com Pandas
 - Estatísticas por material (média e desvio da tensão para cada material)
-- Gráfico de barras com `st.bar_chart`
-- Botão "Regenerar dados" com `st.session_state` + `st.rerun()`
+- Gráfico de barras com Matplotlib (`plt.bar`)
 
 ## Resumo da aula
 
 - NumPy: arrays homogêneos com operações vetorizadas — muito mais rápidos que listas
 - Criação: `np.array()`, `np.arange()`, `np.linspace()`, `np.random.rand()`
 - Indexação booleana: `arr[arr > 50]` — filtra sem loop
-- `st.session_state` persiste dados entre reruns do app
-- `st.rerun()` recarrega o app com novos dados
+- No Colab, variáveis de célula persistem no kernel enquanto o notebook estiver aberto
+- Matplotlib (`plt.plot`, `plt.hist`, `plt.bar`) exibe gráficos abaixo da célula
 
 ## Referências
 
 - **NumPy Documentation** — https://numpy.org/doc/stable/
-- **Streamlit Data Display** — https://docs.streamlit.io/develop/api-reference/data
-- **Streamlit Charts** — https://docs.streamlit.io/develop/api-reference/charts
+- **Matplotlib — Pyplot tutorial** — https://matplotlib.org/stable/tutorials/introductory/pyplot.html

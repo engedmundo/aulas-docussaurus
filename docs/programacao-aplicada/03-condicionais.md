@@ -5,7 +5,7 @@
 1. Por que condicionais?
 2. Operadores de comparação e lógicos
 3. Estruturas `if` / `elif` / `else`
-4. Widgets: `st.radio`, `st.checkbox`
+4. Entrada de dados com `input()` e condicionais
 5. Exercícios
 6. **Mini-projeto:** Classificador de Materiais
 
@@ -34,13 +34,13 @@ Nas aulas anteriores, vimos que programar é traduzir problemas em cálculos. Ma
 
 ### Um exemplo do mundo real
 
-Na aula 02 você criou uma calculadora de tensão que exibia σ = F/A. Mas e se σ ultrapassar o limite de escoamento do material? Sem condicionais, o app apenas exibe o número — o engenheiro precisa interpretar. Com condicionais, o próprio app alerta:
+Na aula 02 você criou uma calculadora de tensão que exibia σ = F/A. Mas e se σ ultrapassar o limite de escoamento do material? Sem condicionais, o programa apenas exibe o número — o engenheiro precisa interpretar. Com condicionais, o próprio programa alerta:
 
 ```python
 if sigma > limite_escoamento:
-    st.error("Tensão acima do limite! Redimensione a peça.")
+    print("Tensão acima do limite! Redimensione a peça.")
 else:
-    st.success("Projeto aprovado.")
+    print("Projeto aprovado.")
 ```
 
 ## Operadores de Comparação
@@ -168,68 +168,72 @@ else:
 
 > **Regra prática:** use `elif` quando as condições são mutuamente exclusivas. Use aninhamento quando a condição interna só faz sentido se a externa for verdadeira.
 
-## Streamlit — Widgets de Decisão
+## Entrada de dados com `input()` e condicionais
 
-Na aula 02 você aprendeu `st.number_input`, `st.slider`, `st.selectbox` e `st.button`. Agora vamos adicionar dois widgets que são ideais para apps com tomada de decisão.
+No Colab, a função `input()` permite que o programa pergunte um valor ao usuário. Combinada com condicionais, permite tomar decisões com base no que foi digitado.
 
-### `st.radio` — seleção única
+### Seleção única com `input()`
 
 Ideal quando o usuário deve escolher **exatamente uma** opção entre várias:
 
 ```python
-import streamlit as st
+material = input("Selecione o tipo de material (1-Aço Carbono, 2-Aço Inox, 3-Alumínio, 4-Latão): ")
 
-material = st.radio(
-    "Selecione o tipo de material:",
-    ["Aço Carbono", "Aço Inox", "Alumínio", "Latão"]
-)
+if material == "1":
+    escolhido = "Aço Carbono"
+elif material == "2":
+    escolhido = "Aço Inox"
+elif material == "3":
+    escolhido = "Alumínio"
+else:
+    escolhido = "Latão"
 
-st.write(f"Material selecionado: {material}")
+print(f"Material selecionado: {escolhido}")
 ```
 
-Diferença entre `st.radio` e `st.selectbox`:
-- **`st.radio`**: todas as opções visíveis de uma vez — melhor para poucas opções (até ~5)
-- **`st.selectbox`**: menu suspenso — melhor para muitas opções
+> A função `input()` sempre retorna texto (`str`). Use `int(input(...))` ou `float(input(...))` quando precisar de um número.
 
-### `st.checkbox` — ligado/desligado
+### Condições binárias com `input()`
 
 Ideal para sensores, chaves e condições binárias:
 
 ```python
-sensor_porta = st.checkbox("Sensor de porta fechada")
-emergencia = st.checkbox("Botão de emergência acionado")
+porta = input("Sensor de porta fechada (s/n): ").lower()
+emergencia = input("Botão de emergência acionado (s/n): ").lower()
 
-if sensor_porta and not emergencia:
-    st.success("Máquina pronta para operar")
+sensor_porta = porta == "s"
+emergencia_acionado = emergencia == "s"
+
+if sensor_porta and not emergencia_acionado:
+    print("Máquina pronta para operar")
 else:
-    st.error("Verifique as condições de segurança")
+    print("Verifique as condições de segurança")
 ```
 
-> `st.checkbox` retorna `True` quando marcado e `False` quando desmarcado.
+> Aqui, `input("...").lower()` converte a resposta para minúsculas, facilitando a comparação.
 
 ---
 
 ## Exercício 3.1 — Prensa Hidráulica
 
-**Contexto:** Uma prensa hidráulica industrial de 200 toneladas possui um sistema de segurança que impede a operação se a grade de proteção estiver aberta ou se a pressão do óleo estiver fora da faixa segura. O supervisor de produção quer um app que monitore essas condições em tempo real e informe o status da máquina.
+**Contexto:** Uma prensa hidráulica industrial de 200 toneladas possui um sistema de segurança que impede a operação se a grade de proteção estiver aberta ou se a pressão do óleo estiver fora da faixa segura. O supervisor de produção quer um programa que verifique essas condições e informe o status da máquina.
 
 **Entradas:**
-- Pressão do óleo (bar) — use `st.number_input`
-- Estado da grade — use `st.checkbox` ("Grade fechada")
+- Pressão do óleo (bar) — use `input()` com `float()`
+- Estado da grade — use `input("Grade fechada? (s/n): ")`
 
 **Lógica:**
-1. Grade **desmarcada (aberta)** → ERRO e bloqueio: "Grade aberta! Operação bloqueada."
-2. Grade **marcada (fechada)**:
+1. Grade **aberta** → ERRO e bloqueio: "Grade aberta! Operação bloqueada."
+2. Grade **fechada**:
    - `pressao < 50` → "Pressão insuficiente. Aqueça o óleo."
    - `50 <= pressao <= 150` → "Operação autorizada."
    - `pressao > 150` → "Sobrepressão! Acionando válvula de alívio."
 
-**O que o app deve ter:**
-- Título e descrição do sistema
-- Campo de entrada para pressão
-- Checkbox para estado da grade
-- Botão "Verificar condições"
-- Mensagem de status com `st.success`, `st.warning` ou `st.error`
+**O que o programa deve ter:**
+- Descrição do sistema
+- Entrada da pressão com `input()` e `float()`
+- Entrada do estado da grade com `input("s/n")`
+- Mensagem de status exibida com `print()`
 
 **Valores de teste:**
 - `pressao = 30`, grade fechada → "Pressão insuficiente"
@@ -242,19 +246,18 @@ else:
 **Contexto:** O laboratório de ensaios mecânicos de uma metalúrgica realiza testes de dureza Brinell (HB) em peças de aço após tratamento térmico. A especificação técnica exige dureza entre 200 e 240 HB. O técnico precisa registrar o resultado e obter a classificação automaticamente.
 
 **Entrada:**
-- Dureza Brinell (HB) — use `st.number_input`
+- Dureza Brinell (HB) — use `input()` com `float()`
 
 **Classificação:**
 - `dureza < 200` → "Peça Rejeitada: Material muito dúctil"
 - `200 <= dureza <= 240` → "Peça Aprovada: Dentro das especificações"
 - `dureza > 240` → "Peça Rejeitada: Material muito frágil"
 
-**O que o app deve ter:**
-- Título com referência ao ensaio Brinell
-- Campo de entrada para a dureza
-- Botão "Classificar"
-- Exibição do valor da dureza com `st.metric`
-- Mensagem de aprovação/rejeição com `st.success` ou `st.error`
+**O que o programa deve ter:**
+- Descrição do ensaio Brinell
+- Entrada da dureza com `input()`
+- Exibição do valor da dureza com `print(f"...")`
+- Mensagem de aprovação/rejeição com `print()`
 
 **Valores de teste:**
 - `dureza = 180 HB` → Rejeitada (muito dúctil)
@@ -262,13 +265,13 @@ else:
 - `dureza = 260 HB` → Rejeitada (muito frágil)
 
 > **Desafios opcionais:** tente os exercícios a seguir por conta própria:
-> - **Sensor de Emergência CNC** — autenticação com `st.text_input`, `st.checkbox` e condições combinadas (`and`)
-> - **Seleção de Material por Torque** — `st.slider` + `st.radio` para classificar faixas de torque e aplicar descontos
+> - **Sensor de Emergência CNC** — autenticação com `input()` e condições combinadas (`and`)
+> - **Seleção de Material por Torque** — `input()` para classificar faixas de torque e aplicar descontos
 > - **Homogeneidade de Eixos** — `max()` e `min()` com condicionais para controle de qualidade
 
 ## Mini-Projeto — Classificador de Materiais
 
-**Contexto:** A engenharia de materiais de uma empresa de componentes mecânicos quer uma ferramenta de apoio para selecionar o material mais adequado para um novo componente. O engenheiro informa as condições de operação (tensão, temperatura e ambiente) e o app sugere o material ideal com base em regras pré-definidas.
+**Contexto:** A engenharia de materiais de uma empresa de componentes mecânicos quer uma ferramenta de apoio para selecionar o material mais adequado para um novo componente. O engenheiro informa as condições de operação (tensão, temperatura e ambiente) e o programa sugere o material ideal com base em regras pré-definidas.
 
 **Regras de classificação:**
 
@@ -283,15 +286,14 @@ else:
 > Note que as faixas de tensão do Aço Carbono e Aço Inox são as mesmas — a diferença está no **ambiente**. Se o ambiente for corrosivo, o Inox é preferido.
 
 **Entradas:**
-- Tensão atuante (MPa) — `st.number_input`
-- Temperatura de operação (°C) — `st.number_input`
-- Ambiente — `st.selectbox` com opções: "Seco", "Úmido", "Corrosivo"
+- Tensão atuante (MPa) — `input()` com `float()`
+- Temperatura de operação (°C) — `input()` com `float()`
+- Ambiente — `input()` com opções: "Seco", "Úmido", "Corrosivo"
 
-**O que o app deve ter:**
-- Título e descrição da ferramenta
-- Três campos de entrada (tensão, temperatura, ambiente)
-- Botão "Selecionar material"
-- Material recomendado exibido com destaque
+**O que o programa deve ter:**
+- Descrição da ferramenta
+- Três entradas (tensão, temperatura, ambiente) com `input()`
+- Material recomendado exibido com `print()`
 - **Desafio extra:** exibir uma segunda opção (material backup) caso o principal não esteja disponível
 
 **Valores de teste:**
@@ -308,10 +310,10 @@ else:
 - Operadores lógicos: `and`, `or`, `not`
 - Python permite comparações encadeadas: `50 <= x <= 150`
 - Use `elif` para alternativas no mesmo nível; aninhe quando a condição interna depende da externa
-- Widgets de decisão: `st.radio` (poucas opções visíveis) e `st.checkbox` (liga/desliga)
+- `input()` permite entrar com dados pelo teclado; use `int()`/`float()` para converter para número
 
 ## Referências
 
 - **Python.org — Controle de fluxo** — https://docs.python.org/pt-br/3/tutorial/controlflow.html
-- **Streamlit Docs — Widgets** — https://docs.streamlit.io/develop/api-reference/widgets
+- **Python.org — Função input()** — https://docs.python.org/pt-br/3/library/functions.html#input
 - **PEP 8 — Guia de estilo** — https://peps.python.org/pep-0008/

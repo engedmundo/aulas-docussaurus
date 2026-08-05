@@ -12,7 +12,7 @@
 8. Herança (`super()`)
 9. Polimorfismo (sobrescrita)
 10. Classes abstratas (ABC)
-11. POO + Streamlit: persistindo objetos com `st.session_state`
+11. POO no notebook: persistindo objetos
 12. Exercícios práticos
 
 ## O que é POO?
@@ -219,29 +219,11 @@ class Peca(ABC):
 - Usa `ABC` como superclasse
 - `@abstractmethod` força a implementação nas subclasses
 
-## POO + Streamlit: Persistindo Objetos com `st.session_state`
+## POO no notebook: persistindo objetos
 
-Streamlit reexecuta o script a cada interação. **Objetos criados fora do `session_state` são perdidos.** Para manter instâncias de classes entre reruns, armazene-as no `session_state`.
+Nos apps Streamlit, o script era reexecutado a cada interação e os objetos criados fora do `st.session_state` eram perdidos. **No Colab isso não acontece**: objetos criados em uma célula permanecem no kernel enquanto o notebook estiver aberto.
 
-### O problema
-
-```python
-class Contador:
-    def __init__(self):
-        self.valor = 0
-
-    def incrementar(self):
-        self.valor += 1
-
-contador = Contador()  # Criado de novo a cada rerun!
-
-if st.button("Incrementar"):
-    contador.incrementar()
-
-st.write(f"Valor: {contador.valor}")  # Sempre 0 ou 1
-```
-
-### A solução: objetos no `session_state`
+### Objetos persistem entre células
 
 ```python
 class Contador:
@@ -250,15 +232,17 @@ class Contador:
 
     def incrementar(self):
         self.valor += 1
-
-if "contador" not in st.session_state:
-    st.session_state.contador = Contador()
-
-if st.button("Incrementar"):
-    st.session_state.contador.incrementar()
-
-st.write(f"Valor: {st.session_state.contador.valor}")
 ```
+
+```python
+# Célula 2 — cria o objeto uma única vez
+contador = Contador()
+contador.incrementar()
+contador.incrementar()
+print(f"Valor: {contador.valor}")
+```
+
+Se você re-executar a célula 2, o contador é **recriado** do zero (volta a 0). Para acumular, execute apenas a célula com `contador.incrementar()`.
 
 ### Padrão com listas de objetos
 
@@ -270,22 +254,20 @@ class Aluno:
 
     def calcular_media(self):
         return sum(self.notas) / len(self.notas)
-
-if "alunos" not in st.session_state:
-    st.session_state.alunos = [
-        Aluno("João", [8, 7, 6, 5, 4, 3]),
-        Aluno("Maria", [10, 9, 8, 7, 6, 5]),
-    ]
-
-nomes = [a.nome for a in st.session_state.alunos]
-escolha = st.selectbox("Aluno:", nomes)
-
-if st.button("Calcular média"):
-    aluno = next(a for a in st.session_state.alunos if a.nome == escolha)
-    st.metric("Média", f"{aluno.calcular_media():.1f}")
 ```
 
-> **Regra:** sempre que criar objetos que precisam sobreviver entre interações, guarde-os em `st.session_state`.
+```python
+# Célula 2 — cria a lista de alunos uma única vez
+alunos = [
+    Aluno("João", [8, 7, 6, 5, 4, 3]),
+    Aluno("Maria", [10, 9, 8, 7, 6, 5]),
+]
+
+for aluno in alunos:
+    print(f"{aluno.nome}: média {aluno.calcular_media():.1f}")
+```
+
+> **Regra:** no notebook, as variáveis e objetos persistirão enquanto o kernel estiver ativo. Re-executar a célula que os cria os recria do zero.
 
 ## Resumo — POO Essencial
 
@@ -308,12 +290,10 @@ if st.button("Calcular média"):
 
 **Classe `Aluno`** com atributos `nome` (str) e `notas` (list). Métodos: `calcular_media()`, `calcular_media_exame()` (média ponderada: 70% normal + 30% exame), `exibir_situacao()`.
 
-**App Streamlit:**
-
-- `st.selectbox` para escolher o aluno
-- `st.button` "Calcular"
-- `st.metric` para média e situação
-- Exibir notas individuais com `st.write`
+**No notebook:**
+- Criar os objetos `Aluno` em uma célula
+- Para cada aluno, exibir com `print(f"...")` a média e a situação
+- Exibir as notas individuais com `print()`
 
 | Aluno | Notas |
 |---|---|
@@ -325,60 +305,50 @@ if st.button("Calcular média"):
 
 **Classe `Calculadora`** com atributos `op1` e `op2` (float). Métodos: `somar()`, `subtrair()`, `multiplicar()`, `dividir()`, `calcular_potencia()`. Cada método deve validar divisão por zero.
 
-**App Streamlit:**
-
-- `st.number_input` para operando 1 e operando 2
-- `st.selectbox` para operação (+, −, ×, ÷, ^)
-- `st.button` "Calcular"
-- `st.metric` para o resultado
-- `st.error` para divisão por zero
+**No notebook:**
+- Criar instâncias com valores definidos em variáveis (`op1`, `op2`)
+- Escolher a operação em uma variável
+- Exibir o resultado com `print(f"...")`
+- Tratar a divisão por zero com condicional e `print()` de erro
 
 ## Exercício 7.3 — Classe Carro
 
 **Classe `Carro`** com `consumo` (km/L), `combustivel` (inicia 0), `tanque_max` (50 L). Métodos: `abastecer(litros)`, `andar(distancia)`, `exibir_combustivel()`. O método `andar` deve calcular consumo e reduzir combustível; se não houver combustível suficiente, exibir mensagem.
 
-**App Streamlit:**
-
-- `st.number_input` para abastecer (L) e andar (km)
-- `st.metric` para nível atual do tanque
-- `st.progress` mostrando fração do tanque (0 a 1)
-- `st.success` / `st.warning` para feedback
+**No notebook:**
+- Criar o `Carro` e simular abastecer e andar com valores definidos em variáveis
+- Exibir o nível atual do tanque com `print(f"...")`
+- Exibir a fração do tanque (0 a 1) formatada como porcentagem
+- Mensagens de feedback com `print()`
 
 ## Exercício 7.4 — Sistema Bancário
 
 **Classes:** `Cliente` (nome, cpf) e `Conta` (titular, saldo). Métodos: `depositar()`, `sacar()`, `transferir()`, `exibir_saldo()`.
 
-**App Streamlit:**
-
-- Sidebar com seções: Criar Cliente / Criar Conta / Operações / Listar
-- Formulário para criar cliente (nome, CPF)
-- Formulário para criar conta (vincular a cliente, saldo inicial)
-- Operações: `st.selectbox` para conta, `st.number_input` para valor, botões para depositar/sacar/transferir
-- Listar contas com `st.dataframe`
-- Persistir clientes e contas em `st.session_state`
+**No notebook:**
+- Criar clientes e contas em células separadas, com valores definidos em variáveis
+- Executar operações (depositar/sacar/transferir) chamando os métodos
+- Listar contas com `print()` ou, se preferir, exibir com Pandas
+- Os objetos persistem no kernel enquanto o notebook estiver aberto
 
 ## Exercício 7.5 — Classe Cliente (Abstração)
 
 Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tratar **clientes**: CPF, nome, endereço.
 
-**App Streamlit:**
-
-- Formulário com `st.text_input` (nome, CPF, endereço)
-- `st.button` "Cadastrar"
-- Lista de clientes cadastrados com `st.write`
-- Persistir lista em `st.session_state`
+**No notebook:**
+- Criar os clientes com valores definidos em variáveis (nome, CPF, endereço)
+- Listar os clientes cadastrados com `print()`
+- A lista persiste no kernel enquanto o notebook estiver aberto
 
 ## Exercício 7.6 — ContaBancaria Encapsulada
 
 **Classe `ContaBancaria`** com atributos privados `_titular` e `_saldo`. Getters via `@property`. Métodos: `depositar(valor)`, `sacar(valor)`, `transferir(destino, valor)` com validações (saldo insuficiente, valor negativo).
 
-**App Streamlit:**
-
-- Formulário para criar conta (titular, saldo inicial)
-- Operações: depositar, sacar, transferir (selecionar conta destino)
-- Exibir saldo com `st.metric`
-- `st.error` para operações inválidas
-- Persistir contas em `st.session_state`
+**No notebook:**
+- Criar contas com valores definidos em variáveis (titular, saldo inicial)
+- Executar operações: depositar, sacar, transferir (informando a conta destino)
+- Exibir saldo com `print(f"...")`
+- Tratar operações inválidas com condicional e `print()` de erro
 
 ## Exercício 7.7 — Animal → Cachorro / Gato
 
@@ -388,13 +358,10 @@ Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tr
 - `Cachorro(Animal)`: + `raca`, método `latir()`
 - `Gato(Animal)`: + `cor`, método `miar()`
 
-**App Streamlit:**
-
-- `st.selectbox` para tipo (Cachorro/Gato)
-- Formulário para nome, idade, raça/cor
-- `st.button` "Cadastrar"
-- Lista de animais com `st.write`
-- Botões "Comer", "Latir"/"Miar" que exibem mensagens
+**No notebook:**
+- Criar objetos `Cachorro` e `Gato` com valores definidos em variáveis
+- Listar os animais com `print()`
+- Chamar os métodos "comer", "latir"/"miar" e exibir as mensagens com `print()`
 
 ## Exercício 7.8 — Veiculo Polimórfico
 
@@ -406,12 +373,10 @@ Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tr
 | `Moto(Veiculo)` | "A moto está acelerando a 60 km/h na pista." |
 | `Aviao(Veiculo)` | "O avião está voando a 900 km/h a 10.000 m de altitude." |
 
-**App Streamlit:**
-
-- `st.selectbox` para escolher o tipo de veículo
-- `st.button` "Mover"
-- Exibir mensagem com `st.info` ou `st.success`
-- Lista de veículos cadastrados com `st.dataframe`
+**No notebook:**
+- Criar veículos das três subclasses com valores definidos em variáveis
+- Chamar `mover()` para cada um e exibir a mensagem com `print()`
+- Listar os veículos criados com `print()`
 
 ## Exercício 7.9 — Estoque de Peças
 
@@ -423,13 +388,10 @@ Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tr
 
 **`Estoque`:** classe gerenciadora com `add_peca()`, `consultar()`, `listar()`.
 
-**App Streamlit:**
-
-- `st.selectbox` para tipo de peça (Parafuso/Rolamento)
-- Formulário com campos específicos do tipo
-- `st.button` "Adicionar ao estoque"
-- Tabela com `st.dataframe` mostrando estoque atual
-- `st.number_input` para retirar peças
+**No notebook:**
+- Criar peças (`Parafuso`, `Rolamento`) com valores definidos em variáveis
+- Adicionar/remover peças chamando os métodos do `Estoque`
+- Listar o estoque atual com `print()` ou Pandas
 
 ## Exercício 7.10 — Controle de Manutenção
 
@@ -439,14 +401,10 @@ Partindo de uma classe genérica `Pessoa`, abstraia apenas o necessário para tr
 
 **`ControleManutencao`:** classe gerenciadora.
 
-**App Streamlit:**
-
-- `st.selectbox` para tipo de máquina
-- `st.text_input` para nome e ID
-- `st.date_input` para última manutenção
-- `st.button` "Cadastrar"
-- Listagem com máquinas e datas da próxima manutenção
-- Destacar máquinas com manutenção atrasada (`st.warning`)
+**No notebook:**
+- Cadastrar máquinas (`Torno`, `Fresa`) com valores definidos em variáveis
+- Exibir as máquinas e as datas da próxima manutenção com `print(f"...")`
+- Destacar máquinas com manutenção atrasada com um aviso no `print()`
 
 ## Resumo da aula
 

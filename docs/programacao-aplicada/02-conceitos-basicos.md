@@ -1,4 +1,4 @@
-# Conceitos Básicos + Apps Interativos
+# Conceitos Básicos + Notebooks no Google Colab
 
 ## Roteiro
 
@@ -7,11 +7,11 @@
 3. Conversão de tipos
 4. Entrada e saída (`print` / `input`)
 5. Operadores matemáticos
-6. Instalação do Streamlit
-7. Streamlit: primeiros passos (anatomia, elementos básicos, métricas)
-8. Widgets Streamlit: `st.number_input`, `st.slider`, `st.selectbox`, `st.button`
+6. Configuração do Google Colab
+7. Notebooks: primeiros passos (células, Markdown, saída formatada)
+8. Entrada de dados no notebook: variáveis, `input()`, `float()` / `int()`
 9. Exemplo completo: Calculadora de Tensão
-10. Exercícios em Streamlit
+10. Exercícios no notebook
 11. **Mini-projeto:** Calculadora de Usinagem
 
 ## Pensamento Computacional
@@ -38,7 +38,7 @@ Na aula 01 você escreveu seu primeiro algoritmo para calcular tensão:
 4. Exibir resultado
 ```
 
-Agora você vai aprender a escrever cada um desses passos em Python com precisão: como **guardar valores** (variáveis), como **recebê-los do usuário** (`input` / widgets) e como **calculá-los** (operadores).
+Agora você vai aprender a escrever cada um desses passos em Python com precisão: como **guardar valores** (variáveis), como **recebê-los do usuário** (`input`) e como **calculá-los** (operadores).
 
 ## Variáveis em Python
 
@@ -221,7 +221,7 @@ print(f"Área da seção: {area * 1e6:.2f} mm²")
 print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
 ```
 
-> **Nota:** Em apps Streamlit, `input()` não é usado — substituímos por widgets como `st.number_input`. O `input()` é útil para scripts de terminal e para entender o fluxo de entrada de dados.
+> **Nota:** Ao executar uma célula no Google Colab, a função `input()` permite entrar com dados pelo teclado — o programa pausa, aguarda o valor digitado e depois continua. Esse é o principal mecanismo para interatividade no notebook.
 
 ## Operadores Matemáticos
 
@@ -276,280 +276,210 @@ V = (4/3) * math.pi * r**3
 print(f"Volume: {V:.6f} m³")
 ```
 
-## Instalação do Streamlit
+## Configuração do Google Colab
 
-Antes de criar apps web, instale o Streamlit:
+Para executar os exemplos desta aula não é preciso instalar nada. O **Google Colab** é um serviço gratuito que roda Python no navegador, no qual cada bloco de código (chamado **célula**) é executado ao vivo.
 
-```bash
-pip install streamlit
-```
+**Primeiros passos:**
 
-Verifique:
-
-```bash
-streamlit hello
-```
-
-Isso abre um app de demonstração no navegador em `http://localhost:8501`. Explore à vontade — a seguir você criará o seu próprio.
-
-## Streamlit — Apps Web com Python
-
-Até agora os programas rodaram no terminal com `print()` e `input()`. Mas e se você quiser criar uma **interface gráfica** que qualquer pessoa possa usar sem instalar Python?
-
-Streamlit é um framework que transforma scripts Python em **aplicações web interativas** sem escrever HTML, CSS ou JavaScript.
-
-**Tradicional:**
-```
-HTML ──> CSS ──> JavaScript ──> Backend → meses de aprendizado → App Web
-```
-
-**Streamlit:**
-```
-Python puro ──> App Web (em segundos)
-```
-
-### Por que Streamlit na Engenharia?
-
-| Problema | Solução Tradicional | Com Streamlit |
-|---|---|---|
-| Dashboard de sensores | Node.js + React + API | **30 linhas de Python** |
-| Calculadora técnica | HTML + JavaScript | **15 linhas de Python** |
-| Visualizar ensaio | Exportar → Excel → Gráfico | **Automatizado** |
-| Compartilhar ferramenta | Servidor web complexo | **Um comando** |
-
-### Anatomia de um App Streamlit
+1. Acesse **colab.research.google.com**
+2. Clique em **Novo notebook**
+3. Em cada célula de código, digite o Python e execute com **Shift+Enter**
+4. O resultado aparece imediatamente abaixo da célula
 
 ```python
-import streamlit as st
-st.title("Meu App")
-st.write("Olá!")
+# Sua primeira célula no Colab
+print("Olá, turma de Eng. Mecânica!")
+print("Python já está pronto — sem instalação!")
+```
+
+Execute com **Shift+Enter**: a saída aparece logo abaixo da célula. Para criar um novo bloco, use o botão **+ Código**. Você também pode adicionar **células de texto** (Markdown) para documentar o notebook — nelas, o texto é formatado com **negrito**, *itálico* e títulos, sem executar código.
+
+> Ao contrário de instalar um ambiente local, o Colab já vem com Python e as principais bibliotecas de engenharia prontas. Nesta aula usaremos apenas Python puro e, se precisar de gráficos, o `matplotlib`.
+
+## Python Interativo — Notebook vs. terminal
+
+Até agora os programas rodaram com `print()` e `input()`. O Colab organiza o código em **células** dentro de um **notebook**:
+
+```
+Célula de código ──> Shift+Enter ──> Python executa ──> saída exibida abaixo
+```
+
+**Tradicional (terminal):**
+```
+escrever arquivo  ──>  executar o arquivo inteiro  ──>  ver a saída no final
+```
+
+**Notebook (Colab):**
+```
+escrever uma célula  ──> Shift+Enter  ──> ver o resultado na hora, célula por célula
+```
+
+### Anatomia de um notebook
+
+```
+# Célula 1 — código com programa simples
+forca = 5000.0
+print(f"Força: {forca} N")
      ↓
-Python executa de cima para baixo
+Shift+Enter executa de cima para baixo
      ↓
-Interface Web (título + texto)
+Resultado impresso abaixo da célula
 ```
 
-- Cada **execução** do script recria a página
-- Você só escreve Python — o Streamlit cuida da web
-- Toda interação do usuário reexecuta o script
+- Cada **célula de código** roda Python de cima para baixo
+- Você escreve Python puro — o Colab cuida do ambiente
+- Uma **célula pode usar as variáveis das células anteriores**, pois elas ficam na memória do notebook
 
-### Primeiro App Streamlit
-
-Crie `app.py`:
+### Elementos de um notebook
 
 ```python
-import streamlit as st
+# Texto e saída
+print("Texto com resultado numérico:", 250)
 
-st.title("Meu Primeiro App")
-st.write("Olá, turma de Eng. Mecânica!")
-st.write("Bem-vindos à Programação Aplicada.")
-```
+# Saída formatada com f-string
+sigma = 2_500_000.0
+print(f"Tensão: {sigma/1e6:.2f} MPa")
 
-Execute:
-
-```bash
-streamlit run app.py
-```
-
-### Elementos básicos
-
-```python
-import streamlit as st
-
-# Títulos
-st.title("Título principal")
-st.header("Cabeçalho")
-st.subheader("Subcabeçalho")
-
-# Texto formatado
-st.write("Texto com **negrito** e *itálico*")
-st.markdown("Texto em **Markdown**")
-
-# Linha separadora
-st.divider()
-
-# Código formatado
+# Código formatado em célula de texto (ou comentário)
 codigo = "print('Olá')"
-st.code(codigo, language="python")
+print(codigo)
 ```
 
-### Exibindo métricas e resultados
+Para separar seções, use células de texto (Markdown) ou uma linha `---` em uma delas.
 
-O Streamlit possui componentes específicos para exibir resultados de forma clara:
+### Exibindo resultados e resumo numérico
+
+No notebook, basta usar `print()` — tanto para números como para mensagens de status:
 
 ```python
-import streamlit as st
+print("== Resultado do Cálculo ==")
 
-st.header("Resultado do Cálculo")
+# Resumo dos valores calculados
+print(f"Tensão (MPa):       {250:.1f}")
+print(f"Deformação (%):     {0.12:.2f}")
+print(f"Fator de segurança: {2.5:.1f}")
 
-# Métricas destacadas
-col1, col2, col3 = st.columns(3)
-col1.metric("Tensão", "250 MPa")
-col2.metric("Deformação", "0.12%")
-col3.metric("Fator de Segurança", "2.5")
-
-# Caixa de informação
-st.info("O material está dentro dos limites de segurança.")
-
-# Caixa de alerta
-st.warning("A temperatura está próxima do limite.")
-
-# Caixa de erro
-st.error("Tensão acima do limite de escoamento!")
-
-# Caixa de sucesso
-st.success("Cálculo concluído com sucesso!")
+# Mensagens de estado
+print("INFO: o material está dentro dos limites de segurança.")
+print("ATENÇÃO: a temperatura está próxima do limite.")
+print("ERRO: tensão acima do limite de escoamento!")
+print("OK: cálculo concluído com sucesso!")
 ```
 
-## Streamlit — Widgets de Entrada
+## Entrada de dados no notebook
 
-Agora que você já viu como criar um app Streamlit, vamos aprofundar os widgets de entrada que substituem o `input()` nos apps.
+Agora que você já sabe estruturar um notebook, vamos usar a entrada de dados interativa. A função `input()` pausa a célula e aguarda o usuário digitar algo no teclado.
 
-### Comparação: console vs. Streamlit
+### Comparação: valores fixos vs. entrada pelo teclado
 
 ```python
-# Console (terminal)
+# Valores definidos no topo da célula
+forca = 5000.0
+material = "Aço 1020"
+
+# Entrada pelo teclado com input()
 forca = float(input("Força (N): "))
 material = input("Material: ")
-
-# Streamlit (app web)
-forca = st.number_input("Força (N):", min_value=0.0)
-material = st.selectbox("Material:", ["Aço", "Alumínio"])
 ```
 
-A lógica é a mesma: receber um valor e guardar em uma variável. A diferença é a interface.
+A lógica é a mesma: receber um valor e guardar em uma variável. A diferença é quem fornece o valor — o código (fixo) ou o usuário (via teclado).
 
-### `st.number_input` — entrada numérica
+### `input()` — entrada numérica
 
-```python
-import streamlit as st
-
-st.number_input(
-    label,        # rótulo exibido
-    min_value,    # valor mínimo aceito
-    max_value,    # valor máximo aceito
-    value,        # valor inicial
-    step,         # incremento ao clicar nas setas
-    format        # formato de exibição
-)
-```
-
-Exemplos práticos:
+No notebook, para receber números do usuário usamos `input()` que **sempre retorna string**, por isso convertemos com `int()` ou `float()`:
 
 ```python
 # Inteiro
-num_pecas = st.number_input("Quantidade de peças:",
-                             min_value=1, step=1, format="%d")
+num_pecas = int(input("Quantidade de peças: "))
 
 # Decimal com 2 casas
-forca = st.number_input("Força aplicada (N):",
-                         min_value=0.0, value=5000.0,
-                         step=100.0, format="%.1f")
+forca = float(input("Força aplicada (N): "))
 ```
 
-> `st.number_input` já retorna `float` ou `int` — não precisa usar `float()` para converter.
+> `input()` retorna sempre `str` — use `float()` ou `int()` para converter e poder calcular.
 
-### `st.slider` — controle deslizante
+### Explorando uma faixa de valores
 
-Útil quando o usuário precisa explorar uma faixa de valores de forma visual:
+Quando o usuário precisa experimentar com uma faixa de valores, o mais simples é usar `input()` e permitir qualquer número:
 
 ```python
-temperatura = st.slider(
-    "Temperatura de operação (°C)",
-    min_value=20,
-    max_value=1200,
-    value=850,
-    step=10
-)
-st.write(f"Temperatura selecionada: {temperatura} °C")
+temperatura = float(input("Temperatura de operação (°C): "))
+print(f"Temperatura informada: {temperatura:.0f} °C")
 ```
 
-Quando usar `slider` vs `number_input`:
-- **`slider`**: exploração visual, faixas não muito grandes, contexto de "experimentar"
-- **`number_input`**: entrada precisa, valores arbitrários, cálculos de engenharia
+Aqui o usuário digita o valor livremente pelo teclado.
 
-### `st.selectbox` — seleção de opções
+### Seleção de opções
 
-Para escolhas pré-definidas:
+Para escolhas pré-definidas, guarde as opções em uma lista e deixe o usuário digitar uma delas:
 
 ```python
-material = st.selectbox(
-    "Material:",
-    ["Aço 1020", "Aço 4340", "Alumínio 6061", "Latão"]
-)
+materiais = ["Aço 1020", "Aço 4340", "Alumínio 6061", "Latão"]
+print("Opções de material:", materiais)
+material = input("Digite o material: ")
 
-diametro_broca = st.selectbox(
-    "Diâmetro da broca (mm):",
-    [6, 8, 10, 12, 16, 20, 25]
-)
+diametros = [6, 8, 10, 12, 16, 20, 25]
+print("Diâmetro da broca (mm):", diametros)
+diametro = int(input("Digite o diâmetro (mm): "))
 ```
 
-### `st.button` — ação sob demanda
+### Calculando sob demanda
 
-`st.button` retorna `True` apenas no momento em que é clicado. Todo o código dentro do `if` só executa nesse momento:
+Como as células executam na ordem em que você as roda, defina os valores primeiro e execute o cálculo na célula seguinte (ou na mesma); o resultado é impresso quando você quiser:
 
 ```python
-forca = st.number_input("Força (N):", value=5000.0)
-area  = st.number_input("Área (m²):", value=0.002, format="%.4f")
+forca = float(input("Força (N): "))
+area  = float(input("Área (m²): "))
 
-if st.button("Calcular tensão"):
-    sigma = forca / area
-    st.metric("Tensão normal", f"{sigma/1e6:.2f} MPa")
+sigma = forca / area
+print(f"Tensão normal: {sigma/1e6:.2f} MPa")
 ```
 
-**Por que usar `st.button`?** Sem o botão, o cálculo roda a cada vez que o usuário digita — inclusive quando o campo está incompleto (ex.: durante a digitação de `0.002`, passa por `0`, `0.`, `0.0`). O botão garante que o cálculo só ocorre com os valores finais.
+**Por que executar assim?** No terminal o cálculo roda uma vez por execução. No notebook, você pode editar os valores e reexecutar a célula quantas vezes quiser.
 
-### `st.columns` — layout lado a lado
+### Organizando a entrada — células separadas
 
-Distribui widgets e resultados em colunas:
+Não é preciso nenhum layout especial; apenas organize a entrada em células ou linhas:
 
 ```python
-col1, col2 = st.columns(2)
+# Célula de entrada
+forca = float(input("Força (N): "))
+area  = float(input("Área (m²): "))
 
-with col1:
-    forca = st.number_input("Força (N):", value=5000.0)
-
-with col2:
-    area = st.number_input("Área (m²):", value=0.002, format="%.4f")
+# (na mesma célula ou em outra) o cálculo
+sigma = forca / area
+print(f"Tensão: {sigma/1e6:.2f} MPa")
 ```
 
 ### Exemplo completo: Calculadora de Tensão
 
-Veja como integrar widgets, colunas e métricas em um app funcional de engenharia:
+Veja como integrar entrada, cálculo e formatação em um notebook funcional de engenharia:
 
 ```python
-import streamlit as st
 import math
 
-st.title("Calculadora de Tensão Normal")
-st.write("Calcula a tensão em barras sob carregamento axial: σ = F / A")
-
-st.divider()
+print("Calculadora de Tensão Normal")
+print("Calcula a tensão em barras sob carregamento axial: σ = F / A")
+print("------------------------------------------------------------")
 
 # Entradas do usuário
-col1, col2 = st.columns(2)
-
-with col1:
-    F = st.number_input("Força aplicada F (N)", min_value=0.0, value=5000.0, step=100.0)
-
-with col2:
-    diametro = st.number_input("Diâmetro da barra (mm)", min_value=0.1, value=50.0, step=1.0)
+F = float(input("Força aplicada F (N): "))
+diametro = float(input("Diâmetro da barra (mm): "))
 
 # Cálculo
 A = math.pi * (diametro / 1000) ** 2 / 4
 sigma = F / A
 
-st.divider()
-st.subheader("Resultado")
-
-col3, col4 = st.columns(2)
-col3.metric("Área da seção (mm²)", f"{A * 1e6:.2f}")
-col4.metric("Tensão normal (MPa)", f"{sigma / 1e6:.2f}")
+print("---------------------------")
+print("Resultado")
+print(f"Área da seção (mm²): {A * 1e6:.2f}")
+print(f"Tensão normal (MPa): {sigma / 1e6:.2f}")
 ```
 
-Execute com `streamlit run calculadora.py` e experimente alterar os valores — o resultado atualiza instantaneamente!
+Rode a célula com **Shift+Enter**, digite os valores e observe o resultado — altere os números e execute novamente para ver como muda.
 
-> Na aula 03 você aprenderá `if/elif/else` e poderá adicionar a verificação do fator de segurança: se σ está abaixo do limite de escoamento, o app exibirá aprovado ou reprovado automaticamente.
+> Na aula 03 você aprenderá `if/elif/else` e poderá adicionar a verificação do fator de segurança: se σ está abaixo do limite de escoamento, o programa exibirá aprovado ou reprovado automaticamente.
 
 ---
 
@@ -561,15 +491,14 @@ Execute com `streamlit run calculadora.py` e experimente alterar os valores — 
 
 $$media = \frac{d_1 + d_2 + d_3}{3}$$
 
-**O que o app deve ter:**
+**O que o exercício deve ter:**
 - Título e descrição da especificação mínima
-- Três campos de entrada lado a lado para as medições (HRC)
-- Um botão "Calcular média"
-- Exibição do resultado com `st.metric`
+- Três entradas de medições (HRC) com `input()` e `float()`
+- Cálculo da média e exibição do resultado com `print(f"...")`
 
 **Valores de teste:** `d1 = 41.5`, `d2 = 43.0`, `d3 = 43.0` → média esperada: `42.50 HRC`
 
-> **Próxima aula:** em `03 — Condicionais` você adicionará a aprovação/rejeição do lote com `if media >= 40: st.success(...) else: st.error(...)`, e um campo opcional de 4ª medição com `st.checkbox`.
+> **Próxima aula:** em `03 — Condicionais` você adicionará a aprovação/rejeição do lote com `if media >= 40: print("aprovado") else: print("reprovado")`, e um campo opcional de 4ª medição solicitada com `input()`.
 
 ## Exercício 2.3 — Relação de Transmissão
 
@@ -579,19 +508,18 @@ $$media = \frac{d_1 + d_2 + d_3}{3}$$
 
 $$i = \frac{z_{movida}}{z_{motriz}} \qquad n_{saida} = \frac{n_{motor}}{i}$$
 
-**O que o app deve ter:**
-- Campo de entrada para a rotação do motor (RPM)
-- Dois campos lado a lado para os dentes das engrenagens (motriz e movida)
-- Um botão "Calcular"
-- Dois resultados lado a lado: relação de transmissão e rotação de saída
+**O que o exercício deve ter:**
+- Entrada para a rotação do motor (RPM) com `input()` e `float()`
+- Duas entradas para os dentes das engrenagens (motriz e movida)
+- Cálculo e impressão dos dois resultados: relação de transmissão e rotação de saída
 
 **Valores de teste:** `z_motriz = 20 dentes`, `z_movida = 70 dentes`, `n_motor = 1750 RPM` → `i = 3.50`, `n_saída = 500.00 RPM`
 
 > **Desafios opcionais:** pratique mais com os exercícios a seguir:
 > - **IMC do Operador** — mesmo padrão da calculadora de tensão, aplicado à ergonomia (NR-17)
-> - **Cilindro com Desperdício** — combine geometria, densidade e custo em um único app
-> - **Dilatação Térmica** — adicione `st.selectbox` para selecionar material automaticamente
-> - **Custo Operacional de Fresadora** — use `st.slider` para horas/dia e calcule impostos
+> - **Cilindro com Desperdício** — combine geometria, densidade e custo em um único notebook
+> - **Dilatação Térmica** — selecione o material a partir de uma lista digitada com `input()`
+> - **Custo Operacional de Fresadora** — receba horas/dia com `input()` e calcule impostos
 
 ## Exercício 2.7 — Pressão de Pistão Hidráulico
 
@@ -601,11 +529,11 @@ $$i = \frac{z_{movida}}{z_{motriz}} \qquad n_{saida} = \frac{n_{motor}}{i}$$
 
 $$P = \frac{F}{A} \qquad A = \frac{\pi \cdot d^2}{4}$$
 
-**O que o app deve ter:**
+**O que o exercício deve ter:**
 - Um título e uma breve descrição do cálculo
-- Dois campos de entrada lado a lado: força `F` (N) e diâmetro `d` (mm)
-- Dois resultados lado a lado: área da seção (mm²) e pressão (MPa)
-- Use `st.number_input`, `st.columns` e `st.metric`
+- Duas entradas: força `F` (N) e diâmetro `d` (mm) com `input()` e `float()`
+- Dois resultados impressos: área da seção (mm²) e pressão (MPa)
+- Use `input()`, `float()` e `print(f"...")`
 
 **Valores de teste:** `F = 12 000 N`, `d = 40 mm` → `A = 1 256.64 mm²`, `P = 9.55 MPa`
 
@@ -621,7 +549,7 @@ $$V_c = \frac{\pi \cdot d \cdot n}{1000} \quad \text{(velocidade de corte, m/min
 
 $$t = \frac{L}{f \cdot n} \quad \text{(tempo de corte, min)}$$
 
-$$m = \frac{\pi \cdot d^2}{4} \cdot L \cdot \rho \cdot 10^{-6} \quad \text{(massa da peça, kg)}$$
+$$m = \frac{\pi \cdot d^2}{4} \cdot L \cdot \rho \cdot 10^{-9} \quad \text{(massa da peça, kg)}$$
 
 $$custo = \left(t \cdot \frac{custo_{hora}}{60}\right) + (m \cdot preco_{kg})$$
 
@@ -632,11 +560,11 @@ $$custo = \left(t \cdot \frac{custo_{hora}}{60}\right) + (m \cdot preco_{kg})$$
 - `f` — avanço por rotação (mm/rot)
 - `ρ` — densidade do material (kg/m³)
 
-**O que o app deve ter:**
-- Seção "Geometria e corte" com campos para diâmetro, rotação, comprimento e avanço
-- Seção "Material e custo" com seleção de material (via `st.selectbox`), custo horário e preço por kg
-- Um botão "Calcular"
-- Resultados: velocidade de corte, tempo de corte, massa da peça e custo total
+**O que o notebook deve ter:**
+- Seção "Geometria e corte" com entradas para diâmetro, rotação, comprimento e avanço
+- Seção "Material e custo" com a seleção do material (lista com `input()`), custo horário e preço por kg
+- Cálculo dos resultados
+- Resultados impressos: velocidade de corte, tempo de corte, massa da peça e custo total
 
 **Valores de teste:** `d = 60 mm`, `n = 1000 RPM`, `L = 250 mm`, `f = 0.15 mm/rot`, `ρ = 7850 kg/m³`, `custo_hora = R$ 80,00`, `preco_kg = R$ 12,00`
 
@@ -644,14 +572,16 @@ $$custo = \left(t \cdot \frac{custo_{hora}}{60}\right) + (m \cdot preco_{kg})$$
 ```
 Velocidade de corte:   188.50 m/min
 Tempo de corte:          1.67 min
-Massa da peça:           0.554 kg
-Custo total:          R$ 8,90
+Massa da peça:           5.55 kg
+Custo total:          R$ 68,81
 ```
 
 **Dica:** use um dicionário para mapear o nome do material à sua densidade:
 
 ```python
-densidades = {"Aço 1020 (7850)": 7850, "Alumínio 6061 (2700)": 2700, "Latão (8500)": 8500}
+densidades = {"Aço 1020": 7850, "Alumínio 6061": 2700, "Latão": 8500}
+print("Materiais:", list(densidades.keys()))
+material = input("Material: ")
 rho = densidades[material]
 ```
 
@@ -663,14 +593,17 @@ rho = densidades[material]
 - `input()` sempre retorna `str` — converta para número antes de calcular
 - f-strings formatam saída: `f"Valor: {variavel:.2f}"`
 - Precedência: `()` > `**` > `*` `/` > `+` `-` — use parênteses para evitar ambiguidade
-- Streamlit transforma scripts Python em apps web: `st.title()`, `st.write()`, `st.metric()`
-- Widgets de entrada: `st.number_input`, `st.slider`, `st.selectbox`, `st.button`
+- O Google Colab roda Python no navegador, sem instalação: células executadas com Shift+Enter
+- Células de texto (Markdown) documentam o notebook; células de código executam Python
+- Entrada de dados interativa: `input()` sempre retorna `str` — converta com `int()`/`float()`
+- Fórmulas de engenharia: defina valores (ou `input()`), calcule e exiba com `print(f"...")`
 
 ## Referências
 
+- **Google Colab — Notebooks com Python** — https://colab.research.google.com/
 - **Python.org — Tutorial oficial (pt-BR)** — https://docs.python.org/pt-br/3/tutorial/
 - **Python.org — Tipos embutidos** — https://docs.python.org/pt-br/3/library/stdtypes.html
 - **Python.org — Função print() e formatação** — https://docs.python.org/pt-br/3/tutorial/inputoutput.html
-- **Streamlit Docs — Input widgets** — https://docs.streamlit.io/develop/api-reference/widgets
+- **Matplotlib — Galeria de exemplos** — https://matplotlib.org/stable/gallery/index.html
 - **PEP 8 — Guia de estilo** — https://peps.python.org/pep-0008/
 - **Tavares Neto, R. F.; Silva, F. M.** Introdução à programação para engenharia. LTC, 2022.

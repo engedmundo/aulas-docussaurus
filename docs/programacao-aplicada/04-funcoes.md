@@ -9,7 +9,7 @@
 5. Múltiplos retornos
 6. Funções + Condicionais
 7. Escopo de variáveis
-8. Funções no contexto Streamlit
+8. Funções em um notebook (Colab)
 9. Exercícios
 10. **Mini-projeto:** Calculadora Técnica com Funções
 
@@ -123,7 +123,7 @@ def classificar_dureza(dureza_hb):
     else:
         return "Material muito frágil — Rejeitada"
 
-# Uso no app
+# Uso da função
 resultado = classificar_dureza(225)
 print(resultado)  # Dentro das especificações — Aprovada
 ```
@@ -202,43 +202,40 @@ print(resultado)   # None — não há return
 
 > Toda função em Python retorna `None` se não houver `return`.
 
-## Funções no contexto Streamlit
+## Funções em um notebook (Colab)
 
-No Streamlit, funções ajudam a organizar a lógica de cálculo separada da interface:
+Em um notebook, funções ajudam a organizar a lógica de cálculo em células separadas, que podem ser reutilizadas em outras células do notebook:
 
 ```python
-import streamlit as st
+import math
 
 def calcular_tensao(forca, diametro):
-    import math
     area = math.pi * (diametro / 1000) ** 2 / 4
     return forca / area
 
-st.title("Calculadora de Tensão")
-F = st.number_input("Força (N):", value=5000.0)
-d = st.number_input("Diâmetro (mm):", value=50.0)
+F = 5000.0   # Força (N)
+d = 50.0     # Diâmetro (mm)
 
-if st.button("Calcular"):
-    sigma = calcular_tensao(F, d)
-    st.metric("Tensão normal", f"{sigma / 1e6:.2f} MPa")
+sigma = calcular_tensao(F, d)
+print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
 ```
 
-A função `calcular_tensao` faz apenas o cálculo — a interface fica no corpo principal do script. Isso facilita testar a função separadamente e reutilizá-la em outros apps.
+A função `calcular_tensao` faz apenas o cálculo — os valores de entrada são definidos como variáveis no topo da célula. Isso facilita testar a função separadamente e reutilizá-la em outras células do notebook.
 
 ---
 
 ## Exercício 4.1 — Conversor de Unidades
 
-**Contexto:** O laboratório de ensaios mecânicos recebe dados de máquinas de teste em unidades imperiais (psi, polegadas, °F) mas os relatórios devem ser em unidades SI (MPa, mm, °C). O técnico quer um app que faça as conversões usando funções bem definidas, para que cada conversão possa ser reutilizada em outros scripts.
+**Contexto:** O laboratório de ensaios mecânicos recebe dados de máquinas de teste em unidades imperiais (psi, polegadas, °F) mas os relatórios devem ser em unidades SI (MPa, mm, °C). O técnico quer um programa que faça as conversões usando funções bem definidas, para que cada conversão possa ser reutilizada em outros scripts.
 
 **Funções que devem ser criadas:**
 - `psi_para_mpa(psi)` — converte psi para MPa (1 psi = 0.00689476 MPa)
 - `pol_para_mm(pol)` — converte polegadas para mm (1 pol = 25.4 mm)
 - `f_para_c(f)` — converte °F para °C (`C = (F - 32) × 5/9`)
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Três seções, uma para cada conversão
-- Cada seção com um campo de entrada e exibição do resultado
+- Cada seção com valores de entrada definidos em variáveis e exibição do resultado com `print(f"...")`
 - Use as funções criadas para fazer os cálculos
 
 **Valores de teste:**
@@ -257,15 +254,14 @@ A função `calcular_tensao` faz apenas o cálculo — a interface fica no corpo
   - `-tolerancia <= desvio <= tolerancia` → "Solda dentro da tolerância — Aprovada"
   - `desvio > tolerancia` → "Solda excessiva — Reprovada"
 
-**Entradas do app:**
+**Entradas do programa:**
 - Valor nominal da perna da solda (mm)
 - Medida real da perna da solda (mm)
 - Tolerância percentual (%) — valor padrão 10%
 
-**O que o app deve ter:**
-- Campos de entrada para nominal, medida e tolerância
-- Botão "Classificar solda"
-- Resultados: desvio percentual e classificação
+**O que o programa deve ter:**
+- Variáveis para nominal, medida e tolerância
+- Resultados: desvio percentual e classificação, exibidos com `print(f"...")`
 
 **Valores de teste:**
 - `nominal = 6 mm`, `medida = 5.8 mm`, `tolerância = 10%` → desvio = -3.33%, Aprovada
@@ -292,11 +288,9 @@ def potencia_mecanica(torque, rpm):
     """P = T · ω — retorna potência em W (ω em rad/s)"""
 ```
 
-**O que o app deve ter:**
-- Um `st.selectbox` para escolher qual cálculo realizar
-- Campos de entrada que mudam conforme a opção selecionada
-- Botão "Calcular"
-- Resultado exibido com `st.metric` e a unidade correta
+**O que o programa deve ter:**
+- Uma célula (ou função) para cada cálculo, com valores de entrada definidos em variáveis
+- Resultado exibido com `print(f"...")` e a unidade correta
 
 **Valores de teste:**
 - Tensão normal: `F = 10000 N`, `A = 0.005 m²` → `2.0 MPa`
@@ -314,10 +308,10 @@ def potencia_mecanica(torque, rpm):
 - Múltiplos valores podem ser retornados como tupla
 - Variáveis criadas dentro da função são locais — não existem fora
 - Constantes globais (MAIÚSCULAS) são aceitáveis; variáveis globais mutáveis devem ser evitadas
-- No Streamlit, funções separam a lógica de cálculo da interface
+- Em um notebook, funções organizam a lógica de cálculo em células reutilizáveis
 
 ## Referências
 
 - **Python.org — Funções** — https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions
 - **PEP 8 — Guia de estilo** — https://peps.python.org/pep-0008/
-- **Streamlit Docs — Widgets** — https://docs.streamlit.io/develop/api-reference/widgets
+- **Google Colab — Introdução** — https://colab.research.google.com/notebooks/intro.ipynb

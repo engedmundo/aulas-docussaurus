@@ -87,7 +87,7 @@ sensores.sort()            # ordena em ordem crescente
 sensores.reverse()         # inverte a ordem
 
 # Funções embutidas que funcionam com listas
-print(len(sensores))       # 4 — quantidade de elementos
+print(len(sensores))       # 3 — quantidade de elementos
 print(sum(sensores))       # 55 — soma
 print(max(sensores))       # 30 — maior valor
 print(min(sensores))       # 10 — menor valor
@@ -252,6 +252,7 @@ densidades = {
     "Alumínio 6061 (2700)": 2700,
     "Latão (8500)": 8500,
 }
+material = "Aço 1020 (7850)"
 rho = densidades[material]
 ```
 
@@ -316,11 +317,11 @@ if comum:
 temperaturas = [300, 320, 315, 310, 290]
 ```
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Título e descrição do ensaio
 - Exibição da lista de temperaturas
 - Resultados: primeira e última temperatura, variação (ΔT), média, máxima, mínima e amplitude
-- Use `st.metric` para cada resultado
+- Exiba cada resultado com `print(f"...")`, identificando cada valor
 
 **Valores de teste:** `temperaturas = [300, 320, 315, 310, 290]` → ΔT = -10, média = 307.0, amplitude = 30
 
@@ -330,7 +331,7 @@ temperaturas = [300, 320, 315, 310, 290]
 
 **Contexto:** O setor de engenharia de materiais quer manter um catálogo digital de materiais com suas propriedades mecânicas. Cada material é representado por um dicionário, e o catálogo é uma lista de dicionários.
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Três dicionários de materiais (Aço 1020, Alumínio 6061, Latão) com: nome, densidade, módulo de elasticidade (E), limite de escoamento
 - Uma lista contendo os três materiais
 - Exibição do catálogo usando `for` e `enumerate()`, mostrando cada material com seu número e propriedades formatadas
@@ -356,7 +357,7 @@ operadores = {
 }
 ```
 
-**O que o app deve ter:**
+**O que o programa deve ter:**
 - Título e descrição do sistema
 - Resultados usando conjuntos:
   - Operadores polivalentes (interseção)
@@ -372,14 +373,14 @@ operadores = {
 
 ## Mini-Projeto — Catálogo de Materiais Interativo
 
-**Contexto:** A engenharia de projetos quer uma ferramenta para consultar propriedades de materiais e comparar dois materiais lado a lado. O catálogo deve ser construído com dicionários e permitir seleção via Streamlit.
+**Contexto:** A engenharia de projetos quer uma ferramenta para consultar propriedades de materiais e comparar dois materiais lado a lado. O catálogo deve ser construído com dicionários.
 
-**O que o app deve ter:**
+**O que o programa deve fazer:**
 - Um dicionário com pelo menos 4 materiais, cada um com: nome, densidade, módulo de elasticidade (E), limite de escoamento, coeficiente de dilatação
-- Um `st.selectbox` para escolher o material principal
-- Um `st.radio` ou segundo `st.selectbox` para escolher o material de comparação (opcional)
-- Botão "Consultar" que exibe as propriedades do material selecionado com `st.metric`
-- Se dois materiais forem selecionados, exibir a comparação lado a lado usando `st.columns`
+- Uma variável com o nome do material principal a consultar
+- Uma variável opcional com o nome do material de comparação
+- Imprima as propriedades do material selecionado com `print(f"...")`
+- Se dois materiais forem selecionados, imprimir a comparação lado a lado com `print(f"...")`
 
 **Materiais sugeridos:**
 
