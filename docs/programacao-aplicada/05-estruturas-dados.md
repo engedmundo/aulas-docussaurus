@@ -318,7 +318,7 @@ temperaturas = [300, 320, 315, 310, 290]
 ```
 
 **O que o programa deve ter:**
-- Título e descrição do ensaio
+- Título e descrição do ensaio.
 - Exibição da lista de temperaturas
 - Resultados: primeira e última temperatura, variação (ΔT), média, máxima, mínima e amplitude
 - Exiba cada resultado com `print(f"...")`, identificando cada valor
