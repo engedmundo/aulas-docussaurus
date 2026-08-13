@@ -308,7 +308,7 @@ if comum:
 
 ---
 
-## Exercício 4.1 — Análise de Temperaturas
+## Exercício 5.1 — Análise de Temperaturas
 
 **Contexto:** Um ensaio térmico registrou temperaturas (°C) em intervalos regulares durante o aquecimento de uma peça. O engenheiro precisa analisar rapidamente os dados para verificar se o perfil de aquecimento está conforme a especificação.
 
@@ -327,21 +327,21 @@ temperaturas = [300, 320, 315, 310, 290]
 
 **Dica:** use `temperaturas[0]`, `temperaturas[-1]`, `sum()`, `max()`, `min()` e `len()`.
 
-## Exercício 4.2 — Cadastro de Materiais
+## Exercício 5.2 — Cadastro de Materiais
 
 **Contexto:** O setor de engenharia de materiais quer manter um catálogo digital de materiais com suas propriedades mecânicas. Cada material é representado por um dicionário, e o catálogo é uma lista de dicionários.
 
 **O que o programa deve ter:**
 - Três dicionários de materiais (Aço 1020, Alumínio 6061, Latão) com: nome, densidade, módulo de elasticidade (E), limite de escoamento
 - Uma lista contendo os três materiais
-- Exibição do catálogo usando `for` e `enumerate()`, mostrando cada material com seu número e propriedades formatadas
+- Exibição do catálogo usando mostrando cada material com seu número e propriedades formatadas
 
 **Valores de teste:**
 - Material 1: Aço 1020, ρ = 7850 kg/m³, E = 210 000 MPa, σ_y = 350 MPa
 - Material 2: Alumínio 6061, ρ = 2700 kg/m³, E = 69 000 MPa, σ_y = 276 MPa
 - Material 3: Latão, ρ = 8500 kg/m³, E = 100 000 MPa, σ_y = 250 MPa
 
-## Exercício 4.3 — Certificações de Operadores
+## Exercício 5.3 — Certificações de Operadores
 
 **Contexto:** O gerente de produção de uma metalúrgica precisa identificar quais operadores são polivalentes (certificados em Torno **e** Fresa), quais são exclusivos de cada máquina, e quem são todos os operadores da seção.
 
