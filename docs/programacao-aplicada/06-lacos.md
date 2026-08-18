@@ -217,6 +217,71 @@ print(f"Média: {sum(validas)/len(validas):.2f} °C")
 > - **Simulação de Caldeira** — use `for` com `range` para simular aquecimento etapa por etapa
 > - **Custo de Combustível da Frota** — itere sobre dicionário de veículos e calcule custos individuais
 
+---
+
+## Exercício 6.3 — Diagnóstico do Turno de Produção
+
+**Contexto:** Uma célula de usinagem possui 5 máquinas CNC. Ao final de cada turno, o sistema registra a lista de tempos de ciclo (min) de cada peça produzida por máquina. O engenheiro de produção precisa analisar o desempenho do turno **como um todo**, detectando as máquinas com tempo médio elevado e as peças que excederam o tempo padrão de ciclo.
+
+**Dados de entrada** (use este dicionário):
+
+```python
+maquinas = {
+    "CNC-01": [11.8, 12.5, 13.1, 11.9, 14.0, 12.2],
+    "CNC-02": [12.3, 12.1, 15.4, 18.9, 12.0, 13.6, 12.4],
+    "CNC-03": [11.6, 11.9, 12.4, 11.8, 12.1],
+    "CNC-04": [13.8, 14.2, 12.9, 16.7, 15.8],
+    "CNC-05": [12.0, 12.2, 12.1, 11.9, 12.3, 12.2, 12.4],
+}
+```
+
+Ciclo padrão de projeto: **12.0 min** — qualquer peça acima disso é um atraso.
+
+**O que o programa deve ter:**
+- Loop sobre `maquinas.items()`; para cada máquina, um **loop interno** percorre a lista de tempos
+- Para cada máquina: quantidade de peças, tempo médio (1 casa decimal) e número de peças acima de 12.0 min
+- Exibir o relatório em tabela alinhada com `Nome`, `Peças`, `Média (min)` e `Alertas`
+- Ao final: a máquina com **pior média**, a máquina com **mais alertas** e o **tempo médio geral** de todas as peças
+- Usar acumuladores (`soma`, `total_peças`, etc.) e as funções `max()` / `min()`
+
+**Dica:** aninhe os laços — o `for` externo percorre os pares `(maquina, tempos)` e o interno percorre `tempos`. Para tabela alinhada, use por exemplo `print(f"{maquina:<7}{n_pecas:>5}{media:>10.1f}{alertas:>8}")`.
+
+**Valores de teste:**
+- CNC-02 → 6 das 7 peças acima do padrão (mais alertas)
+- Média geral ≈ 13.0 min
+- Pior média: CNC-04 (≈ 14.7 min)
+
+## Exercício 6.4 — Faturamento do Mês por Cliente
+
+**Contexto:** O almoxarifado de uma metalúrgica registra as vendas de peças como uma **lista de pedidos**, em que cada pedido é um dicionário com cliente, peça, quantidade e preço unitário. O gerente precisa saber quem são os maiores compradores do mês — ou seja, **agrupar muitos pedidos em um resumo por cliente**, prática comum em qualquer sistema de gestão.
+
+**Dados de entrada** (use esta lista):
+
+```python
+pedidos = [
+    {"cliente": "Auto Peças LTDA", "peca": "Eixo A36",   "qtd": 40, "preco": 120.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Flange",     "qtd": 12, "preco": 480.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Bucha",      "qtd": 80, "preco": 25.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Flange",     "qtd": 25, "preco": 480.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Eixo A36",   "qtd": 60, "preco": 120.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Engrenagem", "qtd": 8,  "preco": 1500.0},
+]
+```
+
+**O que o programa deve ter:**
+- Loop que percorre `pedidos` e agrega tudo em um dicionário-resumo:
+  `{cliente: {"pedidos": n, "total": R$}}`
+- Cálculo do valor de cada pedido: `qtd * preco`
+- Exibir resumo por cliente: quantidade de pedidos e valor total (R$)
+- Identificar e exibir o **maior cliente** (maior valor total) e o cliente com **mais pedidos**
+- Exibir o **ranking dos 3 maiores clientes** usando `sorted()` com `key=lambda`
+
+**Dica:** para não sobrescrever o acumulador ao encontrarmos um cliente pela primeira vez, use `resumo.get(cliente, ...)` ou inicialize o cliente antes de somar. Ex.: `resumo[cliente] = resumo.get(cliente, {"pedidos": 0, "total": 0.0})`.
+
+**Valores de teste:**
+- Auto Peças LTDA → 2 pedidos, R$ 6 800,00 · Fabricante XYZ → R$ 12 960,00 · Ind. Rodrigues → R$ 24 000,00 (maior cliente)
+- Ranking: 1º Ind. Rodrigues, 2º Fabricante XYZ, 3º Auto Peças LTDA
+
 ## Mini-Projeto — Simulador de Aquecimento
 
 **Contexto:** O engenheiro de processos precisa de uma ferramenta para simular o aquecimento de um forno industrial. O usuário informa a temperatura inicial, a temperatura alvo e a taxa de aquecimento, e o app exibe a evolução passo a passo.
