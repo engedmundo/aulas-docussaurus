@@ -7,7 +7,7 @@
 3. Loop `while` — repetição condicional
 4. `break` e `continue`
 5. Exercícios
-6. **Mini-projeto:** Simulador de Aquecimento
+6. **Mini-projeto:** Registro e Consolidação de Movimentações
 
 ## Por que laços de repetição?
 
@@ -259,12 +259,31 @@ Ciclo padrão de projeto: **12.0 min** — qualquer peça acima disso é um atra
 
 ```python
 pedidos = [
-    {"cliente": "Auto Peças LTDA", "peca": "Eixo A36",   "qtd": 40, "preco": 120.0},
-    {"cliente": "Fabricante XYZ",  "peca": "Flange",     "qtd": 12, "preco": 480.0},
-    {"cliente": "Auto Peças LTDA", "peca": "Bucha",      "qtd": 80, "preco": 25.0},
-    {"cliente": "Ind. Rodrigues",  "peca": "Flange",     "qtd": 25, "preco": 480.0},
-    {"cliente": "Fabricante XYZ",  "peca": "Eixo A36",   "qtd": 60, "preco": 120.0},
-    {"cliente": "Ind. Rodrigues",  "peca": "Engrenagem", "qtd": 8,  "preco": 1500.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Eixo A36",   "qtd": 40,  "preco": 120.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Flange",     "qtd": 12,  "preco": 480.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Flange",     "qtd": 25,  "preco": 480.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Bucha",      "qtd": 80,  "preco": 25.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Eixo A36",   "qtd": 60,  "preco": 120.0},
+    {"cliente": "Tornearia Alfa",  "peca": "Pino",       "qtd": 200, "preco": 18.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Engrenagem", "qtd": 8,   "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul", "peca": "Flange",     "qtd": 30,  "preco": 480.0},
+    {"cliente": "Usinagem Norte",  "peca": "Bucha",      "qtd": 50,  "preco": 25.0},
+    {"cliente": "Tornearia Alfa",  "peca": "Eixo A36",   "qtd": 90,  "preco": 120.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Engrenagem", "qtd": 5,   "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul", "peca": "Eixo A36",   "qtd": 110, "preco": 120.0},
+    #{+2 pedidos por cliente}
+    {"cliente": "Auto Peças LTDA",  "peca": "Bucha",     "qtd": 60,  "preco": 25.0},
+    {"cliente": "Auto Peças LTDA",  "peca": "Pino",      "qtd": 100, "preco": 18.0},
+    {"cliente": "Fabricante XYZ",   "peca": "Engrenagem","qtd": 10,  "preco": 1500.0},
+    {"cliente": "Fabricante XYZ",   "peca": "Pino",      "qtd": 150, "preco": 18.0},
+    {"cliente": "Ind. Rodrigues",   "peca": "Eixo A36",  "qtd": 70,  "preco": 120.0},
+    {"cliente": "Ind. Rodrigues",   "peca": "Pino",      "qtd": 120, "preco": 18.0},
+    {"cliente": "Tornearia Alfa",   "peca": "Flange",    "qtd": 20,  "preco": 480.0},
+    {"cliente": "Tornearia Alfa",   "peca": "Bucha",     "qtd": 90,  "preco": 25.0},
+    {"cliente": "Metalúrgica Sul",  "peca": "Engrenagem","qtd": 15,  "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul",  "peca": "Pino",      "qtd": 80,  "preco": 18.0},
+    {"cliente": "Usinagem Norte",   "peca": "Flange",    "qtd": 10,  "preco": 480.0},
+    {"cliente": "Usinagem Norte",   "peca": "Eixo A36",  "qtd": 45,  "preco": 120.0},
 ]
 ```
 
@@ -279,21 +298,63 @@ pedidos = [
 **Dica:** para não sobrescrever o acumulador ao encontrarmos um cliente pela primeira vez, use `resumo.get(cliente, ...)` ou inicialize o cliente antes de somar. Ex.: `resumo[cliente] = resumo.get(cliente, {"pedidos": 0, "total": 0.0})`.
 
 **Valores de teste:**
-- Auto Peças LTDA → 2 pedidos, R$ 6 800,00 · Fabricante XYZ → R$ 12 960,00 · Ind. Rodrigues → R$ 24 000,00 (maior cliente)
-- Ranking: 1º Ind. Rodrigues, 2º Fabricante XYZ, 3º Auto Peças LTDA
+- Total: 24 pedidos, 6 clientes
+- Metalúrgica Sul → R$ 51 540,00 (maior cliente) · Ind. Rodrigues → R$ 34 560,00 · Fabricante XYZ → R$ 30 660,00 · Tornearia Alfa → R$ 26 250,00 · Auto Peças LTDA → 5 pedidos (mais pedidos) · Usinagem Norte → R$ 11 450,00
+- Ranking: 1º Metalúrgica Sul, 2º Ind. Rodrigues, 3º Fabricante XYZ
 
-## Mini-Projeto — Simulador de Aquecimento
+## Mini-Projeto — Registro e Consolidação de Movimentações
 
-**Contexto:** O engenheiro de processos precisa de uma ferramenta para simular o aquecimento de um forno industrial. O usuário informa a temperatura inicial, a temperatura alvo e a taxa de aquecimento, e o app exibe a evolução passo a passo.
+**Contexto:** O almoxarifado de uma empresa não possui sistema eletrônico de controle de estoque: cada chegada ou saída de item é anotada manualmente em papel. Você vai desenvolver um programa que **cria** esse registro, permitindo cadastrar cada movimentação, e que **organiza** os dados digitados em um relatório consolidado — a base de qualquer sistema de gestão.
 
-**O que o programa deve ter:**
-- Variáveis de entrada para temperatura inicial (°C), temperatura alvo (°C) e taxa (°C/min)
-- Loop `while` que executa enquanto `temp_atual < temp_alvo`
-- A cada passo: incrementar temperatura e registrar o tempo acumulado
-- Exibir a evolução em uma tabela (passo, temperatura, tempo acumulado)
-- Ao final: exibir tempo total e um gráfico simples da evolução (com Matplotlib)
+**Cadastro das movimentações (criação dos dados):**
 
-**Valores de teste:** `T_inicial = 25 °C`, `T_alvo = 350 °C`, `taxa = 5 °C/min` → 65 passos, 65 minutos
+O programa deve:
+
+- Solicitar, em repetição, o cadastro de movimentações, uma por vez.
+- Cada movimentação é composta por:
+  - **descrição** do item (texto);
+  - **categoria** do item (texto, ex.: "ferramentas", "fixadores", "EPI");
+  - **tipo de movimento** — `"entrada"` (item chegou) ou `"saída"` (item saiu);
+  - **quantidade** (número inteiro maior que zero);
+  - **valor unitário** (R$).
+- Repetir enquanto o usuário quiser; o cadastro termina quando ele digitar `"fim"` na descrição.
+- **Rejeitar** cadastros inválidos e pedir novamente: o `"fim"` não pode ocorrer nos outros campos, quantidade negativa ou não numérica não é aceita, e o tipo de movimento só pode ser `"entrada"` ou `"saída"`.
+
+**Consolidação dos dados (organização):**
+
+Após encerrar o cadastro, o programa deve:
+
+- Agrupar todas as movimentações por **categoria**.
+- Para cada categoria, apresentar: a **quantidade de movimentos**, a **quantidade total de itens** e o **valor total movimentado** (quantidade × valor unitário, somado).
+- Dentro de cada categoria, separar o total de **entradas** e de **saídas**, tanto em quantidade quanto em valor.
+
+**Indicadores do relatório:**
+
+- Categoria com o maior número de movimentos e categoria com o maior valor total movimentado;
+- Item com o maior valor unitário registrado;
+- **Saldo geral do estoque** (total de entradas − total de saídas), em quantidade e em valor;
+- Percentual de participação de cada categoria no valor total do período.
+
+**Formato da saída:**
+
+- Relatório organizado e legível, com seções por categoria, subtotais por tipo de movimento, linha de totalização e os indicadores acima.
+
+**Valores de teste:** cadastre os 5 itens abaixo e confira os resultados esperados.
+
+| Descrição | Categoria | Tipo | Qtd | Valor unit. |
+|---|---|---|---|---|
+| Bucha | usinados | entrada | 40 | R$ 120,00 |
+| Flange | usinados | entrada | 15 | R$ 480,00 |
+| Parafuso M8 | fixadores | saída | 300 | R$ 1,50 |
+| Parafuso M6 | fixadores | entrada | 200 | R$ 1,20 |
+| Pino guia | usinados | saída | 8 | R$ 30,00 |
+
+- **usinados:** 3 movimentos, valor total R$ 12 240,00 (maior categoria · ~94,7% do total)
+- **fixadores:** 2 movimentos, valor total R$ 690,00 (~5,3%)
+- Item de maior valor unitário: Flange (R$ 480,00)
+- Saldo geral: quantidade **−53**; valor **R$ 11 550,00**
+
+> **Desafio opcional:** além do agrupamento por categoria, calcule o **saldo individual por item** (entradas − saídas por descrição) e sinalize os itens com saldo negativo (estoque inconsistente).
 
 ## Resumo da aula
 
