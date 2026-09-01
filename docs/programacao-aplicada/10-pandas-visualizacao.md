@@ -10,34 +10,40 @@
 5. Filtros avançados: query, loc, iloc, isin, between
 6. GroupBy: split-apply-combine, agg, grouped ops
 7. Merge e Join: combinando DataFrames
-8. Pivot tables: melt, pivot_table, cross-tabulation
+8. Pivot tables: `pivot_table`, `melt` (largo ↔ longo)
 9. matplotlib básico: plt.plot, plt.scatter, plt.hist
 10. seaborn: scatterplot, boxplot, heatmap
 11. Visualização com pandas plot e matplotlib
 12. Persistência de variáveis no kernel do Colab
 13. Exercícios práticos
 
-## DataFrame e Series
+> **Esta aula continua a aula 07.** Lá você aprendeu a criar DataFrames, salvar/carregar CSV e JSON, e usar `df.head()`, `df.style` e `df.describe()`. Aqui você vai aprofundar: limpeza, filtros, agrupamento, joins e visualização com matplotlib e seaborn.
 
-Pandas é a biblioteca do Python para manipulação de dados tabulares. Pense nela como uma **planilha do Excel dentro do Python**, mas com poder de programação.
+## DataFrame e Series — revisão rápida
+
+Na aula 07 você criou DataFrames a partir de dicionários e arquivos CSV. Dois conceitos que ficaram implícitos e que esta aula usa com frequência:
 
 ### Series: uma coluna com índice
 
-Uma **Series** é como uma coluna de planilha: cada valor tem um rótulo (índice).
+Cada coluna de um DataFrame é uma **Series** — um vetor com rótulo (índice). Você já acessa Series quando escreve `df["coluna"]`.
 
 ```python
 import pandas as pd
 
-# Series: coluna única com índice
-tensoes = pd.Series([350, 240, 200], name="tensao_max")
-print(tensoes)
-# 0    350
-# 1    240
-# 2    200
-# Name: tensao_max, dtype: int64
+# Acessar uma coluna → retorna uma Series
+df = pd.DataFrame({
+    "material": ["Aço 1020", "Al 6061", "Latão"],
+    "tensao_max": [350, 240, 200],
+    "modulo_E": [210000, 69000, 97000]
+})
+
+s = df["tensao_max"]
+print(type(s))        # <class 'pandas.core.series.Series'>
+print(s.mean())       # 263.3
+print(s["CP-01"])     # erro: índice é 0, 1, 2 (padrão)
 ```
 
-O índice começa em 0 por padrão, mas pode ser personalizado:
+O índice pode ser personalizado:
 
 ```python
 tensoes = pd.Series([350, 240, 200],
@@ -46,35 +52,13 @@ tensoes = pd.Series([350, 240, 200],
 print(tensoes["CP-02"])  # 240
 ```
 
-### DataFrame: a tabela completa
-
-Um **DataFrame** é um conjunto de Series compartilhando o mesmo índice — ou seja, uma tabela.
-
-```python
-df = pd.DataFrame({
-    "material": ["Aço 1020", "Al 6061", "Latão"],
-    "tensao_max": [350, 240, 200],
-    "modulo_E": [210000, 69000, 97000]
-})
-```
-
-```
-    material  tensao_max  modulo_E
-0   Aço 1020         350    210000
-1    Al 6061         240     69000
-2      Latão         200     97000
-```
-
-Cada coluna é uma Series. Cada linha é um registro.
-
-### Atributos importantes
+### Atributos que você usará o tempo todo
 
 ```python
 print(df.shape)     # (3, 3) → 3 linhas, 3 colunas
 print(df.columns)   # Index(['material', 'tensao_max', 'modulo_E'])
-print(df.dtypes)    # material      object
-                    # tensao_max     int64
-                    # modulo_E       int64
+print(df.dtypes)    # material      object / tensao_max int64 / modulo_E int64
+print(df.index)     # RangeIndex(start=0, stop=3, step=1)
 ```
 
 | Atributo | O que retorna | Uso típico |
@@ -84,7 +68,7 @@ print(df.dtypes)    # material      object
 | `df.dtypes` | Tipo de cada coluna | Detectar erros de tipo |
 | `df.index` | Índice das linhas | Reindexar |
 
-## Primeiro contato: Pandas + NumPy (da aula 08)
+## Pandas + NumPy
 
 Pandas trabalha naturalmente com arrays NumPy. Este é o ponto de partida:
 
@@ -136,6 +120,27 @@ df["densidade"].std()      # 3074.5
 df["densidade"].max()      # 8500
 ```
 
+---
+
+### ✏️ Exercício 10.1 — DataFrame + coluna calculada
+
+Use os dados abaixo para criar um DataFrame e adicionar uma coluna `resistencia_especifica = tensao_max / densidade`:
+
+```python
+import numpy as np
+import pandas as pd
+
+materiais = ["Aço", "Alumínio", "Latão", "Titânio", "PVC"]
+densidade  = [7850, 2700, 8500, 4430, 1380]   # kg/m³
+tensao_max = [350,  240,  200,  520,   50]    # MPa
+modulo_E   = [210,   69,   97,  116,    3]    # GPa
+```
+
+Depois ordene por `resistencia_especifica` decrescente com `df.sort_values("resistencia_especifica", ascending=False)` e exiba `df.describe()`.
+
+**Resultado esperado (ordem):** Titânio → Alumínio → Aço → Latão → PVC
+
+---
 
 ## Explorando um DataFrame: Primeiros Passos
 
@@ -208,6 +213,34 @@ df.isna().sum()
 ```
 
 Cada `True` em `df.isna()` vira 1, cada `False` vira 0. O `.sum()` soma por coluna.
+
+---
+
+### ✏️ Exercício 10.2 — Exploração de dados
+
+Use o DataFrame abaixo para responder às perguntas sem olhar os dados diretamente:
+
+```python
+import pandas as pd
+
+dados = {
+    "amostra":    ["CP-01","CP-02","CP-03","CP-04","CP-05","CP-06"],
+    "material":   ["Aço","Alumínio","Aço", None,  "Latão","Alumínio"],
+    "tensao_max": [450,   240,      None,  320,    200,    260],
+    "modulo_E":   [210000,69000,    205000,None,   97000,  69000],
+    "dureza":     [180,   95,       None,  None,   110,    90]
+}
+df = pd.DataFrame(dados)
+```
+
+1. Quantas linhas e colunas tem o DataFrame? (use `df.shape`)
+2. Quais colunas têm valores nulos e quantos? (use `df.isna().sum()`)
+3. Qual a tensão máxima média das amostras que têm valor? (use `df["tensao_max"].mean()`)
+4. Qual o tipo de dado da coluna `material`? (use `df.dtypes`)
+
+**Respostas esperadas:** (6, 5) — material:1, tensao_max:1, modulo_E:1, dureza:2 — 294.0 MPa — object
+
+---
 
 ## Carregar Dados Reais
 
@@ -377,6 +410,26 @@ df["tensao_max"] = df["tensao_max"].astype(float)
 df["modulo_E"] = df["modulo_E"].astype(float)
 ```
 
+---
+
+### ✏️ Exercício 10.3 — Limpeza de dados
+
+Use o DataFrame do exercício anterior (com nulos) e aplique as estratégias corretas:
+
+```python
+# df já criado no exercício anterior
+```
+
+1. Preencha `tensao_max` e `modulo_E` com a **média** de cada coluna
+2. Preencha `dureza` com **zero** (indica "não medido")
+3. Preencha `material` com a string `"Desconhecido"`
+4. Renomeie a coluna `tensao_max` para `tensao_mpa`
+5. Verifique que não há mais nulos com `df.isna().sum()`
+
+**Ao final:** `df.isna().sum()` deve retornar zero em todas as colunas.
+
+---
+
 ## Filtros Avançados
 
 Filtrar é selecionar **subconjuntos** de dados que atendem a certas condições.
@@ -478,6 +531,33 @@ df[~(df["tensao_max"] > 300)]  # tensão <= 300
 
 > **Importante:** sempre use parênteses em cada condição e `&`/`|` em vez de `and`/`or`.
 
+---
+
+### ✏️ Exercício 10.4 — Filtros
+
+Use o DataFrame abaixo com 10 materiais:
+
+```python
+import pandas as pd
+
+df = pd.DataFrame({
+    "material":   ["Aço","Aço","Aço","Alumínio","Alumínio","Latão","Latão","Titânio","Titânio","PVC"],
+    "tensao_max": [350, 420, 480, 220, 260, 190, 210, 500, 550, 45],
+    "modulo_E":   [210, 210, 210,  69,  69,  97,  97, 116, 116,  3],
+    "dureza":     [180, 200, 220,  90,  95, 100, 110, 300, 320,  15]
+})
+```
+
+1. Selecione apenas os materiais com `tensao_max > 300` usando filtro booleano
+2. Selecione Aço e Titânio usando `isin()`
+3. Selecione materiais com tensão entre 200 e 450 MPa usando `between()`
+4. Usando `query()`, selecione Aço com tensão > 400 MPa
+5. Use `loc` para retornar apenas as colunas `material` e `tensao_max` das linhas filtradas em (1)
+
+**Resultados esperados:** (1) 6 linhas — (2) 5 linhas — (3) 7 linhas — (4) 2 linhas
+
+---
+
 ## GroupBy: Split-Apply-Combine
 
 O **GroupBy** é o conceito mais poderoso do Pandas para análise. Ele segue 3 passos:
@@ -555,6 +635,29 @@ df.groupby("material").agg(
 df.groupby(["material", "lote"])["tensao_max"].mean()
 ```
 
+---
+
+### ✏️ Exercício 10.5 — GroupBy
+
+Use o mesmo DataFrame do exercício anterior (10 materiais) e responda:
+
+1. Qual a tensão média por material? (use `groupby().mean()`)
+2. Monte uma tabela com `mean`, `std`, `min`, `max` e `count` para `tensao_max` por material
+3. Qual material tem o maior desvio padrão de tensão? (indica ensaios mais variáveis)
+4. Usando `agg` com nomes personalizados, crie colunas `tensao_media`, `tensao_max_val` e `n_amostras`
+
+**Resultado esperado da questão 1:**
+```
+material
+Aço         416.7
+Alumínio    240.0
+Latão       200.0
+PVC          45.0
+Titânio     525.0
+```
+
+---
+
 ## Merge e Join
 
 **Merge** combina dois DataFrames usando uma coluna em comum — como o `JOIN` do SQL ou `PROCV` do Excel.
@@ -620,6 +723,38 @@ Quando ambas as tabelas têm colunas com o mesmo nome (além da chave), o Pandas
 df.merge(df2, on="nome", how="left", suffixes=("_materiais", "_fornecedores"))
 ```
 
+---
+
+### ✏️ Exercício 10.6 — Merge
+
+Use os dois DataFrames abaixo e combine-os:
+
+```python
+import pandas as pd
+
+materiais = pd.DataFrame({
+    "material": ["Aço", "Alumínio", "Latão", "Titânio"],
+    "densidade": [7850, 2700, 8500, 4430],
+    "tensao_max": [420, 240, 200, 520]
+})
+
+fornecedores = pd.DataFrame({
+    "material": ["Aço", "Alumínio", "Cobre"],   # Latão e Titânio não têm fornecedor
+    "preco_kg": [8.50, 15.20, 32.00],
+    "prazo_dias": [15, 20, 30]
+})
+```
+
+1. Faça um `inner` merge — quantas linhas resultam? Por quê?
+2. Faça um `left` merge — quantas linhas resultam? O que acontece com Latão e Titânio?
+3. No resultado do `left` merge, calcule `custo_peca = densidade * preco_kg / 1000`
+4. Exiba apenas as linhas onde `preco_kg` não é nulo, ordenadas por `custo_peca`
+
+**Resultado esperado (questão 1):** 2 linhas (Aço e Alumínio)
+**Resultado esperado (questão 2):** 4 linhas; Latão e Titânio ficam com NaN em `preco_kg` e `prazo_dias`
+
+---
+
 ## Pivot Tables
 
 Pivot tables reorganizam dados: transformam **valores de colunas em cabeçalhos**, agregando os resultados.
@@ -681,6 +816,63 @@ pivot = producao.pivot_table(
     aggfunc="sum", margins=True, margins_name="Total"
 )
 ```
+
+### `melt()` — desfazer um pivot (largo → longo)
+
+`melt()` é a operação inversa do pivot: transforma colunas em linhas. Útil quando você recebe dados em formato "largo" (uma coluna por categoria) e precisa deixá-los em formato "longo" para filtrar ou agrupar.
+
+```python
+# Formato largo (como veio do pivot)
+largo = pd.DataFrame({
+    "mes": ["Jan", "Fev", "Mar"],
+    "M1":  [120,   135,   110],
+    "M2":  [ 95,   100,   105],
+})
+
+# melt: colunas M1 e M2 viram linhas
+longo = largo.melt(
+    id_vars="mes",          # coluna que permanece como identificador
+    var_name="maquina",     # nome da nova coluna de categorias
+    value_name="pecas"      # nome da nova coluna de valores
+)
+print(longo)
+```
+
+```
+   mes maquina  pecas
+0  Jan      M1    120
+1  Fev      M1    135
+2  Mar      M1    110
+3  Jan      M2     95
+4  Fev      M2    100
+5  Mar      M2    105
+```
+
+> **Regra:** use `pivot_table` para agregar e resumir; use `melt` para preparar dados para gráficos ou GroupBy.
+
+---
+
+### ✏️ Exercício 10.7 — Pivot e Melt
+
+Use os dados de produção abaixo:
+
+```python
+import pandas as pd
+
+producao = pd.DataFrame({
+    "mes":     ["Jan","Jan","Jan","Fev","Fev","Fev","Mar","Mar","Mar"],
+    "maquina": ["M1","M2","M3","M1","M2","M3","M1","M2","M3"],
+    "pecas":   [120,  95, 110, 135, 100, 108, 110, 105, 120]
+})
+```
+
+1. Crie um pivot com `mes` nas linhas, `maquina` nas colunas e `sum` como agregação — adicione totais com `margins=True`
+2. A partir do pivot resultante, use `melt()` para voltar ao formato longo
+3. No formato longo, use `groupby("maquina")["pecas"].sum()` para identificar a máquina mais produtiva nos 3 meses
+
+**Resultado esperado (questão 3):** M1=365, M2=300, M3=338 → M1 é a mais produtiva
+
+---
 
 ## matplotlib Básico
 
@@ -777,6 +969,33 @@ ax.legend()
 fig
 ```
 
+---
+
+### ✏️ Exercício 10.8 — matplotlib
+
+Use os dados de materiais já utilizados nesta aula:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({
+    "material":   ["Aço","Alumínio","Latão","Titânio","PVC"],
+    "tensao_max": [420,   240,       200,    520,       45],
+    "modulo_E":   [210,    69,        97,    116,        3],
+    "densidade":  [7850,  2700,      8500,  4430,     1380]
+})
+```
+
+1. Crie um gráfico de barras com `tensao_max` por material (use `fig, ax = plt.subplots()` e `ax.bar()`)
+2. Adicione título, rótulos nos eixos e grid horizontal com `alpha=0.3`
+3. Crie um segundo gráfico de dispersão com `densidade` no eixo X e `tensao_max` no eixo Y, com o nome do material anotado em cada ponto (use `ax.annotate()`)
+4. Crie uma figura com 2 subplots lado a lado: barras de tensão à esquerda e histograma de modulo_E à direita
+
+**Dica para questão 3:** `ax.annotate(texto, xy=(x, y), xytext=(x+50, y+5))`
+
+---
+
 ## seaborn: Estatística Visual
 
 seaborn é construída sobre matplotlib e simplifica gráficos estatísticos. A grande vantagem: **ela entende DataFrames diretamente** e adiciona cores por categoria automaticamente.
@@ -821,6 +1040,48 @@ fig
 - Valores próximos de **0**: sem correlação linear
 
 > **Importante:** crie sempre `fig, ax` antes e passe `ax=` nos gráficos seaborn. No Colab, deixe o `fig` como última linha da célula para exibir.
+
+---
+
+### ✏️ Exercício 10.9 — seaborn
+
+Gere dados sintéticos de ensaios e explore com seaborn:
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+np.random.seed(42)
+n = 20
+
+df = pd.DataFrame({
+    "material":   ["Aço"]*n + ["Alumínio"]*n + ["Titânio"]*n,
+    "tensao_max": np.concatenate([
+        np.random.normal(420, 25, n),
+        np.random.normal(240, 20, n),
+        np.random.normal(520, 35, n)
+    ]),
+    "alongamento": np.concatenate([
+        np.random.normal(12, 2, n),
+        np.random.normal(18, 3, n),
+        np.random.normal(10, 2, n)
+    ]),
+    "dureza": np.concatenate([
+        np.random.normal(190, 15, n),
+        np.random.normal(90,  10, n),
+        np.random.normal(310, 20, n)
+    ])
+})
+```
+
+1. Crie um boxplot de `tensao_max` por `material` — qual material tem maior variabilidade?
+2. Crie um scatter plot de `alongamento` × `tensao_max` com cor por `material`
+3. Gere a matriz de correlação com `df.select_dtypes("number").corr()` e exiba como heatmap com `annot=True`
+4. Interprete: `tensao_max` e `dureza` têm correlação positiva ou negativa? Por quê faz sentido?
+
+---
 
 ## Visualização com pandas plot e matplotlib
 
@@ -883,180 +1144,344 @@ print(df.head())
 
 > **Dica:** facilita o uso das linhas separadas: deixe a parte de geração de dados e a parte de análise em células separadas. Re-executar a célula de geração atualiza os dados para as células seguintes.
 
-## Exercício 8.1 — Carregar e Limpar Dados de Ensaios
+## Exercício 10.10 — Limpeza de Dados de Ensaios
 
-**Contexto:** Dados de ensaios mecânicos com falhas de preenchimento.
+**Contexto:** Dados de ensaios mecânicos com falhas de preenchimento típicas de planilhas reais.
 
-**Dados iniciais:**
+**Dados:**
 ```python
+import pandas as pd
+
 dados = {
-    "amostra": ["CP-01","CP-02","CP-03","CP-04","CP-05"],
-    "material": ["Aço","Alumínio","Aço",None,"Latão"],
-    "tensao_max": [450, 240, None, 320, 200],
-    "modulo_E": [210000, 69000, 205000, None, 97000],
-    "alongamento": [12.5, 18.0, 10.2, 15.8, None],
-    "dureza": [180, 95, None, None, 110]
+    "amostra":    ["CP-01","CP-02","CP-03","CP-04","CP-05","CP-06","CP-07"],
+    "material":   ["Aço","Alumínio","Aço", None,   "Latão","Aço",  "Alumínio"],
+    "tensao_max": [450,   240,      None,  320,    200,    480,    None],
+    "modulo_E":   [210000,69000,    205000,None,   97000,  210000, 69000],
+    "alongamento":[12.5,  18.0,     10.2,  15.8,  None,   11.0,   19.5],
+    "dureza":     [180,   95,       None,  None,   110,    195,    88]
 }
 df = pd.DataFrame(dados)
 ```
 
-**O que o notebook deve ter:**
+**O que o programa deve ter:**
+- Exibir `df.isna().sum()` e a porcentagem de nulos por coluna
+- Preencher `tensao_max` e `modulo_E` com a **média** de cada coluna
+- Preencher `dureza` com **zero** e `alongamento` com a média
+- Preencher `material` com `"Desconhecido"`
+- Renomear `tensao_max` para `tensao_mpa` e `modulo_E` para `modulo_gpa` (dividindo por 1000)
+- Exibir o DataFrame limpo e confirmar `df.isna().sum()` = 0 em todas as colunas
 
-- Exibir dados originais (`df.head()`) e destacar nulos com `df.isna().sum()`
-- Definir variáveis no topo da célula: `remover_nulos = True` (usa `dropna()`) e `preencher = "media"` (opções: `"media"` / `"zero"` / `"nenhum"`)
-- Preencher nulos de colunas selecionadas com `fillna()`
-- Exibir resultado da limpeza (`df.head()` ou `df`)
-- Como no Colab as variáveis persistem no kernel, os dados limpos ficam disponíveis nas células seguintes
+**Resultado esperado (nulos antes da limpeza):**
+```
+material      1
+tensao_max    2
+modulo_E      1
+alongamento   1
+dureza        2
+```
 
-## Exercício 8.2 — Filtrar Materiais por Propriedade
+## Exercício 10.11 — Filtros e Seleção
 
-**Contexto:** Selecionar materiais por faixa de tensão máxima e tipo.
+**Contexto:** Usar o DataFrame limpo do exercício anterior para responder perguntas de engenharia.
 
-**Dados:** DataFrame com 15+ materiais (Aço, Alumínio, Latão, Titânio, PVC, Cobre, Bronze).
+**Dados:** use o DataFrame limpo do Exercício 10.10.
 
-**O que o notebook deve ter:**
+**O que o programa deve fazer:**
+- Selecione apenas amostras de Aço com `tensao_mpa > 400` (use `query()`)
+- Selecione amostras com tensão entre 200 e 450 MPa (use `between()`)
+- Use `isin()` para selecionar Aço e Alumínio ao mesmo tempo
+- Use `loc` para retornar apenas `amostra`, `material` e `tensao_mpa` dos resultados de cada filtro
+- Exiba: `print(f"Encontradas: {len(resultado)} amostras")`
 
-- Definir no topo da célula: `tensao_min = 200` e `tensao_max = 400`
-- Definir `tipo = "Aço"` (valores: "Todos" / "Aço" / "Alumínio" / "Outros")
-- Aplicar `between()` + `str.contains()` para filtrar
-- Exibir resultados com `df.head()` ou `df`
-- `print(f"Materiais encontrados: {len(resultado)}")`
+**Resultado esperado (questão 1 — Aço com tensão > 400):** CP-02 não existe, CP-06 com 480 MPa, mais CP-01 com 450 MPa → 2 amostras
 
-## Exercício 8.3 — Estatísticas por Grupo (GroupBy)
+## Exercício 10.12 — GroupBy e Estatísticas por Material
 
-**Contexto:** Dados de ensaios de tração de vários materiais (15-20 amostras, 3+ materiais).
-
-**O que o notebook deve ter:**
-
-- Gerar dados sintéticos com `np.random.normal` para cada material
-- Definir `coluna_alvo = "tensao_max"` no topo da célula (valores: tensao_max, modulo_E, alongamento)
-- Tabela com `groupby().agg()` (mean, std, min, max, count)
-- `df.groupby("material")[coluna_alvo].mean().plot(kind="bar")` da média por material
-- `print()` com interpretação: qual material tem melhor desempenho?
-
-## Exercício 8.4 — Merge de Dados de Material + Fornecedor
-
-**Contexto:** Juntar catálogo de materiais com tabela de fornecedores.
+**Contexto:** Gerar dados sintéticos de ensaios para 4 materiais e analisar por grupo.
 
 **Dados:**
 ```python
-materiais = pd.DataFrame({
-    "id": [1, 2, 3],
-    "nome": ["Aço", "Alumínio", "Latão"],
-    "densidade": [7850, 2700, 8500],
+import numpy as np
+import pandas as pd
+
+np.random.seed(0)
+n = 20
+
+materiais_params = {
+    "Aço":      {"tensao": (420, 25), "modulo": (210, 10), "densidade": 7850},
+    "Alumínio": {"tensao": (280, 20), "modulo": ( 70,  8), "densidade": 2700},
+    "Latão":    {"tensao": (350, 30), "modulo": (100, 12), "densidade": 8500},
+    "Titânio":  {"tensao": (520, 35), "modulo": (115, 10), "densidade": 4430},
+}
+
+registros = []
+for mat, p in materiais_params.items():
+    for i in range(n):
+        registros.append({
+            "material":  mat,
+            "tensao_mpa": round(np.random.normal(*p["tensao"]), 1),
+            "modulo_gpa": round(np.random.normal(*p["modulo"]),  1),
+            "densidade":  p["densidade"]
+        })
+
+df = pd.DataFrame(registros)
+```
+
+**O que o programa deve fazer:**
+- Exibir `df.head()` e `df.describe()`
+- Calcular `resistencia_especifica = tensao_mpa / densidade * 1000`
+- Tabela GroupBy com `mean`, `std`, `min`, `max`, `count` para `tensao_mpa` por material
+- Identificar qual material tem maior `resistencia_especifica` média
+- Gráfico de barras da tensão média por material com `df.groupby().mean().plot(kind="bar")`
+
+**Resultado esperado (resistência específica média):** Titânio (~117) > Alumínio (~103) > Aço (~53) > Latão (~41)
+
+## Exercício 10.13 — Merge: Catálogo + Fornecedores
+
+**Contexto:** O setor de compras precisa cruzar o catálogo de materiais com a tabela de fornecedores para calcular o custo estimado de peças.
+
+**Dados:**
+```python
+import pandas as pd
+
+catalogo = pd.DataFrame({
+    "material":  ["Aço", "Alumínio", "Latão", "Titânio", "PVC"],
+    "densidade": [7850,   2700,       8500,    4430,      1380],
+    "tensao_mpa":[420,    280,        350,     520,        50],
 })
+
 fornecedores = pd.DataFrame({
-    "id": [1, 2, 3],
-    "nome_material": ["Aço", "Alumínio", "Latão"],
-    "preco_kg": [8.50, 15.20, 22.00],
-    "prazo_dias": [15, 20, 10]
+    "material":   ["Aço", "Alumínio", "Latão", "Cobre"],  # Titânio e PVC sem fornecedor
+    "fornecedor": ["AçosBR","AlumPro","MetaisX","CobresY"],
+    "preco_kg":   [8.50,    15.20,    22.00,    32.00],
+    "prazo_dias": [15,      20,       10,       25]
 })
 ```
 
-**O que o notebook deve ter:**
+**O que o programa deve fazer:**
+- Fazer `left` merge — quantos materiais ficam sem fornecedor? Quais?
+- Calcular `custo_por_dm3 = densidade * preco_kg / 1000` (custo por dm³ de material)
+- Exibir só os materiais que têm fornecedor, ordenados por `custo_por_dm3`
+- `print()` com o material mais barato e mais caro por dm³
 
-- Fazer merge com `left_on` / `right_on`
-- Calcular `custo_peca = densidade * preco_kg / 1000`
-- Exibir colunas: nome, fornecedor, densidade, preco_kg, custo_peca, prazo_dias
-- `print(f"Mais barato: {df_enriquecido['custo_peca'].min()}")` / `print(f"Mais caro: {df_enriquecido['custo_peca'].max()}")` para destacar os extremos de custo
+**Resultado esperado:** Titânio e PVC ficam com NaN; Aço é o mais barato por dm³ (R$ 66,73); Latão o mais caro (R$ 187,00)
 
-## Exercício 8.5 — Pivot Table de Produção Mensal
+## Exercício 10.14 — Pivot e Heatmap de Produção
 
-**Contexto:** Produção diária de 3 máquinas (90 linhas simulando 3 meses).
+**Contexto:** Visualizar a produção mensal de 3 máquinas ao longo de 6 meses.
 
-**O que o notebook deve ter:**
+**Dados:**
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-- Gerar dados sintéticos: mes, maquina, pecas (90 linhas)
-- `pivot_table` com mes × maquina
-- Coluna "Total" por mês
-- Heatmap do pivot com `sns.heatmap` (matplotlib + seaborn), deixando o `fig` na última linha da célula
-- `print()` com a máquina mais produtiva por mês
+np.random.seed(7)
+meses    = ["Jan","Fev","Mar","Abr","Mai","Jun"]
+maquinas = ["M1","M2","M3"]
 
-## Exercício 8.6 — Correlação de Propriedades (seaborn)
+registros = []
+for mes in meses:
+    for maq in maquinas:
+        registros.append({
+            "mes":    mes,
+            "maquina": maq,
+            "pecas":  int(np.random.normal(110, 15))
+        })
 
-**Contexto:** 50 materiais com densidade, módulo_E, tensão_escoamento, dureza, alongamento.
+df = pd.DataFrame(registros)
+```
 
-**O que o notebook deve ter:**
+**O que o programa deve fazer:**
+- Criar `pivot_table` com `mes` nas linhas, `maquina` nas colunas, `sum` como agregação e `margins=True`
+- Exibir o pivot com `df.style.background_gradient(cmap="YlOrRd")`
+- Usar `melt()` para converter o pivot de volta ao formato longo
+- Criar heatmap com `sns.heatmap(pivot, annot=True, fmt=".0f", cmap="YlOrRd")` — deixe o `fig` na última linha
+- Identificar o mês e máquina com maior produção
 
-- Gerar dados sintéticos com correlações realistas
-- `sns.heatmap` da matriz de correlação com `annot=True` (deixar `fig` na última linha)
-- Interpretação textual: quais pares têm maior correlação positiva e negativa?
-- Opcional: `sns.pairplot` (o Colab exibe o pairplot diretamente como saída da célula)
+## Exercício 10.15 — Dashboard de Qualidade (CEP)
 
-## Exercício 8.7 — Dashboard de Qualidade (CEP)
-
-**Contexto:** Controle estatístico de processo — eixos com diâmetro alvo de 50 mm e tolerância ±0.1 mm.
+**Contexto:** Controle estatístico de processo — eixos usinados com diâmetro alvo 50 mm e tolerância ±0.1 mm.
 
 **Fórmulas:**
 
-$Cp = \frac{LSE - LIE}{6\sigma}$
+$$Cp = \frac{LSE - LIE}{6\sigma}$$
 
-$Cpk = \min\left(\frac{media - LIE}{3\sigma}, \frac{LSE - media}{3\sigma}\right)$
-
-**O que o notebook deve ter:**
-
-- Gerar 50+ medidas com `np.random.normal(loc=50, scale=0.03)`
-- Histograma com linhas LIE/LSE/target (matplotlib)
-- Boxplot por batch
-- Calcular e exibir Cp e Cpk com `print(f"Cp = {cp:.2f}")` / `print(f"Cpk = {cpk:.2f}")`
-- Interpretação: Cp > 1.33 = processo capaz
-
-## Mini-Projeto 8 — Analisador de Ensaios Mecânicos
-
-**Funcionalidades obrigatórias:**
-
-- Upload CSV via `from google.colab import files` (ou dados de exemplo)
-- Opções de limpeza (fillna / dropna) — defina as escolhas como variáveis no topo da célula
-- Filtros por variáveis definidas no topo da célula (faixa de tensão + tipo)
-- GroupBy stats por material
-- Scatter plot tensão × alongamento (matplotlib/seaborn)
-- Heatmap de correlação (seaborn)
-- Export CSV filtrado (`from google.colab import files` + `files.download("resultado.csv")`)
-
-## Exercício 10.1 — DataFrame de Materiais a partir de NumPy
+$$Cpk = \min\left(\frac{\bar{x} - LIE}{3\sigma},\ \frac{LSE - \bar{x}}{3\sigma}\right)$$
 
 **Dados:**
 ```python
-nomes = ["Aço", "Alumínio", "Latão", "Titânio", "PVC"]
-densidade = [7850, 2700, 8500, 4430, 1380]
-modulo_E = [210, 69, 97, 116, 3]  # GPa
+import numpy as np
+import pandas as pd
+
+np.random.seed(42)
+
+LIE    = 49.90   # Limite inferior de especificação
+LSE    = 50.10   # Limite superior de especificação
+TARGET = 50.00   # Valor nominal
+
+# Processo ligeiramente descentrado (média 50.02) com desvio 0.03
+medicoes = np.random.normal(loc=50.02, scale=0.03, size=60)
+lotes    = ["Lote A"] * 20 + ["Lote B"] * 20 + ["Lote C"] * 20
+
+df = pd.DataFrame({"diametro": medicoes, "lote": lotes})
 ```
 
-**O que o notebook deve ter:**
-- Criar DataFrame com colunas: `material`, `densidade`, `modulo_E`
-- Adicionar coluna calculada: `relacao = modulo_E / densidade * 1000`
-- Ordenar por `relacao` decrescente (`df.sort_values`)
-- Exibir `df.describe()`
-- Gráfico de barras com `df.plot(kind="bar")`
+**O que o programa deve fazer:**
+- Histograma com linhas verticais para LIE, LSE e TARGET (matplotlib)
+- Boxplot por lote com `sns.boxplot`
+- Calcular e imprimir Cp e Cpk
+- Identificar quantas peças estão fora da tolerância (`df[df["diametro"] < LIE]` e `df[df["diametro"] > LSE]`)
+- Interpretação: Cp > 1.33 indica processo capaz; Cpk < Cp indica processo descentrado
 
-## Exercício 10.2 — Dashboard de Materiais com GroupBy
+**Resultado esperado:** Cp ≈ 1.11 (processo marginalmente capaz), Cpk < Cp (processo descentrado)
 
-**Contexto:** Gerar dados sintéticos de ensaios de tração para 4 materiais e construir um dashboard analítico.
+## Mini-Projeto 10 — Análise de Resultados Internacionais de Futebol
 
-| Material | Tensão μ/σ (MPa) | Módulo E μ/σ (GPa) | Densidade (kg/m³) |
-|---|---|---|---|
-| Aço | 420 / 25 | 210 / 10 | 7850 |
-| Alumínio | 280 / 20 | 70 / 8 | 2700 |
-| Latão | 350 / 30 | 100 / 12 | 8500 |
-| Titânio | 520 / 35 | 115 / 10 | 4430 |
+**Dataset:** [International Football Results (1872–2026)](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017) — Mart Jürisoo (Kaggle)
+
+Arquivos necessários: `results.csv`, `goalscorers.csv`, `shootouts.csv`
+
+**Como carregar no Colab:**
+
+```python
+# Opção A — upload manual (baixe os 3 CSVs do Kaggle e faça upload no painel lateral)
+import pandas as pd
+
+resultados   = pd.read_csv("results.csv",     parse_dates=["date"])
+gols         = pd.read_csv("goalscorers.csv", parse_dates=["date"])
+penaltis     = pd.read_csv("shootouts.csv",   parse_dates=["date"])
+```
+
+**Colunas disponíveis:**
+
+| Arquivo | Colunas |
+|---------|---------|
+| `results.csv` | `date`, `home_team`, `away_team`, `home_score`, `away_score`, `tournament`, `city`, `country`, `neutral` |
+| `goalscorers.csv` | `date`, `home_team`, `away_team`, `team`, `scorer`, `minute`, `own_goal`, `penalty` |
+| `shootouts.csv` | `date`, `home_team`, `away_team`, `winner`, `first_shooter` |
+
+**Exploração inicial obrigatória:**
+
+```python
+# Quantas partidas, de quando a quando?
+print(f"Partidas: {len(resultados)}")
+print(f"Período: {resultados['date'].min().year} – {resultados['date'].max().year}")
+resultados.head()
+```
 
 **Funcionalidades obrigatórias:**
-- Gerar 20 amostras por material com `np.random.normal`
-- Exibir os dados com `df.head()`
-- Estatísticas por material com `groupby`
-- Coluna calculada: resistência específica = tensão / densidade
-- Gráfico de barras com `df.plot(kind="bar")`
-- Re-executar a célula de geração de dados para "regenerar" os dados (variáveis persistem no kernel do Colab)
-- Exportar dados filtrados como CSV (`df.to_csv("resultado.csv")` + `files.download("resultado.csv")`)
+
+**1. Limpeza e tipagem**
+- Verificar nulos com `isna().sum()` nos 3 DataFrames
+- Confirmar que `home_score` e `away_score` são numéricos (`df.dtypes`)
+- Converter `date` para datetime se necessário (`pd.to_datetime`)
+
+**2. Coluna calculada: resultado da partida**
+```python
+# Criar coluna com o vencedor de cada partida
+def vencedor(row):
+    if row["home_score"] > row["away_score"]:
+        return row["home_team"]
+    elif row["away_score"] > row["home_score"]:
+        return row["away_team"]
+    else:
+        return "Empate"
+
+resultados["vencedor"] = resultados.apply(vencedor, axis=1)
+```
+
+**3. Análises com GroupBy**
+- Ranking dos 10 países com mais vitórias (filtre `vencedor != "Empate"`, use `value_counts()`)
+- Total de gols marcados por torneio (`groupby("tournament").agg(...)`) — top 10 torneios
+- Média de gols por partida por década:
+```python
+resultados["decada"] = (resultados["date"].dt.year // 10) * 10
+resultados["total_gols"] = resultados["home_score"] + resultados["away_score"]
+resultados.groupby("decada")["total_gols"].mean()
+```
+
+**4. Filtro por seleção**
+```python
+selecao = "Brazil"   # altere aqui para analisar outro país
+
+jogos_brasil = resultados[
+    (resultados["home_team"] == selecao) | (resultados["away_team"] == selecao)
+]
+print(f"Jogos do {selecao}: {len(jogos_brasil)}")
+```
+- Calcule vitórias, empates e derrotas do país selecionado
+- Exiba o resultado como DataFrame com `pd.DataFrame`
+
+**5. Artilheiros históricos (goalscorers.csv)**
+- Filtre `own_goal == False` para remover gols contra
+- Use `value_counts()` em `scorer` para obter os top 15 artilheiros
+- Exiba como DataFrame estilizado com `df.style.background_gradient()`
+
+**6. Merge: cruzar resultados com dados de pênaltis**
+- Faça `merge` entre `resultados` e `penaltis` usando `date`, `home_team`, `away_team`
+- Quantos jogos tiveram disputa de pênaltis? Em quais torneios isso é mais comum?
+
+**7. Pivot table: desempenho por torneio e década**
+```python
+pivot = resultados.pivot_table(
+    index="decada",
+    columns="tournament",
+    values="total_gols",
+    aggfunc="mean"
+)
+# Filtre só os torneios principais para não ficar grande demais
+torneiros_principais = ["FIFA World Cup", "Copa América", "UEFA Euro", "Friendly"]
+pivot = pivot[torneiros_principais]
+```
+
+**8. Visualizações**
+- Gráfico de barras: top 10 países por número de vitórias (matplotlib)
+- Linha do tempo: média de gols por partida por década (matplotlib)
+- Heatmap: média de gols por torneio × década (seaborn, use o pivot da etapa 7)
+- Scatter: total de jogos × total de vitórias por seleção (seaborn, destaque Brasil, Argentina, Alemanha)
+
+**9. Export**
+```python
+from google.colab import files
+
+jogos_brasil.to_csv("analise_brasil.csv", index=False)
+files.download("analise_brasil.csv")
+```
+
+**Resultado esperado — top 5 vitórias históricas (aproximado):**
+```
+Brazil       ~650 vitórias
+Germany      ~600 vitórias
+Spain        ~500 vitórias
+Argentina    ~500 vitórias
+England      ~490 vitórias
+```
 
 ## Resumo da aula
 
-- `groupby()` agrupa dados por categoria e aplica agregacões (`mean`, `sum`, `count`)
-- `merge()` combina DataFrames como JOIN em SQL — essencial para dados relacionais
-- `pivot_table()` reorganiza dados em formato de tabela dinâmica
-- matplotlib: `plt.plot()`, `plt.scatter()`, `plt.bar()` — gráficos estáticos customizáveis
-- seaborn: `sns.boxplot()`, `sns.heatmap()` — gráficos estatísticos com pouco código
-- No Colab, deixe o `fig` como última linha da célula (ou `plt.show()`) para exibir gráficos matplotlib/seaborn
+**Manipulação:**
+- `dropna()` / `fillna()` / `rename()` / `astype()` — limpeza de dados reais
+- Filtros: `df[condição]`, `query()`, `loc`, `iloc`, `isin()`, `between()`, `str.contains()`
+- `groupby().agg()` — split-apply-combine; use `.reset_index()` ao final
+- `merge()` — JOIN entre DataFrames; `how=` controla o tipo (left/inner/outer)
+- `pivot_table()` — formato longo → largo com agregação; `melt()` — largo → longo
+
+**Visualização:**
+- matplotlib: `fig, ax = plt.subplots()` + `ax.plot/bar/scatter/hist` — controle total
+- seaborn: `sns.boxplot`, `sns.scatterplot`, `sns.heatmap` — estatística visual com menos código
+- `df.plot(kind=)` — atalho rápido para gráficos simples direto do DataFrame
+- No Colab, deixe o `fig` como última linha da célula para exibir o gráfico
+
+**Fluxo típico de análise:**
+1. Carregar → `pd.read_csv()` ou dados sintéticos com `np.random.normal`
+2. Explorar → `head()`, `info()`, `describe()`, `isna().sum()`
+3. Limpar → `fillna()`, `dropna()`, `rename()`, `astype()`
+4. Filtrar → `query()`, `loc`, `between()`, `isin()`
+5. Agregar → `groupby().agg()`, `pivot_table()`
+6. Visualizar → matplotlib / seaborn
+7. Exportar → `df.to_csv("resultado.csv", index=False)`
 
 ## Referências
 
@@ -1065,3 +1490,4 @@ modulo_E = [210, 69, 97, 116, 3]  # GPa
 - **seaborn documentation** — https://seaborn.pydata.org/
 - **pandas.DataFrame.plot** — https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html
 - **Montgomery, D. C.** Introduction to Statistical Quality Control. Wiley, 2019.
+- **Dataset — International Football Results (1872–2026)** — https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017
