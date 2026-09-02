@@ -22,7 +22,7 @@ Introdução à programação com Python aplicada à Engenharia Mecânica. Algor
 | 09 | POO Essencial para Engenharia |
 | 10 | Pandas Aplicado + Visualização |
 | 11 | Análise Visual com Matplotlib no Google Colab |
-| 12 | Projeto Final — Monitoramento de Sensores |
+| 12 | Projeto Final — Sistema de Apoio à Engenharia (tema livre) |
 
 ## Bibliografia
 
