@@ -1,373 +1,122 @@
-# Projeto Final: Sistema de Monitoramento de Sensores Industriais
+# Projeto Final: Sistema de Apoio à Engenharia
 
 ## Visão Geral do Projeto
 
-**Objetivo:** Construir um notebook analítico no Google Colab (Python + Pandas + NumPy) que gerencia sensores industriais, registra leituras e dispara alertas.
+**Objetivo:** Cada dupla deve desenvolver um sistema, script ou aplicação em Python (Google Colab) que resolva um **problema real do dia a dia da engenharia**. O tema é **livre** — a dupla escolhe um problema concreto com o qual se identifique e o transforma em uma ferramenta útil, aplicando os conceitos vistos ao longo da disciplina.
 
-**Carga horária:** 8h (2 aulas)
+**Carga horária:** 16h (4 aulas)
 
-**Tipo:** Individual ou duplas
+**Tipo:** Duplas
 
 **Entregáveis:**
-- Notebook (.ipynb) com célula única executável no Google Colab
-- Dados CSV (pasta `data/`)
-- Vídeo de 3-5 min demonstrando o notebook
-- Relatório técnico (PDF)
+- Notebook (`.ipynb`) com célula principal executável no Google Colab
+- Dados persistidos em CSV/JSON (pasta `data/` ou arquivos gerados)
+- Vídeo de 3–5 min demonstrando o funcionamento
+- Relatório técnico (PDF) descrevendo o problema, a solução e as decisões de projeto
 
-## Objetivos de Aprendizagem
+## O que se espera
 
-**Habilidades Técnicas:**
-- Integrar Pandas com dados em CSV (CRUD via DataFrames)
-- Gerar dados sintéticos realistas com NumPy
-- Construir visualizações com matplotlib
-- Implementar regras de negócio (alertas)
-- Exportar dados em CSV e relatórios
+O projeto **não** é um exercício de implementação de um enunciado fechado. Ele propõe que a dupla:
 
-**Habilidades de Projeto:**
-- Organizar código em células e funções
-- Tratar erros e bordas
-- Projetar análise para engenharia
-- Documentar o sistema
-- Apresentar resultados
+1. **Identifique um problema real** de engenharia que possa ser resolvido (ou facilitado) por programação — dimensionamento de componentes, controle de estoque, vendas e orçamentos, gerenciamento de projetos, análise de dados de ensaios, acompanhamento de produção, controle de qualidade etc.
+2. **Modele esse problema** como dados (o que é um "item", "cliente", "peça", "sensor", "máquina"?) usando dicionários, listas e DataFrames.
+3. **Defina a regra de negócio** — a decisão que o sistema toma automaticamente via condicionais (aprova/rejeita, alerta, estoque mínimo, fator de segurança, orçamento viável etc.).
+4. **Construa uma ferramenta** que receba entradas, processe, persista os dados e apresente resultados claros (tabelas e gráficos).
 
-## Arquitetura do Sistema
+O objetivo final é entregar algo que o próprio autor usaria no seu futuro estágio ou emprego — e não apenas "rodar um código para a nota".
 
-```
-  ┌──────────────────────────────────────────────────────────────┐
-  │        SISTEMA DE MONITORAMENTO DE SENSORES (Notebook)       │
-  ├──────────────────────────────────────────────────────────────┤
-  │                                                              │
-  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐ │
-  │  │ Dashboard │  │ Sensores  │  │ Leituras  │  │ Alertas   │ │
-  │  │           │  │  (CRUD)   │  │  (Regis-  │  │  (Regras  │ │
-  │  │ KPIs,     │  │           │  │  trar +   │  │  + Hist.) │ │
-  │  │ Gráficos  │  │ Cadastrar │  │  Gráficos │  │           │ │
-  │  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘  └─────┬─────┘ │
-  │        └───────────────┴──────────────┴──────────────┘       │
-  │                           │                                  │
-  │           ┌───────────────┴───────────────┐                  │
-  │           │  DataFrames em memória        │                  │
-  │           │  persistência: CSV em data/   │                  │
-  │           └───────────────────────────────┘                  │
-  │                                                              │
-  │   Bibliotecas: Pandas | NumPy | matplotlib                   │
-  └──────────────────────────────────────────────────────────────┘
-```
+## Habilidades Avaliadas
 
-## Modelo de Dados — Entidades
+**Técnicas:**
+- Algoritmos e tradução de um problema real em código (aulas 01–02)
+- Condicionais para decisão/classificação (aula 03)
+- Funções para organizar e reutilizar a lógica (aula 04)
+- Estruturas de dados: listas, tuplas, dicionários, conjuntos (aula 05)
+- Laços para processar coleções e repetir operações (aula 06)
+- Persistência em JSON/CSV para que os dados sobrevivam à reexecução (aula 07)
+- Manipulação e análise com Pandas: DataFrames, filtros, `groupby`, `merge`, `pivot_table` (aulas 07 e 10)
+- Visualização com matplotlib: gráficos de linha, barra, histograma, dispersão (aula 10)
 
-**Departamentos:** id, nome, setor
+**De projeto:**
+- Organização do código em células e funções com responsabilidades claras
+- Tratamento de erros e casos-limite (entrada inválida, dados vazios, arquivo ausente)
+- Documentação e clareza da apresentação
 
-**Sensores:** id, nome, tipo (temperatura/pressão/vazão), unidade, limite_alerta, departamento_id
+## Escopo mínimo obrigatório
 
-**Leituras:** id, sensor_id, valor, timestamp, status (normal/alerta/crítico)
+Independentemente do tema escolhido, o sistema **deve** contemplar os seguintes elementos:
 
-**Alertas:** id, sensor_id, leitura_id, mensagem, timestamp, resolvido (0/1)
+| Elemento | Descrição | Conceito-chave |
+|---|---|---|
+| **Entrada de dados** | Receber valores do usuário (`input()`) ou ler de arquivo CSV/JSON | `input()`, `pd.read_csv`, `json.load` |
+| **Modelo de dados** | Uma estrutura que represente as "entidades" do problema (lista de dicionários ou DataFrame) | listas, dicionários, DataFrames |
+| **Funções** | Pelo menos 3 funções com responsabilidades distintas | `def`, parâmetros, `return` |
+| **Decisão automática** | Alguma regra que classifica/aprova/alerta de forma autônoma | `if`/`elif`/`else` |
+| **Processamento em laço** | Iterar sobre uma coleção (cadastros, leituras, pedidos) | `for`/`while`, `enumerate`, `break`/`continue` |
+| **Persistência** | Salvar e recarregar os dados em arquivo (CSV ou JSON) | `to_csv`, `json.dump`, `open` |
+| **Consolidação/análise** | Resumir os dados (totais, médias, ranking, agrupamento) | `groupby`, `agg`, acumuladores |
+| **Visualização** | No mínimo 2 gráficos com título e rótulos | `matplotlib` |
+| **Tratamento de erros** | Validar entrada e lidar com dados ausentes/inválidos | `try/except`, `fillna`, validações |
 
-## Regras de Negócio — Status da Leitura
+## Exemplos de tema (não obrigatórios)
 
-```
-Se sensor.tipo == 'temperatura':
-    normal:   valor <= limite_alerta
-    alerta:   limite_alerta < valor <= limite_alerta * 1.2
-    crítico:  valor > limite_alerta * 1.2
+> Estes são apenas **inspirações**. A dupla pode adotar, adaptar ou criar um tema totalmente novo. O que importa é o problema ser **real, específico e bem modelado**.
 
-Se sensor.tipo == 'pressao':
-    normal:   valor <= limite_alerta
-    alerta:   limite_alerta < valor <= limite_alerta * 1.15
-    crítico:  valor > limite_alerta * 1.15
+- **Dimensionamento:** uma calculadora que, dado um material e um carregamento, recomenda a seção/componente adequado e sinaliza o fator de segurança.
+- **Estoque/almoxarifado:** controle de entrada e saída de itens com alerta de estoque mínimo e relatório de consumo.
+- **Vendas/orçamento:** um orçamentista que compõe custo (hora, material, lucro) e consolida por cliente/período.
+- **Manutenção:** rastreador de equipamentos com periodicidade de manutenção preventiva.
+- **Produção:** análise de tempos de ciclo por máquina com detecção de atrasos.
+- **Qualidade:** painel de controle estatístico de um processo com limites de especificação.
+- **Gestão de projetos:** acompanhamento de tarefas/etapas com status e prazo.
 
-Se sensor.tipo == 'vazao':
-    normal:   valor >= limite_alerta * 0.8 E valor <= limite_alerta
-    alerta:   valor < limite_alerta * 0.8 OU valor > limite_alerta * 1.1
-    crítico:  valor < limite_alerta * 0.5 OU valor > limite_alerta * 1.3
-```
+## Requisitos de qualidade
 
-**Alerta** é criado automaticamente quando status = `alerta` ou `crítico`.
+- **Célula principal executável:** o notebook deve rodar de ponta a ponta (de `import` até a exportação) sem depender de ordem manual. As células Markdown servem apenas para organizar/documentar.
+- **Dados demonstráveis:** o sistema deve ter dados de exemplo suficientes para demonstrar a análise (por exemplo, alguns registros cadastrados + geração simulada quando fizer sentido).
+- **Feedback ao usuário:** use `print()` com mensagens claras de `OK`, `Atenção` e `Erro` para cada operação.
+- **Nomes e comentários:** variáveis e funções com nomes descritivos; comentários apenas onde realmente esclarecerem a intenção.
 
-## Dados de Exemplo — Povoamento
-
-**Departamentos:** Produção (Usinagem), Manutenção (Preditiva), Qualidade (Metrologia), Segurança (Monitoramento)
-
-**Sensores (mínimo 8):**
-
-| Nome | Tipo | Unidade | Limite |
-|---|---|---|---|
-| Temp. Forno | temperatura | °C | 250.0 |
-| Temp. Caldeira | temperatura | °C | 180.0 |
-| Pressão Óleo | pressão | bar | 6.0 |
-| Pressão Ar | pressão | bar | 8.0 |
-| Vazão Bomba | vazão | L/min | 100.0 |
-| Vazão Resfriador | vazão | L/min | 50.0 |
-| Temp. Ambiente | temperatura | °C | 40.0 |
-| Pressão Vapor | pressão | bar | 12.0 |
-
-## Estrutura do Notebook Sugerida
-
-Um único notebook `.ipynb` no Google Colab, com a célula principal contendo todo o código (funções de dados, regras de negócio e análise). Use células Markdown (títulos `##`) para separar as seções:
+## Estrutura sugerida do notebook
 
 ```
-monitoramento_sensores.ipynb
+projeto_final.ipynb
 │
-├── ## 1. Configuração e Imports          (célula Markdown)
-│        → import pandas, numpy, matplotlib
-│
-├── ## 2. Funções de Dados (CSV)          (célula Markdown)
-│        → carregar(), salvar(), inicializar()
-│
-├── ## 3. Regras de Negócio               (célula Markdown)
-│        → classificar_status(), registrar_leitura()
-│
-├── ## 4. Povoamento Inicial              (célula Markdown)
-│        → departamentos, sensores, leituras, alertas
-│
-├── ## 5. Dashboard — KPIs e Gráficos     (célula Markdown)
-├── ## 6. Gerenciar Sensores (CRUD)       (célula Markdown)
-├── ## 7. Registrar Leituras              (célula Markdown)
-├── ## 8. Alertas                         (célula Markdown)
-├── ## 9. Relatórios e Exportação         (célula Markdown)
-│
-├── data/                   # CSV files (persistência)
-│   ├── departamentos.csv
-│   ├── sensores.csv
-│   ├── leituras.csv
-│   └── alertas.csv
+├── ## 1. O Problema (contextualização em Markdown)
+├── ## 2. Configuração e Imports
+├── ## 3. Funções de Dados (carregar/salvar/inicializar)
+├── ## 4. Regras de Negócio (funções de decisão)
+├── ## 5. Povoamento / Entrada de Dados
+├── ## 6. Análise e Consolidação
+├── ## 7. Visualizações / Gráficos
+├── ## 8. Relatório e Exportação
 ```
 
-> **Importante:** a entrega deve ter uma **célula de código única e executável** que rode de ponta a ponta (de `import` até a exportação), sem depender de ordem manual de execução. As células Markdown com `##` servem apenas para organizar e documentar.
+> A ordem pode variar conforme o tema, mas todas as seções acima devem aparecer de alguma forma.
 
-## Skeleton Code — Célula Única Executável
+## Tratamento de erros (obrigatório)
 
-Cole tudo abaixo em uma única célula de código no Colab. As funções podem ser ajustadas livremente.
+O sistema deve estar preparado para:
+- Arquivo CSV/JSON inexistente na primeira execução
+- DataFrame vazio ao tentar operar
+- Entrada inválida (texto em campo numérico, valor negativo onde não faz sentido)
+- Registro não encontrado ao consultar/remover
+- Usar `try/except` com mensagens claras (`Erro`, `Atenção`, `OK`)
 
-### Parte A — Imports e Funções de Dados (CSV)
+## Entregáveis detalhados
 
-```python
-import os
-import numpy as np
-import pandas as pd
-from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
+1. **Notebook (`.ipynb`)** — célula principal executável + células Markdown de documentação.
+2. **Dados** — arquivos CSV/JSON gerados (ou pasta `data/`).
+3. **Vídeo (3–5 min)** — demonstração do sistema funcionando e explicação das decisões de projeto.
+4. **Relatório técnico (PDF)** — descrição do problema, modelo de dados, regras de negócio, decisões técnicas e limitações.
 
-DATA_DIR = "data"
+## Dicas finais
 
-def carregar(nome, colunas=None):
-    caminho = os.path.join(DATA_DIR, f"{nome}.csv")
-    if os.path.exists(caminho):
-        return pd.read_csv(caminho)
-    return pd.DataFrame(columns=colunas or [])
-
-def salvar(df, nome):
-    os.makedirs(DATA_DIR, exist_ok=True)
-    caminho = os.path.join(DATA_DIR, f"{nome}.csv")
-    df.to_csv(caminho, index=False)
-
-def inicializar():
-    if not os.path.exists(os.path.join(DATA_DIR, "departamentos.csv")):
-        salvar(pd.DataFrame(columns=["id", "nome", "setor"]), "departamentos")
-        salvar(pd.DataFrame(columns=["id", "nome", "tipo", "unidade", "limite_alerta", "departamento_id"]), "sensores")
-        salvar(pd.DataFrame(columns=["id", "sensor_id", "valor", "timestamp", "status"]), "leituras")
-        salvar(pd.DataFrame(columns=["id", "sensor_id", "leitura_id", "mensagem", "timestamp", "resolvido"]), "alertas")
-```
-
-### Parte B — Regras de Negócio
-
-```python
-def classificar_status(sensor_tipo, valor, limite):
-    if sensor_tipo == "temperatura":
-        if valor <= limite:
-            return "normal"
-        elif valor <= limite * 1.2:
-            return "alerta"
-        else:
-            return "crítico"
-    elif sensor_tipo == "pressao":
-        if valor <= limite:
-            return "normal"
-        elif valor <= limite * 1.15:
-            return "alerta"
-        else:
-            return "crítico"
-    elif sensor_tipo == "vazao":
-        if limite * 0.8 <= valor <= limite:
-            return "normal"
-        elif valor < limite * 0.5 or valor > limite * 1.3:
-            return "crítico"
-        else:
-            return "alerta"
-    return "normal"
-
-def registrar_leitura(sensor_id, valor):
-    sensores = carregar("sensores")
-    sensor = sensores[sensores["id"] == sensor_id]
-    if sensor.empty:
-        return None, "Sensor não encontrado."
-
-    sensor = sensor.iloc[0]
-    status = classificar_status(sensor["tipo"], valor, sensor["limite_alerta"])
-
-    leituras = carregar("leituras")
-    nova_id = len(leituras) + 1
-    nova_leitura = pd.DataFrame([{
-        "id": nova_id,
-        "sensor_id": sensor_id,
-        "valor": valor,
-        "timestamp": datetime.now().isoformat(),
-        "status": status,
-    }])
-    leituras = pd.concat([leituras, nova_leitura], ignore_index=True)
-    salvar(leituras, "leituras")
-
-    if status in ("alerta", "crítico"):
-        alertas = carregar("alertas")
-        novo_alerta = pd.DataFrame([{
-            "id": len(alertas) + 1,
-            "sensor_id": sensor_id,
-            "leitura_id": nova_id,
-            "mensagem": f"{sensor['nome']}: {valor} {sensor['unidade']} — {status}",
-            "timestamp": datetime.now().isoformat(),
-            "resolvido": 0,
-        }])
-        alertas = pd.concat([alertas, novo_alerta], ignore_index=True)
-        salvar(alertas, "alertas")
-
-    return status, "Leitura registrada."
-```
-
-### Parte C — Povoamento Inicial
-
-```python
-def popular():
-    deptos = pd.DataFrame([
-        {"id": 1, "nome": "Produção", "setor": "Usinagem"},
-        {"id": 2, "nome": "Manutenção", "setor": "Preditiva"},
-        {"id": 3, "nome": "Qualidade", "setor": "Metrologia"},
-        {"id": 4, "nome": "Segurança", "setor": "Monitoramento"},
-    ])
-    salvar(deptos, "departamentos")
-
-    sensores = pd.DataFrame([
-        {"id": 1, "nome": "Temp. Forno", "tipo": "temperatura", "unidade": "°C", "limite_alerta": 250.0, "departamento_id": 1},
-        {"id": 2, "nome": "Temp. Caldeira", "tipo": "temperatura", "unidade": "°C", "limite_alerta": 180.0, "departamento_id": 1},
-        {"id": 3, "nome": "Pressão Óleo", "tipo": "pressao", "unidade": "bar", "limite_alerta": 6.0, "departamento_id": 2},
-        {"id": 4, "nome": "Pressão Ar", "tipo": "pressao", "unidade": "bar", "limite_alerta": 8.0, "departamento_id": 2},
-        {"id": 5, "nome": "Vazão Bomba", "tipo": "vazao", "unidade": "L/min", "limite_alerta": 100.0, "departamento_id": 1},
-        {"id": 6, "nome": "Vazão Resfriador", "tipo": "vazao", "unidade": "L/min", "limite_alerta": 50.0, "departamento_id": 3},
-        {"id": 7, "nome": "Temp. Ambiente", "tipo": "temperatura", "unidade": "°C", "limite_alerta": 40.0, "departamento_id": 4},
-        {"id": 8, "nome": "Pressão Vapor", "tipo": "pressao", "unidade": "bar", "limite_alerta": 12.0, "departamento_id": 4},
-    ])
-    salvar(sensores, "sensores")
-
-    leituras = []
-    lid = 1
-    agora = datetime.now()
-    for sensor_id, limite in [(1, 250), (2, 180), (3, 6), (4, 8), (5, 100), (6, 50), (7, 40), (8, 12)]:
-        for i in range(20):
-            ts = agora - timedelta(hours=20 - i)
-            valor = limite * np.random.uniform(0.7, 1.25)
-            if valor <= limite:
-                status = "normal"
-            elif valor <= limite * 1.15:
-                status = "alerta"
-            else:
-                status = "crítico"
-            leituras.append({"id": lid, "sensor_id": sensor_id, "valor": round(valor, 2), "timestamp": ts.isoformat(), "status": status})
-            lid += 1
-
-    salvar(pd.DataFrame(leituras), "leituras")
-    salvar(pd.DataFrame(columns=["id", "sensor_id", "leitura_id", "mensagem", "timestamp", "resolvido"]), "alertas")
-
-inicializar()
-popular()
-print("Dados populados com sucesso.")
-```
-
-## Seção 1: Dashboard — KPIs e Gráficos
-
-**Filtros (variáveis no topo da célula):** `departamento_filtro`, `sensor_filtro`, `data_inicio` e `data_fim` definidos no início da célula (ou via `input()`).
-
-**KPIs:** total de sensores, total de leituras, alertas ativos, última leitura.
-
-**Gráficos (matplotlib):** linha (leituras × tempo), barras (média por sensor).
-
-**Tabela:** últimas 10 leituras com filtro por status (`df.head()` / Pandas).
-
-## Seção 2: Gerenciar Sensores (CRUD)
-
-**Create:** dados de um novo sensor em variáveis no topo da célula (ou via `input()`), valide e insira no DataFrame.
-
-**Read:** `df.head()` / exibição de todos os sensores, filtro por departamento.
-
-**Update:** alterar campos de um sensor existente informando o `id`.
-
-**Delete:** remover um sensor por `id`, impedir exclusão se houver leituras vinculadas.
-
-## Seção 3: Registrar Leituras
-
-**Forma 1 — Manual:** `sensor_id` + `valor` definidos em variáveis (ou `input()`). Calcula status automaticamente, cria alerta se necessário.
-
-**Forma 2 — Geração em lote:** `sensor_id`, `quantidade` (5-100) e `ruido_pct` (1-20%) em variáveis no topo da célula. Gera leituras simuladas com NumPy.
-
-**Histórico:** tabela com filtro por sensor e data, gráfico de linha com matplotlib.
-
-## Seção 4: Alertas
-
-**Alertas Ativos:** tabela com ID, Sensor, Mensagem, Data/Hora. Função para resolver um alerta (marca `resolvido = 1`) ou resolver todos.
-
-**Histórico:** exibir alertas resolvidos e pendentes, tabela completa com filtro por data. Críticos em vermelho, alertas em amarelo.
-
-## Seção 5: Relatórios
-
-**Exportar CSV:** exportar leituras com join de sensores e departamentos e exportar alertas. Baixar os arquivos com `files.download()`.
-
-**Relatório de Resumo:** texto formatado (`print`) com total de sensores por tipo, média de leituras por sensor, alertas gerados, sensor mais crítico. Salvar como `.txt`.
-
-## Tratamento de Erros (Obrigatório)
-
-- CSV inexistente na pasta `data/`
-- DataFrame vazio tentando operações
-- Erro ao carregar/salvar CSV
-- Campos vazios no cadastro
-- Valor inválido (texto em campo numérico)
-- Nenhum sensor/leitura/alerta cadastrado
-- Usar `try/except` com `print(f"Erro: ...")`, `print(f"Atenção: ...")` e `print(f"OK: ...")` para feedback
-
-## Rubrica de Avaliação (100 pontos)
-
-| Critério | Pts |
-|---|---|
-| Funcionalidade (CRUDs, gráficos, alertas) | 30 |
-| Organização em células/funções (célula única executável, seções claras) | 15 |
-| Uso correto de Pandas (DataFrames, joins, filtros, `pd.concat`) | 15 |
-| Visualizações com matplotlib (linha, barras, títulos/labels) | 10 |
-| Análise de dados real (médias, contagens, correlação com limites) | 5 |
-| POO (se usado: classes para Sensor, Leitura, Alerta) | 5 |
-| Exportação/gerência dos dados (CSV + `files.download()`) | 10 |
-| Relatório Texto (formatado com métricas) | 5 |
-| Dados de Exemplo (4+ deptos, 8+ sensores, 50+ leituras) | 5 |
-
-## Dicas Finais
-
-**Comece pelo básico:**
-1. Funções de dados (load/save CSV) + dados iniciais
-2. Funções de regras de negócio (operações com DataFrame)
-3. Célula principal com inicialização e povoamento
-4. Uma seção de cada vez (dashboard primeiro)
-5. Teste cada seção antes de passar
-
-**Evite erros comuns:**
-- Salvar CSV após cada modificação: `df.to_csv(caminho, index=False)`
-- Usar `pd.concat()` para adicionar linhas, não `df.append()`
-- Definir as variáveis de filtro/simulação no topo da célula para fácil ajuste
-- Chamar `files.download()` dentro da célula do Colab para baixar os CSV gerados
-
-## Resumo da aula
-
-- Planeje a arquitetura antes de codificar: componentes separados por responsabilidade
-- Dados sintéticos com NumPy simulam cenários reais de sensoriamento industrial
-- CRUD via DataFrames + CSV = sistema funcional sem banco de dados
-- Regras de negócio (normal/alerta/crítico) tornam a análise inteligente
-- Documentação e apresentação são parte da entrega — trate o código como produto
+- **Comece pequeno:** escolha um problema cujo "caminho feliz" caiba em poucas funções e evolua a partir daí.
+- **Modele antes de codificar:** desenhe (mesmo no papel) as entidades e a regra de negócio.
+- **Uma seção de cada vez:** garanta que cada parte funciona antes de avançar.
+- **Dados sintéticos ok:** se não houver dados reais, gere valores realistas para demonstrar a análise.
+- **Trate o código como produto:** nomes claros, mensagens amigáveis e relatório bem elaborado fazem diferença na nota e na carreira.
 
 ## Referências
 
@@ -375,3 +124,4 @@ print("Dados populados com sucesso.")
 - **Pandas** — https://pandas.pydata.org/docs/
 - **NumPy** — https://numpy.org/doc/stable/
 - **matplotlib** — https://matplotlib.org/stable/
+- **Tavares Neto, R. F.; Silva, F. M.** Introdução à programação para engenharia. LTC, 2022.
