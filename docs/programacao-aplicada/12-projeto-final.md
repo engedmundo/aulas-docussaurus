@@ -4,15 +4,11 @@
 
 **Objetivo:** Cada dupla deve desenvolver um sistema, script ou aplicação em Python (Google Colab) que resolva um **problema real do dia a dia da engenharia**. O tema é **livre** — a dupla escolhe um problema concreto com o qual se identifique e o transforma em uma ferramenta útil, aplicando os conceitos vistos ao longo da disciplina.
 
-**Carga horária:** 16h (4 aulas)
-
-**Tipo:** Duplas
-
 **Entregáveis:**
 - Notebook (`.ipynb`) com célula principal executável no Google Colab
 - Dados persistidos em CSV/JSON (pasta `data/` ou arquivos gerados)
 - Vídeo de 3–5 min demonstrando o funcionamento
-- Relatório técnico (PDF) descrevendo o problema, a solução e as decisões de projeto
+- Relatório técnico (PDF ou MD) descrevendo o problema, a solução e as decisões de projeto
 
 ## O que se espera
 
@@ -35,7 +31,6 @@ O objetivo final é entregar algo que o próprio autor usaria no seu futuro est�
 - Laços para processar coleções e repetir operações (aula 06)
 - Persistência em JSON/CSV para que os dados sobrevivam à reexecução (aula 07)
 - Manipulação e análise com Pandas: DataFrames, filtros, `groupby`, `merge`, `pivot_table` (aulas 07 e 10)
-- Visualização com matplotlib: gráficos de linha, barra, histograma, dispersão (aula 10)
 
 **De projeto:**
 - Organização do código em células e funções com responsabilidades claras
@@ -55,8 +50,6 @@ Independentemente do tema escolhido, o sistema **deve** contemplar os seguintes 
 | **Processamento em laço** | Iterar sobre uma coleção (cadastros, leituras, pedidos) | `for`/`while`, `enumerate`, `break`/`continue` |
 | **Persistência** | Salvar e recarregar os dados em arquivo (CSV ou JSON) | `to_csv`, `json.dump`, `open` |
 | **Consolidação/análise** | Resumir os dados (totais, médias, ranking, agrupamento) | `groupby`, `agg`, acumuladores |
-| **Visualização** | No mínimo 2 gráficos com título e rótulos | `matplotlib` |
-| **Tratamento de erros** | Validar entrada e lidar com dados ausentes/inválidos | `try/except`, `fillna`, validações |
 
 ## Exemplos de tema (não obrigatórios)
 
@@ -77,46 +70,13 @@ Independentemente do tema escolhido, o sistema **deve** contemplar os seguintes 
 - **Feedback ao usuário:** use `print()` com mensagens claras de `OK`, `Atenção` e `Erro` para cada operação.
 - **Nomes e comentários:** variáveis e funções com nomes descritivos; comentários apenas onde realmente esclarecerem a intenção.
 
-## Estrutura sugerida do notebook
-
-```
-projeto_final.ipynb
-│
-├── ## 1. O Problema (contextualização em Markdown)
-├── ## 2. Configuração e Imports
-├── ## 3. Funções de Dados (carregar/salvar/inicializar)
-├── ## 4. Regras de Negócio (funções de decisão)
-├── ## 5. Povoamento / Entrada de Dados
-├── ## 6. Análise e Consolidação
-├── ## 7. Visualizações / Gráficos
-├── ## 8. Relatório e Exportação
-```
-
-> A ordem pode variar conforme o tema, mas todas as seções acima devem aparecer de alguma forma.
-
-## Tratamento de erros (obrigatório)
-
-O sistema deve estar preparado para:
-- Arquivo CSV/JSON inexistente na primeira execução
-- DataFrame vazio ao tentar operar
-- Entrada inválida (texto em campo numérico, valor negativo onde não faz sentido)
-- Registro não encontrado ao consultar/remover
-- Usar `try/except` com mensagens claras (`Erro`, `Atenção`, `OK`)
 
 ## Entregáveis detalhados
 
 1. **Notebook (`.ipynb`)** — célula principal executável + células Markdown de documentação.
 2. **Dados** — arquivos CSV/JSON gerados (ou pasta `data/`).
 3. **Vídeo (3–5 min)** — demonstração do sistema funcionando e explicação das decisões de projeto.
-4. **Relatório técnico (PDF)** — descrição do problema, modelo de dados, regras de negócio, decisões técnicas e limitações.
-
-## Dicas finais
-
-- **Comece pequeno:** escolha um problema cujo "caminho feliz" caiba em poucas funções e evolua a partir daí.
-- **Modele antes de codificar:** desenhe (mesmo no papel) as entidades e a regra de negócio.
-- **Uma seção de cada vez:** garanta que cada parte funciona antes de avançar.
-- **Dados sintéticos ok:** se não houver dados reais, gere valores realistas para demonstrar a análise.
-- **Trate o código como produto:** nomes claros, mensagens amigáveis e relatório bem elaborado fazem diferença na nota e na carreira.
+4. **Relatório técnico (PDF/MD)** — descrição do problema, modelo de dados, regras de negócio, decisões técnicas e limitações.
 
 ## Referências
 
