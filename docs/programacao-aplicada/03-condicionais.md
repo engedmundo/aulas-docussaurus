@@ -3,11 +3,12 @@
 ## Roteiro
 
 1. Por que condicionais?
-2. Operadores de comparação e lógicos
+2. Operadores de comparação
 3. Estruturas `if` / `elif` / `else`
-4. Entrada de dados com `input()` e condicionais
-5. Exercícios
-6. **Mini-projeto:** Classificador de Materiais
+4. Operadores lógicos
+5. Entrada de dados com `input()` e condicionais
+6. Exercício 3.6: Classificador de Materiais
+7. Exercício 3.7: Análise de Crédito (nível avançado)
 
 ## Por que condicionais?
 
@@ -80,43 +81,6 @@ if 50 <= pressao <= 150:
 
 As duas formas são equivalentes. Use a que achar mais clara.
 
-## Operadores Lógicos
-
-Quando precisamos combinar múltiplas condições:
-
-| Operador | Significado | Exemplo | Resultado |
-|---|---|---|---|
-| `and` | E (ambos devem ser verdadeiros) | `True and False` | `False` |
-| `or` | OU (basta um ser verdadeiro) | `True or False` | `True` |
-| `not` | NÃO (inverte o valor) | `not True` | `False` |
-
-```python
-pressao = 120
-grade_fechada = True
-
-# Ambas as condições devem ser verdadeiras
-if pressao >= 50 and grade_fechada:
-    print("Operação autorizada")
-
-# Basta uma ser verdadeira
-if pressao > 200 or temperatura > 500:
-    print("Alarme! Condição crítica detectada.")
-
-# Inversão
-if not grade_fechada:
-    print("Grade aberta! Operação bloqueada.")
-```
-
-### Tabela-verdade rápida
-
-```
-A       B       A and B   A or B    not A
-True    True    True      True      False
-True    False   False     True      False
-False   True    False     True      True
-False   False   False     False     True
-```
-
 ## Sintaxe `if` / `elif` / `else`
 
 ```python
@@ -168,6 +132,92 @@ else:
 
 > **Regra prática:** use `elif` quando as condições são mutuamente exclusivas. Use aninhamento quando a condição interna só faz sentido se a externa for verdadeira.
 
+### Exercício 3.1 — Do pseudocódigo ao Python (Aprovado ou Reprovado)
+
+**Contexto:** na aula 01 você escreveu o pseudocódigo da média de um aluno (`SE media >= 7 ENTÃO aprovado SENÃO reprovado`). Agora você tem as ferramentas para executá-lo de verdade. A tradução é direta:
+
+| Pseudocódigo | Python |
+|---|---|
+| `CALCULE media = ...` | `media = ...` |
+| `SE media >= 7 ENTÃO` | `if media >= 7:` |
+| `SENÃO` | `else:` |
+| `ESCREVA ...` | `print(...)` |
+
+**Tarefa:** escreva o código com os valores **fixos** `nota1 = 8.0`, `nota2 = 7.0` e `nota3 = 6.0`. Calcule a média e exiba `Aprovado` ou `Reprovado` com `if`/`else`.
+
+**Valores de teste:**
+- `8.0, 7.0, 6.0` → média `7.0` → "Aprovado"
+- Altere `nota3` para `4.0` e execute de novo → "Reprovado"
+
+### Exercício 3.2 — Tipo de triângulo
+
+**Contexto:** em geometria, um triângulo é classificado pelos seus lados:
+
+- **Equilátero** — os três lados iguais (`a == b == c`)
+- **Isósceles** — exatamente dois lados iguais
+- **Escaleno** — todos os lados diferentes
+
+**Tarefa:** com os valores **fixos** `a = 5`, `b = 5` e `c = 8`, escreva o código usando `if`/`elif`/`else` que exiba o tipo do triângulo.
+
+**Dica:** teste a condição mais específica primeiro (equilátero), depois a intermediária (isósceles), e deixe o `else` para o caso restante (escaleno).
+
+**Valores de teste:**
+- `a = 5, b = 5, c = 5` → "Equilátero"
+- `a = 5, b = 5, c = 8` → "Isósceles"
+- `a = 3, b = 4, c = 5` → "Escaleno"
+
+## Operadores Lógicos
+
+Quando precisamos combinar múltiplas condições:
+
+| Operador | Significado | Exemplo | Resultado |
+|---|---|---|---|
+| `and` | E (ambos devem ser verdadeiros) | `True and False` | `False` |
+| `or` | OU (basta um ser verdadeiro) | `True or False` | `True` |
+| `not` | NÃO (inverte o valor) | `not True` | `False` |
+
+```python
+pressao = 120
+grade_fechada = True
+
+# Ambas as condições devem ser verdadeiras
+if pressao >= 50 and grade_fechada:
+    print("Operação autorizada")
+
+# Basta uma ser verdadeira
+if pressao > 200 or temperatura > 500:
+    print("Alarme! Condição crítica detectada.")
+
+# Inversão
+if not grade_fechada:
+    print("Grade aberta! Operação bloqueada.")
+```
+
+### Tabela-verdade rápida
+
+```
+A       B       A and B   A or B    not A
+True    True    True      True      False
+True    False   False     True      False
+False   True    False     True      True
+False   False   False     False     True
+```
+
+### Exercício 3.3 — Entrada na montanha-russa (duas condições)
+
+**Contexto:** um parque de diversões só permite a entrada na montanha-russa se o visitante tiver **altura mínima de 1,40 m** **e** **idade mínima de 10 anos**.
+
+**Tarefa:** com os valores **fixos** `altura = 1.55` e `idade = 12`, escreva o código que combina as duas condições com `and` e exibe:
+
+- `"Pode entrar. Bom divertimento!"` — se altura **e** idade suficientes
+- `"Altura insuficiente para o brinquedo."` — se a altura for menor que 1,40 m
+- `"Idade insuficiente para o brinquedo."` — nos demais casos
+
+**Valores de teste:**
+- `altura = 1.55`, `idade = 12` → "Pode entrar"
+- `altura = 1.30`, `idade = 12` → "Altura insuficiente"
+- `altura = 1.55`, `idade = 8` → "Idade insuficiente"
+
 ## Entrada de dados com `input()` e condicionais
 
 No Colab, a função `input()` permite que o programa pergunte um valor ao usuário. Combinada com condicionais, permite tomar decisões com base no que foi digitado.
@@ -212,9 +262,7 @@ else:
 
 > Aqui, `input("...").lower()` converte a resposta para minúsculas, facilitando a comparação.
 
----
-
-## Exercício 3.1 — Prensa Hidráulica
+## Exercício 3.4 — Prensa Hidráulica
 
 **Contexto:** Uma prensa hidráulica industrial de 200 toneladas possui um sistema de segurança que impede a operação se a grade de proteção estiver aberta ou se a pressão do óleo estiver fora da faixa segura. O supervisor de produção quer um programa que verifique essas condições e informe o status da máquina.
 
@@ -241,7 +289,7 @@ else:
 - `pressao = 180`, grade fechada → "Sobrepressão!"
 - Qualquer pressão, grade aberta → "Grade aberta!"
 
-## Exercício 3.2 — Dureza do Aço
+## Exercício 3.5 — Dureza do Aço
 
 **Contexto:** O laboratório de ensaios mecânicos de uma metalúrgica realiza testes de dureza Brinell (HB) em peças de aço após tratamento térmico. A especificação técnica exige dureza entre 200 e 240 HB. O técnico precisa registrar o resultado e obter a classificação automaticamente.
 
@@ -269,7 +317,7 @@ else:
 > - **Seleção de Material por Torque** — `input()` para classificar faixas de torque e aplicar descontos
 > - **Homogeneidade de Eixos** — `max()` e `min()` com condicionais para controle de qualidade
 
-## Mini-Projeto — Classificador de Materiais
+## Exercício 3.6 — Classificador de Materiais
 
 **Contexto:** A engenharia de materiais de uma empresa de componentes mecânicos quer uma ferramenta de apoio para selecionar o material mais adequado para um novo componente. O engenheiro informa as condições de operação (tensão, temperatura e ambiente) e o programa sugere o material ideal com base em regras pré-definidas.
 
@@ -303,6 +351,35 @@ else:
 - `tensão = 450 MPa`, `temp = 350 °C`, `ambiente = Corrosivo` → Aço Inox 304
 - `tensão = 800 MPa`, `temp = 400 °C`, `ambiente = Seco` → Liga de Titânio
 
+## Exercício 3.7 — Análise de Crédito
+
+**Contexto:** um analista de crédito de um banco avalia pedidos de empréstimo pessoal. A decisão não depende de um único critério: é preciso verificar o **score** do cliente, o **limite do valor** solicitado e o **comprometimento da renda** — nesta ordem. Antes de programar, decomponha o problema em etapas de decisão (qual verificação vem primeiro? o que acontece se ela falhar?).
+
+**Entradas (todas com `input()`):**
+- Renda mensal (R$) — `float`
+- Valor solicitado (R$) — `float`
+- Número de parcelas — `int`
+- Score de crédito (0 a 1000) — `int`
+
+**Regras de decisão (nesta ordem):**
+1. `score < 600` → **negado**: "score insuficiente (mínimo 600)"
+2. `valor > 12 × renda` → **negado**: "valor acima de 12x a renda mensal"
+3. Caso contrário, defina a taxa de juros: `score >= 750` → `1,5%` ao mês; senão → `2,5%` ao mês
+4. Calcule com juros simples: `total = valor × (1 + taxa × n)` e `parcela = total / n`
+5. `parcela > 30% da renda` → **negado**: "parcela acima de 30% da renda"; senão → **aprovado**
+
+**O que o programa deve ter:**
+- Descrição da análise
+- As quatro entradas com `input()` e conversão adequada
+- Exibição da taxa aplicada, do valor total e da parcela
+- A decisão final (aprovado/negado) com o motivo
+
+**Valores de teste:**
+- `renda = 5000`, `valor = 20000`, `n = 24`, `score = 780` → aprovado (taxa 1,5%, parcela R$ 1.133,33)
+- `renda = 5000`, `valor = 20000`, `n = 24`, `score = 550` → negado (score)
+- `renda = 3000`, `valor = 50000`, `n = 12`, `score = 650` → negado (valor acima de 12x a renda)
+- `renda = 4000`, `valor = 30000`, `n = 12`, `score = 700` → negado (parcela R$ 3.250,00 > 30% da renda)
+
 ## Resumo da aula
 
 - Condicionais (`if`/`elif`/`else`) permitem que o programa tome decisões com base em expressões booleanas
@@ -310,7 +387,9 @@ else:
 - Operadores lógicos: `and`, `or`, `not`
 - Python permite comparações encadeadas: `50 <= x <= 150`
 - Use `elif` para alternativas no mesmo nível; aninhe quando a condição interna depende da externa
+- Decisões em etapas (score → limite → parcela) combinam cálculos e condicionais num mesmo algoritmo
 - `input()` permite entrar com dados pelo teclado; use `int()`/`float()` para converter para número
+- Tradução pseudocódigo → Python: `LEIA` → `input()`, `CALCULE` → `=`, `SE` → `if`, `ESCREVA` → `print()`
 
 ## Referências
 

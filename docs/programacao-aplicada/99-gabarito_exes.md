@@ -4,9 +4,128 @@ Este arquivo contém as soluções completas de todos os exercícios da discipli
 
 ---
 
-## Aula 01 — Introdução + Google Colab
+## Aula 01 — Setup + Algoritmos
 
-### Exercício 1.1 — Pressão de Pistão Hidráulico
+### Exercício 1.1 — Ordenar os passos (Bhaskara)
+
+Ordem correta:
+
+```
+1. Leia os coeficientes a, b e c
+2. Calcule o discriminante: Δ = b² − 4ac
+3. Calcule as raízes: x = (−b ± √Δ) / (2a)
+4. Exiba as duas raízes encontradas
+```
+
+A propriedade desrespeitada foi a **ordenação** (as raízes eram exibidas antes de serem lidas as entradas e calculado o discriminante).
+
+---
+
+### Exercício 1.2 — Corrigir o algoritmo com defeito (restaurante)
+
+Algoritmo corrigido (resposta sugerida — podem existir outras válidas):
+
+```
+1. Sente à mesa
+2. Consulte o cardápio
+3. Escolha um prato
+4. Chame o garçom e faça o pedido
+5. Aguarde e receba o prato
+6. Coma
+7. Peça a conta
+8. Pague (dinheiro ou cartão) e receba o comprovante
+9. Saia do restaurante
+```
+
+O que foi corrigido: **precisão** ("peça um prato" virou "consulte o cardápio → escolha → chame o garçom"), **ordenação** e **finitude** (o processo agora só termina após o pagamento e o comprovante — antes a pessoa "ia embora" sem pagar).
+
+---
+
+### Exercício 1.3 — Decomposição (caixa eletrônico)
+
+| Bloco | Conteúdo |
+|---|---|
+| **Entrada** | Cartão, senha e valor do saque (R$) |
+| **Processamento** | Validar senha; consultar saldo; comparar `saldo` com `valor`; se suficiente, debitar `saldo = saldo − valor` |
+| **Saída** | Cédulas liberadas + recibo (ou a mensagem "saldo insuficiente") |
+
+---
+
+### Exercício 1.4 — Pseudocódigo e fluxograma do saque
+
+**Pseudocódigo:**
+
+```
+INÍCIO
+   LEIA cartão
+   LEIA senha
+   LEIA valor (R$)
+   SE senha incorreta ENTÃO
+       ESCREVA "Senha inválida"
+   SENÃO
+       SE saldo < valor ENTÃO
+           ESCREVA "Saldo insuficiente"
+       SENÃO
+           CALCULE saldo = saldo - valor
+           ESCREVA "Libere as cédulas"
+           ESCREVA "Imprima o recibo"
+       FIM SE
+   FIM SE
+FIM
+```
+
+**Fluxograma (resumo):**
+
+```
+      ┌─────────┐
+      │  INÍCIO │
+      └────┬────┘
+           │
+ ┌─────────▼──────────┐
+ │ LEIA cartão, senha,│
+ │ valor              │
+ └─────────┬──────────┘
+           │
+      ┌────▼─────┐
+      │ senha OK?│
+      └────┬─────┘
+        não│          sim
+           │      ┌────▼──────────┐
+  ┌────────▼────┐ │ saldo < valor?│
+  │ "Senha      │ └────┬──────────┘
+  │ inválida"   │   não│         sim
+  └────────┬────┘      │   ┌──────────▼──────┐
+           │     ┌─────▼──────────┐ "Saldo        │
+           │     │ debita saldo;  │  insuficiente" │
+           │     │ libera cédulas;│ └──────────┬─────┘
+           │     │ imprime recibo │            │
+           │     └─────┬──────────┘            │
+           └───────────┴───────────────────────┘
+                        │
+                   ┌────▼────┐
+                   │   FIM   │
+                   └─────────┘
+```
+
+---
+
+### Exercício 1.5 — Pressão de Pistão Hidráulico
+
+**Pseudocódigo:**
+
+```
+INÍCIO
+   LEIA força F (N)
+   LEIA diâmetro d (mm)
+   CALCULE d_m = d / 1000
+   CALCULE A = 3,1416 · d_m² / 4
+   CALCULE P = F / A
+   ESCREVA "Área:", A, "m²"
+   ESCREVA "Pressão:", P/1e6, "MPa"
+FIM
+```
+
+**Código Python:**
 
 ```python
 import math
@@ -31,9 +150,98 @@ print(f"Pressão: {P / 1e6:.2f} MPa")
 
 ---
 
+### Exercício 1.6 — Execute o código de tensão
+
+Com `F = 8000 N` e `A = 0.004 m²`:
+
+```python
+F = 8000
+A = 0.004
+sigma = F / A
+print(f"Tensão normal: {sigma} Pa")
+print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
+```
+
+Saída: `Tensão normal: 2.00 MPa`.
+
+---
+
 ## Aula 02 — Conceitos Básicos + Apps Interativos
 
-### Exercício 2.1 — Média de Dureza Rockwell
+### Exercício 2.1 — Hello World
+
+```python
+print("Hello, World!")
+print("Bem-vindo à Programação Aplicada!")
+print("Seu Nome")
+```
+
+---
+
+### Exercício 2.2 — Criando e exibindo variáveis
+
+```python
+num_pecas = 150
+pressao = 2.5
+material = "Aço 1020"
+sensor_ok = True
+
+print(num_pecas)
+print(pressao)
+print(material)
+print(sensor_ok)
+
+forca = 8000
+print("A força aplicada é", forca, "N")
+```
+
+---
+
+### Exercício 2.3 — Descobrindo o tipo
+
+```python
+print(type(150))        # <class 'int'>
+print(type(2.5))        # <class 'float'>
+print(type("Aço 1020")) # <class 'str'>
+print(type(True))       # <class 'bool'>
+print(type(1e-3))       # <class 'float'>
+print(type("150"))      # <class 'str'>
+```
+
+O `150` é um número (`int`), enquanto `"150"` é um texto (`str`). O tipo importa porque operações matemáticas só fazem sentido com números — `150 + 1` calcula, mas `"150" + 1` gera erro.
+
+---
+
+### Exercício 2.4 — Área de um círculo
+
+```python
+import math
+
+d = 50            # mm
+d_m = d / 1000    # mm → m
+
+A = math.pi * d_m ** 2 / 4   # m²
+
+print(f"Área da seção: {A:.6f} m²")
+print(f"Área da seção: {A * 1e6:.2f} mm²")
+```
+
+---
+
+### Exercício 2.5 — Formatando resultados
+
+```python
+sigma = 2_500_000.0   # Pa
+
+print(f"{sigma:.0f} Pa")         # 2500000 Pa
+print(f"{sigma / 1e6:.2f} MPa")  # 2.50 MPa
+print(f"{sigma / 1e3:.1f} kPa")  # 2500.0 kPa
+print(f"{sigma:.3e} Pa")         # 2.500e+06 Pa
+```
+
+---
+
+### Exercício 2.6 — Média de Dureza Rockwell
 
 ```python
 print("Controle de Qualidade — Dureza Rockwell")
@@ -49,21 +257,7 @@ print("---------------------------")
 print(f"Média de dureza: {media:.2f} HRC")
 ```
 
-### Exercício 2.2 — IMC do Operador
-
-```python
-print("IMC do Operador — NR-17")
-print("------------------------------------------------------------")
-
-peso = float(input("Peso (kg): "))
-altura = float(input("Altura (m): "))
-
-imc = peso / altura ** 2
-print("---------------------------")
-print(f"IMC calculado: {imc:.2f}")
-```
-
-### Exercício 2.3 — Relação de Transmissão
+### Exercício 2.7 — Relação de Transmissão
 
 ```python
 print("Redutor de Velocidade")
@@ -81,7 +275,25 @@ print(f"Relação de transmissão: {i:.2f}")
 print(f"Rotação de saída (RPM): {n_saida:.1f}")
 ```
 
-### Exercício 2.4 — Cilindro com Desperdício de Material
+---
+
+### Desafio opcional — IMC do Operador
+
+```python
+print("IMC do Operador — NR-17")
+print("------------------------------------------------------------")
+
+peso = float(input("Peso (kg): "))
+altura = float(input("Altura (m): "))
+
+imc = peso / altura ** 2
+print("---------------------------")
+print(f"IMC calculado: {imc:.2f}")
+```
+
+---
+
+### Desafio opcional — Cilindro com Desperdício de Material
 
 ```python
 import math
@@ -117,7 +329,7 @@ print(f"Valor perdido: R$ {valor_perdido:,.2f}")
 print(f"Aproveitamento: {aproveitamento:.1f}%")
 ```
 
-### Exercício 2.5 — Dilatação Térmica
+### Desafio opcional — Dilatação Térmica
 
 ```python
 print("Dilatação Térmica Linear")
@@ -143,7 +355,7 @@ print(f"Lf: {Lf:.6f} m")
 print(f"Variação: {var_pct:.3f}%")
 ```
 
-### Exercício 2.6 — Custo Operacional de Fresadora
+### Desafio opcional — Custo Operacional de Fresadora
 
 ```python
 print("Custo Operacional — Fresadora CNC")
@@ -168,6 +380,28 @@ print(f"Impostos (27%): R$ {impostos:,.2f}")
 print(f"Custo total: R$ {custo_total:,.2f}")
 print(f"Custo por hora: R$ {custo_hora:.2f}/h")
 ```
+
+### Exercício 2.8 — Pressão de Pistão Hidráulico
+
+```python
+import math
+
+print("Pressão de Pistão Hidráulico")
+print("------------------------------------------------------------")
+
+F = float(input("Força F (N): "))
+d = float(input("Diâmetro d (mm): "))
+
+d_m = d / 1000
+A = math.pi * d_m ** 2 / 4
+P = F / A
+
+print("---------------------------")
+print(f"Área da seção: {A * 1e6:.2f} mm²")
+print(f"Pressão: {P / 1e6:.2f} MPa")
+```
+
+---
 
 ### Mini-Projeto — Calculadora de Usinagem
 
@@ -219,7 +453,57 @@ print(f"Custo total: R$ {custo:.2f}")
 
 ## Aula 03 — Condicionais + Classificadores
 
-### Exercício 3.1 — Prensa Hidráulica
+### Exercício 3.1 — Do pseudocódigo ao Python (Aprovado ou Reprovado)
+
+```python
+nota1 = 8.0
+nota2 = 7.0
+nota3 = 6.0
+
+media = (nota1 + nota2 + nota3) / 3
+
+if media >= 7:
+    print(f"Média: {media:.1f} — Aprovado")
+else:
+    print(f"Média: {media:.1f} — Reprovado")
+```
+
+---
+
+### Exercício 3.2 — Tipo de triângulo
+
+```python
+a = 5
+b = 5
+c = 8
+
+if a == b == c:
+    print("Equilátero")
+elif a == b or b == c or a == c:
+    print("Isósceles")
+else:
+    print("Escaleno")
+```
+
+---
+
+### Exercício 3.3 — Entrada na montanha-russa (duas condições)
+
+```python
+altura = 1.55
+idade = 12
+
+if altura >= 1.40 and idade >= 10:
+    print("Pode entrar. Bom divertimento!")
+elif altura < 1.40:
+    print("Altura insuficiente para o brinquedo.")
+else:
+    print("Idade insuficiente para o brinquedo.")
+```
+
+---
+
+### Exercício 3.4 — Prensa Hidráulica
 
 ```python
 print("Prensa Hidráulica — Monitoramento de Segurança")
@@ -238,7 +522,7 @@ else:
     print("ERRO: Sobrepressão! Acionando válvula de alívio.")
 ```
 
-### Exercício 3.2 — Dureza do Aço
+### Exercício 3.5 — Dureza do Aço
 
 ```python
 print("Classificação de Dureza Brinell")
@@ -256,7 +540,7 @@ else:
     print("Peça Rejeitada: Material muito frágil")
 ```
 
-### Exercício 3.3 — Sensor de Emergência CNC
+### Desafio opcional — Sensor de Emergência CNC
 
 ```python
 print("Autenticação — Fresadora CNC 5 Eixos")
@@ -272,7 +556,7 @@ else:
     print("ACESSO NEGADO: Verifique credenciais e sensor de emergência.")
 ```
 
-### Exercício 3.4 — Seleção de Material por Torque
+### Desafio opcional — Seleção de Material por Torque
 
 ```python
 print("Seleção de Material — Eixo de Transmissão")
@@ -306,7 +590,7 @@ print(f"Forma de pagamento: {forma}")
 print(f"Custo final: R$ {custo_final:.2f}")
 ```
 
-### Exercício 3.5 — Homogeneidade de Eixos
+### Desafio opcional — Homogeneidade de Eixos
 
 ```python
 print("Controle de Qualidade — Homogeneidade de Eixos")
@@ -331,7 +615,7 @@ else:
     print(f"Lote Aprovado: dispersão ({dispersao:.3f} mm) < tolerância ({tolerancia:.3f} mm)")
 ```
 
-### Mini-Projeto — Classificador de Materiais
+### Exercício 3.6 — Classificador de Materiais
 
 ```python
 print("Classificador de Materiais")
@@ -375,7 +659,130 @@ else:
     print("AVISO: Nenhum material atende todas as condições especificadas. Revise os parâmetros.")
 ```
 
-### Exercício 3.6 — Conversor de Unidades com Funções
+---
+
+### Exercício 3.7 — Análise de Crédito
+
+```python
+print("Análise de Crédito — Empréstimo Pessoal")
+print("Avalia score, limite de valor e comprometimento de renda.")
+print("------------------------------------------------------------")
+
+renda = float(input("Renda mensal (R$): "))
+valor = float(input("Valor solicitado (R$): "))
+n = int(input("Número de parcelas: "))
+score = int(input("Score de crédito (0-1000): "))
+
+if score < 600:
+    print("CRÉDITO NEGADO: score insuficiente (mínimo 600).")
+elif valor > 12 * renda:
+    print("CRÉDITO NEGADO: valor acima de 12x a renda mensal.")
+else:
+    if score >= 750:
+        taxa = 0.015
+    else:
+        taxa = 0.025
+
+    total = valor * (1 + taxa * n)
+    parcela = total / n
+
+    print("---------------------------")
+    print(f"Taxa aplicada: {taxa * 100:.1f}% a.m.")
+    print(f"Valor total: R$ {total:,.2f}")
+    print(f"Parcela ({n}x): R$ {parcela:,.2f}")
+
+    if parcela > 0.30 * renda:
+        print("CRÉDITO NEGADO: parcela acima de 30% da renda.")
+    else:
+        print("CRÉDITO APROVADO.")
+```
+
+---
+
+## Aula 04 — Funções em Python
+
+### Exercício 4.1 — Sua primeira função (média)
+
+```python
+def media(n1, n2, n3):
+    """Calcula a média aritmética de três notas."""
+    return (n1 + n2 + n3) / 3
+
+m = media(8.0, 7.0, 6.0)
+print(f"Média: {m:.1f}")
+```
+
+---
+
+### Exercício 4.2 — Preço com desconto (valor padrão)
+
+```python
+def preco_final(preco, desconto=0.0):
+    """Calcula o preço com desconto (0.0 a 1.0)."""
+    return preco * (1 - desconto)
+
+print(f"À vista: R$ {preco_final(100, 0.10):.2f}")
+print(f"Cartão: R$ {preco_final(100):.2f}")
+```
+
+---
+
+### Exercício 4.3 — Bhaskara com dois retornos
+
+```python
+import math
+
+def raizes(a, b, c):
+    """Retorna as duas raízes de ax²+bx+c=0 (assume Δ ≥ 0)."""
+    delta = b ** 2 - 4 * a * c
+    x1 = (-b + math.sqrt(delta)) / (2 * a)
+    x2 = (-b - math.sqrt(delta)) / (2 * a)
+    return x1, x2
+
+x1, x2 = raizes(1, -5, 6)
+print(f"x1 = {x1:.1f}, x2 = {x2:.1f}")
+```
+
+---
+
+### Exercício 4.4 — Triângulo como função
+
+```python
+def tipo_triangulo(a, b, c):
+    """Classifica o triângulo pelos lados."""
+    if a == b == c:
+        return "Equilátero"
+    elif a == b or b == c or a == c:
+        return "Isósceles"
+    else:
+        return "Escaleno"
+
+print(tipo_triangulo(5, 5, 5))
+print(tipo_triangulo(5, 5, 8))
+print(tipo_triangulo(3, 4, 5))
+```
+
+---
+
+### Exercício 4.5 — Encontre os dois erros (escopo + `return`)
+
+O código original quebra por dois motivos: a função não tem `return` (logo `valor` vale `None`, e formatar `None` com `:.2f` gera `TypeError`) e a variável `final` é local (usá-la fora da função geraria `NameError`).
+
+```python
+preco = 200.0
+
+def aplicar_desconto(preco, taxa):
+    """Retorna o preço com desconto."""
+    final = preco * (1 - taxa)
+    return final
+
+valor = aplicar_desconto(preco, 0.1)
+print(f"Preço com desconto: R$ {valor:.2f}")
+```
+
+---
+
+### Exercício 4.6 — Conversor de Unidades
 
 ```python
 def psi_para_mpa(psi):
@@ -402,7 +809,7 @@ f = float(input("Valor em °F: "))
 print(f"Resultado: {f_para_c(f):.2f} °C")
 ```
 
-### Exercício 3.7 — Classificador de Solda com Funções
+### Exercício 4.7 — Classificador de Solda
 
 ```python
 def calcular_desvio_percentual(medida, nominal):
@@ -441,9 +848,202 @@ else:
 
 ---
 
-## Aula 04 — Estruturas de Dados
+### Exercício 4.8 — Calculadora Técnica com Funções
 
-### Exercício 4.1 — Análise de Temperaturas
+```python
+import math
+
+def tensao_normal(forca, area):
+    """σ = F / A — retorna tensão em Pa."""
+    return forca / area
+
+def deformacao_especifica(var_l, l0):
+    """ε = ΔL / L₀ — retorna deformação (adimensional)."""
+    return var_l / l0
+
+def lei_hooke(mod_elasticidade, deformacao):
+    """σ = E · ε — retorna tensão pela Lei de Hooke."""
+    return mod_elasticidade * deformacao
+
+def potencia_mecanica(torque, rpm):
+    """P = T · ω — retorna potência em W (ω em rad/s)."""
+    omega = (2 * math.pi * rpm) / 60
+    return torque * omega
+
+print(f"Tensão normal: {tensao_normal(10000, 0.005) / 1e6:.1f} MPa")
+print(f"Deformação: {deformacao_especifica(2, 1000):.4f}")
+print(f"Lei de Hooke: {lei_hooke(200e9, 0.002) / 1e6:.0f} MPa")
+print(f"Potência: {potencia_mecanica(300, 1750) / 1e3:.2f} kW")
+```
+
+---
+
+### Exercício 4.9 — Plano de Manutenção da Frota
+
+```python
+def km_restantes(km_atual, km_ultima_troca, intervalo):
+    """Retorna quantos km faltam para a próxima troca."""
+    return intervalo - (km_atual - km_ultima_troca)
+
+def status_item(km_rest):
+    """Classifica o item: VENCIDO, VENCE EM BREVE ou EM DIA."""
+    if km_rest <= 0:
+        return "VENCIDO"
+    elif km_rest < 2000:
+        return "VENCE EM BREVE"
+    else:
+        return "EM DIA"
+
+print("Plano de Manutenção — Frota")
+print("------------------------------------------------------------")
+
+km = float(input("Quilometragem atual: "))
+oleo = float(input("Km da última troca de óleo: "))
+freios = float(input("Km da última revisão de freios: "))
+correia = float(input("Km da última troca da correia: "))
+
+r_oleo = km_restantes(km, oleo, 10000)
+r_freios = km_restantes(km, freios, 30000)
+r_correia = km_restantes(km, correia, 60000)
+
+s_oleo = status_item(r_oleo)
+s_freios = status_item(r_freios)
+s_correia = status_item(r_correia)
+
+print("---------------------------")
+print(f"Óleo: faltam {r_oleo:.0f} km — {s_oleo}")
+print(f"Freios: faltam {r_freios:.0f} km — {s_freios}")
+print(f"Correia: faltam {r_correia:.0f} km — {s_correia}")
+
+if "VENCIDO" in (s_oleo, s_freios, s_correia):
+    print("MANUTENÇÃO URGENTE: há item vencido.")
+elif "VENCE EM BREVE" in (s_oleo, s_freios, s_correia):
+    print("Agendar revisão em breve.")
+else:
+    print("Frota em dia. Boa viagem!")
+```
+
+---
+
+## Aula 05 — Estruturas de Dados
+
+### Exercício 5.1 — Playlist
+
+```python
+playlist = ["Bohemian Rhapsody", "Imagine", "Billie Jean", "Hotel California", "Smells Like Teen Spirit"]
+
+print(f"Três primeiras: {playlist[:3]}")
+print(f"Duas últimas: {playlist[-2:]}")
+print(f"Do meio: {playlist[1:4]}")
+print(f"Invertida: {playlist[::-1]}")
+```
+
+---
+
+### Exercício 5.2 — Fila de atendimento
+
+```python
+fila = ["Ana", "Bruno"]
+
+fila.append("Carla")       # chegada → fim da fila
+fila.insert(0, "Seu José") # prioritário → posição 0
+atendido = fila.pop(0)     # chama o próximo
+
+print(f"Em atendimento: {atendido}")
+print(f"Fila atual: {fila}")
+print(f"Aguardando: {len(fila)} pessoas")
+```
+
+---
+
+### Exercício 5.3 — Tabela de preços montada de uma vez
+
+```python
+codigos = list(range(101, 105))
+produtos = "Pão,Leite,Café,Açúcar".split(",")
+precos = [5.50, 6.00, 12.00, 4.50]
+
+tabela = dict(zip(produtos, precos))
+
+print(f"Códigos: {codigos}")
+print(f"Produtos: {produtos}")
+print(f"Preço do Café: R$ {tabela['Café']:.2f}")
+print(f"Tabela: {list(tabela.items())}")
+```
+
+---
+
+### Exercício 5.4 — Cor RGB
+
+```python
+cor = (255, 128, 0)   # laranja
+
+r, g, b = cor
+print(f"Vermelho: {r}, Verde: {g}, Azul: {b}")
+print(f"Primeiro canal: {cor[0]}")
+
+# cor[0] = 100   → TypeError: 'tuple' object does not support item assignment
+```
+
+A tentativa de alteração gera `TypeError` porque tuplas são imutáveis — e é exatamente isso que protege uma cor (ou coordenada) contra mudanças acidentais.
+
+---
+
+### Exercício 5.5 — Ficha cadastral
+
+```python
+pessoa = {
+    "nome": "Mariana",
+    "idade": 28,
+    "cidade": "Passo Fundo",
+    "telefones": ["54-99911-2233"],
+}
+
+print(f"Nome: {pessoa['nome']}")
+print(f"E-mail: {pessoa.get('email', 'não informado')}")
+
+pessoa["idade"] = 29
+pessoa["email"] = "mari@mail.com"
+
+print(f"Tem CNH? {'cnh' in pessoa}")
+print(f"Telefones: {pessoa['telefones']}")
+print(f"Chaves: {list(pessoa.keys())}")
+```
+
+---
+
+### Exercício 5.6 — Boletim aninhado
+
+```python
+turma = {"Ana": [8.0, 7.0, 9.0], "Bruno": [6.0, 5.0, 7.0]}
+
+print(f"Primeira nota da Ana: {turma['Ana'][0]}")
+
+media_ana = sum(turma["Ana"]) / len(turma["Ana"])
+media_bruno = sum(turma["Bruno"]) / len(turma["Bruno"])
+print(f"Média da Ana: {media_ana:.1f}")
+print(f"Média do Bruno: {media_bruno:.1f}")
+
+turma["Carla"] = [10.0, 9.5, 9.0]
+print(f"Alunos: {list(turma.keys())}")
+```
+
+---
+
+### Exercício 5.7 — O que falta na despensa?
+
+```python
+receita = {"farinha", "ovos", "leite", "açúcar", "fermento"}
+despensa = {"farinha", "ovos", "café", "sal"}
+
+print(f"Falta comprar: {receita - despensa}")
+print(f"Já tem: {receita & despensa}")
+print(f"Todos os itens: {receita | despensa}")
+```
+
+---
+
+### Exercício 5.8 — Análise de Temperaturas
 
 ```python
 print("Análise de Temperaturas — Ensaio Térmico")
@@ -466,7 +1066,7 @@ amplitude = max(temperaturas) - min(temperaturas)
 print(f"Amplitude: {amplitude} °C")
 ```
 
-### Exercício 4.2 — Cadastro de Materiais
+### Exercício 5.9 — Cadastro de Materiais
 
 ```python
 print("Catálogo de Materiais")
@@ -492,15 +1092,25 @@ materiais = [
     },
 ]
 
-print("Materiais cadastrados")
-for i, mat in enumerate(materiais, start=1):
-    print(f"{i}. {mat['nome']}")
-    print(f"  Densidade: {mat['densidade']} kg/m³")
-    print(f"  Módulo de elasticidade: {mat['modulo_E']:,} MPa")
-    print(f"  Limite de escoamento: {mat['escoamento']} MPa")
+print("Materiais cadastrados (sem laços — posição por posição)")
+
+print(f"1. {materiais[0]['nome']}")
+print(f"  Densidade: {materiais[0]['densidade']} kg/m³")
+print(f"  Módulo de elasticidade: {materiais[0]['modulo_E']:,} MPa")
+print(f"  Limite de escoamento: {materiais[0]['escoamento']} MPa")
+
+print(f"2. {materiais[1]['nome']}")
+print(f"  Densidade: {materiais[1]['densidade']} kg/m³")
+print(f"  Módulo de elasticidade: {materiais[1]['modulo_E']:,} MPa")
+print(f"  Limite de escoamento: {materiais[1]['escoamento']} MPa")
+
+print(f"3. {materiais[2]['nome']}")
+print(f"  Densidade: {materiais[2]['densidade']} kg/m³")
+print(f"  Módulo de elasticidade: {materiais[2]['modulo_E']:,} MPa")
+print(f"  Limite de escoamento: {materiais[2]['escoamento']} MPa")
 ```
 
-### Exercício 4.3 — Certificações de Operadores
+### Exercício 5.10 — Certificações de Operadores
 
 ```python
 print("Certificações de Operadores")
@@ -521,11 +1131,53 @@ todos = torno | fresa
 
 print("Análise de certificações")
 
-print(f"Polivalentes (Torno e Fresa): {', '.join(operadores[op] for op in polivalentes)}")
-print(f"Exclusivos do Torno: {', '.join(operadores[op] for op in exclusivos_torno)}")
-print(f"Exclusivos da Fresa: {', '.join(operadores[op] for op in exclusivos_fresa)}")
+print(f"Polivalentes (Torno e Fresa): {list(map(operadores.get, sorted(polivalentes)))}")
+print(f"Exclusivos do Torno: {list(map(operadores.get, sorted(exclusivos_torno)))}")
+print(f"Exclusivos da Fresa: {list(map(operadores.get, sorted(exclusivos_fresa)))}")
 print(f"Total de operadores na seção: {len(todos)}")
 ```
+
+---
+
+### Exercício 5.11 — Carrinho de compras
+
+```python
+carrinho = {
+    "Pão": {"preco": 5.50, "qtd": 4},
+    "Café": {"preco": 12.00, "qtd": 2},
+    "Leite": {"preco": 6.00, "qtd": 3},
+}
+
+subtotal = (
+    carrinho["Pão"]["preco"] * carrinho["Pão"]["qtd"]
+    + carrinho["Café"]["preco"] * carrinho["Café"]["qtd"]
+    + carrinho["Leite"]["preco"] * carrinho["Leite"]["qtd"]
+)
+
+if subtotal >= 100:
+    frete = 0.0
+else:
+    frete = 15.0
+
+print(f"Subtotal: R$ {subtotal:.2f}")
+print(f"Frete: R$ {frete:.2f}")
+print(f"Total: R$ {subtotal + frete:.2f}")
+
+carrinho["Açúcar"] = {"preco": 4.50, "qtd": 10}
+subtotal = subtotal + carrinho["Açúcar"]["preco"] * carrinho["Açúcar"]["qtd"]
+
+if subtotal >= 100:
+    frete = 0.0
+else:
+    frete = 15.0
+
+print("---------------------------")
+print(f"Subtotal: R$ {subtotal:.2f}")
+print(f"Frete: R$ {frete:.2f}")
+print(f"Total: R$ {subtotal + frete:.2f}")
+```
+
+---
 
 ### Mini-Projeto — Catálogo de Materiais Interativo
 
@@ -533,20 +1185,19 @@ print(f"Total de operadores na seção: {len(todos)}")
 print("Catálogo de Materiais Interativo")
 
 catalogo = {
-    "aco_1020": {"nome": "Aço 1020", "densidade": 7850, "E": 210_000, "sigma_y": 350, "alpha": 11.7e-6},
-    "al_6061": {"nome": "Alumínio 6061", "densidade": 2700, "E": 69_000, "sigma_y": 276, "alpha": 23.1e-6},
-    "latao": {"nome": "Latão", "densidade": 8500, "E": 100_000, "sigma_y": 250, "alpha": 19.0e-6},
-    "ti_6al4v": {"nome": "Titânio Ti-6Al-4V", "densidade": 4430, "E": 114_000, "sigma_y": 880, "alpha": 8.6e-6},
+    "Aço 1020": {"densidade": 7850, "E": 210_000, "sigma_y": 350, "alpha": 11.7e-6},
+    "Alumínio 6061": {"densidade": 2700, "E": 69_000, "sigma_y": 276, "alpha": 23.1e-6},
+    "Latão": {"densidade": 8500, "E": 100_000, "sigma_y": 250, "alpha": 19.0e-6},
+    "Titânio Ti-6Al-4V": {"densidade": 4430, "E": 114_000, "sigma_y": 880, "alpha": 8.6e-6},
 }
 
-nomes = [m["nome"] for m in catalogo.values()]
-print("Materiais:", nomes)
+print("Materiais:", list(catalogo))
 
 mat1 = input("Material principal: ")
-print("Comparar com: [Nenhum] " + ", ".join(nomes))
+print("Comparar com: [Nenhum] " + str(list(catalogo)))
 comparacao = input("Comparar com: ")
 
-m = catalogo[[k for k, v in catalogo.items() if v["nome"] == mat1][0]]
+m = catalogo[mat1]
 
 if comparacao == "Nenhum":
     print(mat1)
@@ -555,7 +1206,7 @@ if comparacao == "Nenhum":
     print(f"Limite de escoamento: {m['sigma_y']} MPa")
     print(f"Coef. dilatação: {m['alpha']*1e6:.1f} ×10⁻⁶/°C")
 else:
-    m2 = catalogo[[k for k, v in catalogo.items() if v["nome"] == comparacao][0]]
+    m2 = catalogo[comparacao]
 
     print("Comparação de materiais")
     print(mat1)
@@ -572,9 +1223,31 @@ else:
 
 ---
 
-## Aula 05 — Laços + Persistência + Tabelas
+## Aula 06 — Laços de Repetição
 
-### Exercício 5.1 — Tubulação com Sensores
+### Exercício 6.1 — Tocar playlist
+
+```python
+playlist = ["Bohemian Rhapsody", "Imagine", "Billie Jean"]
+
+for musica in playlist:
+    print(f"Tocando: {musica}")
+```
+
+---
+
+### Exercício 6.2 — Cardápio numerado
+
+```python
+cardapio = ["Pizza", "Lasanha", "Salada", "Suco"]
+
+for i, prato in enumerate(cardapio, start=1):
+    print(f"{i}. {prato}")
+```
+
+---
+
+### Exercício 6.3 — Tubulação com Sensores
 
 ```python
 import random
@@ -596,7 +1269,90 @@ leituras = [random.uniform(140, 170) for _ in posicoes]
 print(f"Temperatura média: {sum(leituras)/len(leituras):.2f} °C")
 ```
 
-### Exercício 5.2 — Simulação de Caldeira
+---
+
+### Exercício 6.4 — Catálogo com laço
+
+```python
+materiais = [
+    {"nome": "Aço 1020", "densidade": 7850},
+    {"nome": "Alumínio 6061", "densidade": 2700},
+    {"nome": "Latão", "densidade": 8500},
+]
+
+for i, mat in enumerate(materiais, start=1):
+    print(f"{i}. {mat['nome']} — {mat['densidade']} kg/m³")
+```
+
+---
+
+### Exercício 6.5 — Encher o tanque
+
+```python
+nivel = 20
+
+while nivel < 100:
+    nivel += 15
+    print(f"Nível: {nivel}%")
+
+print("Tanque cheio!")
+```
+
+---
+
+### Exercício 6.6 — Autenticação PIN Técnico
+
+```python
+print("Autenticação — Célula Robotizada de Soldagem")
+
+tentativas = 3
+
+while tentativas > 0:
+    pin = input("PIN de 6 dígitos: ")
+
+    if pin == "123456":
+        print("Acesso autorizado. Célula liberada.")
+        break
+    else:
+        tentativas -= 1
+        if tentativas > 0:
+            print(f"PIN incorreto. Tentativas restantes: {tentativas}")
+        else:
+            print("ACESSO BLOQUEADO. Procure o supervisor.")
+```
+
+---
+
+### Exercício 6.7 — Filtrar e parar
+
+```python
+leituras = [22.5, -1.0, 23.1, 0.0, 105.0, 24.0]
+
+for valor in leituras:
+    if valor <= 0:
+        continue
+    if valor > 100:
+        print(f"CRÍTICO: {valor} — parando!")
+        break
+    print(f"Leitura OK: {valor}")
+```
+
+---
+
+### Exercício 6.8 — Filtro em uma linha
+
+```python
+leituras = [22.5, -1.0, 23.1, 0.0, 24.0]
+
+validas = [v for v in leituras if v > 0]
+
+print(f"Válidas: {validas}")
+print(f"Média: {sum(validas)/len(validas):.2f}")
+```
+
+---
+
+### Desafio opcional — Simulação de Caldeira
 
 ```python
 print("Simulação de Aquecimento — Caldeira")
@@ -619,7 +1375,9 @@ else:
     print(f"Temperatura alvo ({t_alvo} °C) atingida em {etapas} minutos.")
 ```
 
-### Exercício 5.3 — Custo de Combustível da Frota
+---
+
+### Desafio opcional — Custo de Combustível da Frota
 
 ```python
 print("Custo de Combustível — Frota de Veículos")
@@ -644,28 +1402,351 @@ print("---------------------------")
 print(f"Custo total da frota: R$ {custo_total:.2f}")
 ```
 
-### Exercício 5.4 — Autenticação PIN Técnico
+---
+
+### Exercício 6.9 — Desconto aplicado em lote
 
 ```python
-print("Autenticação — Célula Robotizada de Soldagem")
+def preco_final(preco, desconto=0.0):
+    """Retorna o preço com desconto."""
+    return preco * (1 - desconto)
 
-tentativas = 3
+precos = [100.0, 59.90, 250.0, 32.50]
 
-while tentativas > 0:
-    pin = input("PIN de 6 dígitos: ")
-
-    if pin == "123456":
-        print("Acesso autorizado. Célula liberada.")
-        break
-    else:
-        tentativas -= 1
-        if tentativas > 0:
-            print(f"PIN incorreto. Tentativas restantes: {tentativas}")
-        else:
-            print("ACESSO BLOQUEADO. Procure o supervisor.")
+for p in precos:
+    print(f"De R$ {p:.2f} por R$ {preco_final(p, 0.10):.2f}")
 ```
 
-### Exercício 5.5 — Controle de Estoque com JSON
+---
+
+### Exercício 6.10 — Diagnóstico do Turno de Produção
+
+```python
+maquinas = {
+    "CNC-01": [11.8, 12.5, 13.1, 11.9, 14.0, 12.2],
+    "CNC-02": [12.3, 12.1, 15.4, 18.9, 12.0, 13.6, 12.4],
+    "CNC-03": [11.6, 11.9, 12.4, 11.8, 12.1],
+    "CNC-04": [13.8, 14.2, 12.9, 16.7, 15.8],
+    "CNC-05": [12.0, 12.2, 12.1, 11.9, 12.3, 12.2, 12.4],
+}
+
+print("Diagnóstico do Turno de Produção")
+print("------------------------------------------------------------")
+print(f"{'Máquina':<7}{'Peças':>6}{'Média':>10}{'Alertas':>9}")
+
+soma_geral = 0
+total_pecas = 0
+pior_maquina = ""
+pior_media = 0
+mais_alertas_maquina = ""
+mais_alertas = 0
+
+for maquina, tempos in maquinas.items():
+    n = len(tempos)
+    media = sum(tempos) / n
+    alertas = 0
+    for t in tempos:
+        if t > 12.0:
+            alertas += 1
+    soma_geral += sum(tempos)
+    total_pecas += n
+    if media > pior_media:
+        pior_media = media
+        pior_maquina = maquina
+    if alertas > mais_alertas:
+        mais_alertas = alertas
+        mais_alertas_maquina = maquina
+    print(f"{maquina:<7}{n:>6}{media:>10.1f}{alertas:>9}")
+
+print("---------------------------")
+print(f"Média geral: {soma_geral / total_pecas:.2f} min")
+print(f"Pior média: {pior_maquina} ({pior_media:.1f} min)")
+print(f"Mais alertas: {mais_alertas_maquina} ({mais_alertas})")
+```
+
+---
+
+### Exercício 6.11 — Faturamento do Mês por Cliente
+
+```python
+pedidos = [
+    {"cliente": "Auto Peças LTDA", "peca": "Eixo A36",   "qtd": 40,  "preco": 120.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Flange",     "qtd": 12,  "preco": 480.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Flange",     "qtd": 25,  "preco": 480.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Bucha",      "qtd": 80,  "preco": 25.0},
+    {"cliente": "Fabricante XYZ",  "peca": "Eixo A36",   "qtd": 60,  "preco": 120.0},
+    {"cliente": "Tornearia Alfa",  "peca": "Pino",       "qtd": 200, "preco": 18.0},
+    {"cliente": "Ind. Rodrigues",  "peca": "Engrenagem", "qtd": 8,   "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul", "peca": "Flange",     "qtd": 30,  "preco": 480.0},
+    {"cliente": "Usinagem Norte",  "peca": "Bucha",      "qtd": 50,  "preco": 25.0},
+    {"cliente": "Tornearia Alfa",  "peca": "Eixo A36",   "qtd": 90,  "preco": 120.0},
+    {"cliente": "Auto Peças LTDA", "peca": "Engrenagem", "qtd": 5,   "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul", "peca": "Eixo A36",   "qtd": 110, "preco": 120.0},
+    {"cliente": "Auto Peças LTDA",  "peca": "Bucha",     "qtd": 60,  "preco": 25.0},
+    {"cliente": "Auto Peças LTDA",  "peca": "Pino",      "qtd": 100, "preco": 18.0},
+    {"cliente": "Fabricante XYZ",   "peca": "Engrenagem","qtd": 10,  "preco": 1500.0},
+    {"cliente": "Fabricante XYZ",   "peca": "Pino",      "qtd": 150, "preco": 18.0},
+    {"cliente": "Ind. Rodrigues",   "peca": "Eixo A36",  "qtd": 70,  "preco": 120.0},
+    {"cliente": "Ind. Rodrigues",   "peca": "Pino",      "qtd": 120, "preco": 18.0},
+    {"cliente": "Tornearia Alfa",   "peca": "Flange",    "qtd": 20,  "preco": 480.0},
+    {"cliente": "Tornearia Alfa",   "peca": "Bucha",     "qtd": 90,  "preco": 25.0},
+    {"cliente": "Metalúrgica Sul",  "peca": "Engrenagem","qtd": 15,  "preco": 1500.0},
+    {"cliente": "Metalúrgica Sul",  "peca": "Pino",      "qtd": 80,  "preco": 18.0},
+    {"cliente": "Usinagem Norte",   "peca": "Flange",    "qtd": 10,  "preco": 480.0},
+    {"cliente": "Usinagem Norte",   "peca": "Eixo A36",  "qtd": 45,  "preco": 120.0},
+]
+
+resumo = {}
+
+for p in pedidos:
+    c = p["cliente"]
+    if c not in resumo:
+        resumo[c] = {"pedidos": 0, "total": 0.0}
+    resumo[c]["pedidos"] += 1
+    resumo[c]["total"] += p["qtd"] * p["preco"]
+
+print("Faturamento do Mês por Cliente")
+print("---------------------------")
+for c, d in resumo.items():
+    print(f"{c}: {d['pedidos']} pedidos → R$ {d['total']:,.2f}")
+
+maior = max(resumo, key=lambda c: resumo[c]["total"])
+mais_pedidos = max(resumo, key=lambda c: resumo[c]["pedidos"])
+ranking = sorted(resumo, key=lambda c: resumo[c]["total"], reverse=True)[:3]
+
+print("---------------------------")
+print(f"Maior cliente: {maior} (R$ {resumo[maior]['total']:,.2f})")
+print(f"Mais pedidos: {mais_pedidos} ({resumo[mais_pedidos]['pedidos']})")
+print(f"Top 3: {', '.join(ranking)}")
+```
+
+---
+
+### Mini-Projeto — Registro e Consolidação de Movimentações
+
+```python
+print("Registro de Movimentações — Almoxarifado")
+
+movs = []
+
+while True:
+    desc = input("Descrição (ou 'fim'): ")
+    if desc.strip().lower() == "fim":
+        break
+    cat = input("Categoria: ")
+    while not cat or cat.strip().lower() == "fim":
+        cat = input("Categoria inválida. Digite novamente: ")
+    tipo = input("Tipo (entrada/saída): ").strip().lower()
+    while tipo not in ("entrada", "saída", "saida"):
+        tipo = input("Tipo inválido. Digite 'entrada' ou 'saída': ").strip().lower()
+    if tipo == "saida":
+        tipo = "saída"
+    qtd = 0
+    while qtd <= 0:
+        try:
+            qtd = int(input("Quantidade: "))
+        except ValueError:
+            qtd = 0
+    valor = float(input("Valor unitário (R$): "))
+    movs.append({"descricao": desc, "categoria": cat, "tipo": tipo, "qtd": qtd, "valor": valor})
+
+categorias = {}
+
+for m in movs:
+    c = m["categoria"]
+    if c not in categorias:
+        categorias[c] = {"movimentos": 0, "qtd_in": 0, "val_in": 0.0, "qtd_out": 0, "val_out": 0.0}
+    d = categorias[c]
+    v = m["qtd"] * m["valor"]
+    d["movimentos"] += 1
+    if m["tipo"] == "entrada":
+        d["qtd_in"] += m["qtd"]
+        d["val_in"] += v
+    else:
+        d["qtd_out"] += m["qtd"]
+        d["val_out"] += v
+
+total_valor = sum(d["val_in"] + d["val_out"] for d in categorias.values())
+
+print("===========================")
+print("Relatório Consolidado")
+for c, d in categorias.items():
+    tot = d["val_in"] + d["val_out"]
+    print("---------------------------")
+    print(f"Categoria: {c}")
+    print(f"Movimentos: {d['movimentos']}")
+    print(f"Entradas: {d['qtd_in']} itens → R$ {d['val_in']:,.2f}")
+    print(f"Saídas: {d['qtd_out']} itens → R$ {d['val_out']:,.2f}")
+    print(f"Valor total: R$ {tot:,.2f} ({tot / total_valor:.1%})")
+
+maior_mov = max(categorias, key=lambda c: categorias[c]["movimentos"])
+maior_val = max(categorias, key=lambda c: categorias[c]["val_in"] + categorias[c]["val_out"])
+maior_item = max(movs, key=lambda m: m["valor"])
+saldo_qtd = sum(m["qtd"] if m["tipo"] == "entrada" else -m["qtd"] for m in movs)
+saldo_val = sum(m["qtd"] * m["valor"] if m["tipo"] == "entrada" else -m["qtd"] * m["valor"] for m in movs)
+
+print("---------------------------")
+print(f"Categoria com mais movimentos: {maior_mov}")
+print(f"Categoria com maior valor: {maior_val}")
+print(f"Item de maior valor unitário: {maior_item['descricao']} (R$ {maior_item['valor']:,.2f})")
+print(f"Saldo geral: {saldo_qtd} itens, R$ {saldo_val:,.2f}")
+```
+
+---
+
+## Aula 07 — Persistência + Tabelas
+
+### Exercício 7.1 — Ficha de leitura
+
+```python
+import json
+
+leitor = {
+    "nome": "Marina",
+    "livro_atual": "Dom Casmurro",
+    "paginas_lidas": 120,
+    "lidos": ["Capitães da Areia", "O Hobbit", "1984"],
+}
+
+with open("leitor.json", "w") as f:
+    json.dump(leitor, f, indent=4)
+
+with open("leitor.json", "r") as f:
+    d = json.load(f)
+
+print(f"{d['nome']} está lendo {d['livro_atual']} ({d['paginas_lidas']} páginas lidas).")
+print(f"Livros concluídos: {len(d['lidos'])}")
+```
+
+---
+
+### Exercício 7.2 — Boletim da turma em JSON
+
+```python
+import json
+import os
+
+BOLETIM_FILE = "boletim.json"
+
+def carregar_boletim():
+    if os.path.exists(BOLETIM_FILE):
+        with open(BOLETIM_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def salvar_boletim(boletim):
+    with open(BOLETIM_FILE, "w") as f:
+        json.dump(boletim, f, indent=4)
+
+novos = {
+    "Ana": [8.0, 7.5, 9.0],
+    "Bruno": [6.0, 5.5, 7.0],
+    "Carla": [10.0, 9.5, 9.0],
+}
+
+boletim = carregar_boletim()
+boletim.update(novos)
+salvar_boletim(boletim)
+
+boletim = carregar_boletim()
+for nome, notas in boletim.items():
+    media = sum(notas) / len(notas)
+    print(f"{nome}: {media:.1f}")
+```
+
+---
+
+### Exercício 7.3 — Gastos do mês em CSV
+
+```python
+import csv
+
+linhas = [
+    ["2026-09-01", "mercado",    250.0],
+    ["2026-09-03", "transporte",  80.0],
+    ["2026-09-05", "mercado",    120.5],
+    ["2026-09-10", "lazer",       90.0],
+    ["2026-09-12", "transporte",  45.0],
+]
+
+with open("gastos.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["data", "categoria", "valor"])
+    writer.writerows(linhas)
+
+total = 0.0
+total_mercado = 0.0
+
+with open("gastos.csv", "r") as f:
+    reader = csv.DictReader(f)
+    for linha in reader:
+        valor = float(linha["valor"])
+        total += valor
+        if linha["categoria"] == "mercado":
+            total_mercado += valor
+        print(f"{linha['data']} — {linha['categoria']}: R$ {valor:.2f}")
+
+print("---------------------------")
+print(f"Total do mês: R$ {total:.2f}")
+print(f"Gasto com mercado: R$ {total_mercado:.2f}")
+```
+
+---
+
+### Exercício 7.4 — Cardápio da cantina vai e volta
+
+```python
+import pandas as pd
+
+cardapio = {
+    "dia": ["seg", "ter", "qua", "qui", "sex"],
+    "prato": ["Pizza", "Lasanha", "Salada", "Feijoada", "Suco + Pão"],
+    "preco": [18.0, 22.0, 15.0, 25.0, 12.0],
+}
+
+df = pd.DataFrame(cardapio)
+print(df.shape)
+print(df.head(3))
+
+df.to_csv("cardapio.csv", index=False)
+df2 = pd.read_csv("cardapio.csv")
+
+print(f"Preço médio: R$ {df2['preco'].mean():.2f}")
+top = df2.loc[df2["preco"].idxmax()]
+print(f"Prato mais caro: {top['prato']} (R$ {top['preco']:.2f})")
+```
+
+---
+
+### Exercício 7.5 — Boletim com estilo e estatísticas
+
+```python
+import pandas as pd
+
+alunos = [
+    {"nome": "Ana", "P1": 8.0, "P2": 7.5, "P3": 9.0},
+    {"nome": "Bruno", "P1": 6.0, "P2": 5.5, "P3": 7.0},
+    {"nome": "Carla", "P1": 10.0, "P2": 9.5, "P3": 9.0},
+    {"nome": "Diego", "P1": 4.0, "P2": 5.0, "P3": 6.0},
+]
+
+for a in alunos:
+    a["media"] = (a["P1"] + a["P2"] + a["P3"]) / 3
+
+df = pd.DataFrame(alunos)
+
+print(df.describe())
+print(f"Média da turma: {df['media'].mean():.2f}")
+
+top = df.loc[df["media"].idxmax()]
+print(f"Maior média: {top['nome']} ({top['media']:.2f})")
+
+df.style.background_gradient(cmap="viridis").format("{:.1f}", subset=["P1", "P2", "P3", "media"])
+```
+
+---
+
+### Exercício 7.6 — Controle de Estoque com JSON
 
 ```python
 import json
@@ -684,105 +1765,131 @@ def salvar_estoque(estoque):
     with open(ESTOQUE_FILE, "w") as f:
         json.dump(estoque, f, indent=4)
 
+# Começa zerado para o teste (apaga arquivo anterior, se existir)
+if os.path.exists(ESTOQUE_FILE):
+    os.remove(ESTOQUE_FILE)
+
 estoque = carregar_estoque()
 
-print("Controle de Estoque — Almoxarifado")
+cadastros = [
+    ("Capacete",            50),
+    ("Luva de borracha",    120),
+    ("Bota de segurança",   30),
+    ("Óculos de proteção",  75),
+    ("Colete refletivo",    40),
+]
 
-# Cadastrar item
-print("Cadastrar item")
-nome_item = input("Nome do item: ")
-qtd_item = int(input("Quantidade: "))
-if nome_item:
-    estoque[nome_item] = estoque.get(nome_item, 0) + qtd_item
-    salvar_estoque(estoque)
-    print(f"{qtd_item}x {nome_item} cadastrado.")
+for nome, qtd in cadastros:
+    estoque[nome] = estoque.get(nome, 0) + qtd
+salvar_estoque(estoque)
 
-# Retirar item
-print("Retirar item")
-if estoque:
-    print("Itens:", list(estoque.keys()))
-    nome_retirar = input("Item: ")
-    qtd_retirar = int(input("Quantidade a retirar: "))
-    if nome_retirar in estoque:
-        if estoque[nome_retirar] >= qtd_retirar:
-            estoque[nome_retirar] -= qtd_retirar
-            if estoque[nome_retirar] == 0:
-                del estoque[nome_retirar]
-            salvar_estoque(estoque)
-            print(f"{qtd_retirar}x {nome_retirar} retirado.")
+retiradas = [
+    ("Capacete",           10),
+    ("Luva de borracha",   200),   # deve falhar: saldo insuficiente
+    ("Bota de segurança",   5),
+]
+
+for nome, qtd in retiradas:
+    if nome in estoque:
+        if estoque[nome] >= qtd:
+            estoque[nome] -= qtd
+            print(f"{qtd}x {nome} retirado.")
         else:
-            print(f"Saldo insuficiente. Disponível: {estoque[nome_retirar]}")
+            print(f"{nome}: saldo insuficiente ({estoque[nome]}). Retirada de {qtd} recusada.")
+salvar_estoque(estoque)
 
-print("---------------------------")
-print("Estoque atual")
-if estoque:
-    df = pd.DataFrame({"Item": list(estoque.keys()), "Quantidade": list(estoque.values())})
-    print(df)
-else:
-    print("Estoque vazio.")
+df = pd.DataFrame({"Item": list(estoque.keys()), "Quantidade": list(estoque.values())})
+print(df)
 ```
 
-### Mini-Projeto — Dashboard de Sensores
+---
+
+### Exercício 7.7 — Vitórias por Piloto na Fórmula 1
 
 ```python
 import pandas as pd
+
+resultados = pd.read_csv("results.csv")
+pilotos    = pd.read_csv("drivers.csv")
+
+vitorias = resultados[resultados["positionOrder"] == 1]
+
+pilotos["nome"] = pilotos["forename"] + " " + pilotos["surname"]
+
+df = pd.merge(vitorias, pilotos[["driverId", "nome"]], on="driverId")
+
+ranking = df.groupby("nome").size().reset_index(name="vitorias")
+ranking = ranking.sort_values("vitorias", ascending=False).reset_index(drop=True)
+
+print(ranking.head(10))
+ranking.head(10).style.background_gradient(cmap="viridis").format({"vitorias": "{:.0f}"})
+```
+
+### Exercício 7.8 — Fatura de Luz com Tabela de Tarifas
+
+```python
 import json
-import random
+import pandas as pd
 
-print("Dashboard de Sensores — Monitoramento Industrial")
+TAXA_FIXA = 15.0
 
-LIMITE_TEMP = 180.0
-LIMITE_PRESSAO = 7.0
+tarifas = pd.read_csv("tarifas.csv")
+leituras = pd.read_csv("leituras.csv")
 
-sensores = [f"S{i+1:02d}" for i in range(10)]
-temperaturas = [random.uniform(140, 170) for _ in range(10)]
-pressao = [random.uniform(4.5, 6.0) for _ in range(10)]
+def buscar_tarifa(consumo):
+    for _, r in tarifas.iterrows():
+        if r["consumo_min"] <= consumo <= r["consumo_max"]:
+            return r["faixa"], float(r["tarifa_kwh"])
+    raise ValueError(f"Consumo fora das faixas: {consumo}")
 
-# Simular algumas falhas
-for i in range(10):
-    if random.random() < 0.15:
-        temperaturas[i] = random.uniform(175, 200)
-    if random.random() < 0.15:
-        pressao[i] = random.uniform(6.5, 8.0)
+registros = []
+for _, row in leituras.iterrows():
+    cliente = row["cliente"]
+    kwh = row["consumo_kwh"]
+    faixa, tarifa = buscar_tarifa(kwh)
+    valor_energia = kwh * tarifa
+    acrescimo = kwh * 0.05 if kwh > 200 else 0.0
+    total = valor_energia + TAXA_FIXA + acrescimo
+    perfil = "economico" if kwh <= 100 else ("normal" if kwh <= 220 else "alto consumo")
+    alerta = "revisar instalacao" if kwh > 220 else "ok"
+    registros.append({
+        "cliente": cliente,
+        "consumo_kwh": kwh,
+        "faixa": faixa,
+        "tarifa_kwh": tarifa,
+        "valor_energia": round(valor_energia, 2),
+        "acrescimo_bandeira": round(acrescimo, 2),
+        "total": round(total, 2),
+        "perfil": perfil,
+        "alerta": alerta,
+    })
 
-dados = {
-    "sensores": sensores,
-    "temperaturas": temperaturas,
-    "pressao": pressao,
+relatorio = pd.DataFrame(registros).sort_values("total", ascending=False).reset_index(drop=True)
+
+print(relatorio)
+print(relatorio.describe())
+print(relatorio["perfil"].value_counts().to_dict())
+relatorio.style.background_gradient(cmap="viridis", subset=["total"]).format("{:.2f}", subset=["total"])
+
+relatorio.to_csv("relatorio_faturas.csv", index=False)
+
+resumo = {
+    "total_arrecadado": round(float(relatorio["total"].sum()), 2),
+    "ticket_medio": round(float(relatorio["total"].mean()), 2),
+    "maior_fatura": {
+        "cliente": relatorio.loc[relatorio["total"].idxmax(), "cliente"],
+        "valor": float(relatorio["total"].max()),
+    },
+    "contagem_perfil": relatorio["perfil"].value_counts().to_dict(),
 }
+with open("resumo_faturas.json", "w") as f:
+    json.dump(resumo, f, indent=4)
 
-df = pd.DataFrame({
-    "Sensor": dados["sensores"],
-    "Temperatura (°C)": dados["temperaturas"],
-    "Pressão (bar)": dados["pressao"],
-})
+print(resumo)
 
-print(df)
-
-print("---------------------------")
-print("Métricas")
-
-temp_media = sum(dados["temperaturas"]) / len(dados["temperaturas"])
-pressao_media = sum(dados["pressao"]) / len(dados["pressao"])
-alertas_temp = sum(1 for t in dados["temperaturas"] if t > LIMITE_TEMP)
-alertas_pressao = sum(1 for p in dados["pressao"] if p > LIMITE_PRESSAO)
-
-print(f"Temp. média: {temp_media:.1f} °C")
-print(f"Pressão média: {pressao_media:.2f} bar")
-print(f"Sensores em alerta: {alertas_temp + alertas_pressao}")
-
-if alertas_temp > 0 or alertas_pressao > 0:
-    print("---------------------------")
-    print("Alertas")
-    for i, (s, t, p) in enumerate(zip(dados["sensores"], dados["temperaturas"], dados["pressao"])):
-        if t > LIMITE_TEMP:
-            print(f"{s}: Temperatura {t:.1f} °C — acima do limite ({LIMITE_TEMP} °C)!")
-        if p > LIMITE_PRESSAO:
-            print(f"{s}: Pressão {p:.2f} bar — acima do limite ({LIMITE_PRESSAO} bar)!")
-
-with open("leituras_sensores.json", "w") as f:
-    json.dump(dados, f, indent=4)
-print("Dados salvos em leituras_sensores.json")
+# Prova de persistência: recarrega o relatório do disco
+conferencia = pd.read_csv("relatorio_faturas.csv")
+print(f"Itens no relatório recarregado: {len(conferencia)}")
 ```
 
 ---

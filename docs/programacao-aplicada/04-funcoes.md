@@ -2,16 +2,15 @@
 
 ## Roteiro
 
-1. O que é uma função?
-2. Por que usar funções?
-3. Anatomia de uma função
-4. Parâmetros com valor padrão
-5. Múltiplos retornos
-6. Funções + Condicionais
-7. Escopo de variáveis
-8. Funções em um notebook (Colab)
-9. Exercícios
-10. **Mini-projeto:** Calculadora Técnica com Funções
+1. O que é uma função? (e por que usar)
+2. Anatomia: `def`, parâmetros, `return`
+3. Parâmetros com valor padrão
+4. Múltiplos retornos
+5. Funções + condicionais
+6. Escopo de variáveis
+7. Funções no notebook (Colab)
+8. Exercício 4.8: Calculadora Técnica com Funções
+9. Exercício 4.9: Plano de Manutenção da Frota (nível avançado)
 
 ## O que é uma função?
 
@@ -55,22 +54,47 @@ def nome_da_funcao(parametro1, parametro2):
 
 ### Chamando uma função
 
-Os valores que passamos para a função na hora de usar são chamados de **argumentos**:
+Definir a função **não** a executa — apenas registra a "receita" na memória. Para **executar** a função, é obrigatório usar o nome seguido de **parênteses `()`**, com os valores de entrada dentro deles. São esses valores que passamos na hora de usar, chamados de **argumentos**:
 
 ```python
-# Definição (parâmetros são nomes)
+# Definição (parâmetros são nomes) — nada é executado aqui
 def calcular_torcao(forca, braco):
     """Calcula o torque dado força e braço de alavanca."""
     torque = forca * braco
     return torque
 
-# Chamada (argumentos são valores concretos)
+# Chamada (argumentos são valores concretos) — AQUI a função executa
 resultado = calcular_torcao(500, 0.3)
 print(f"Torque: {resultado} Nm")
 # Saída: Torque: 150.0 Nm
 ```
 
+> **Sem os parênteses, não há execução.** Escrever apenas `calcular_torcao` (sem `()`) referencia a função, mas não a chama — nenhum cálculo acontece e nenhum valor é devolvido.
+
+### O `return` devolve o valor para quem chamou
+
+Quando a função encontra o `return`, ela **devolve o valor para o ponto exato onde foi chamada** — e esse valor pode ser guardado em uma variável, exibido ou usado em outro cálculo:
+
+```python
+resultado = calcular_torcao(500, 0.3)   # o 150.0 "volta" e é guardado em resultado
+print(resultado)                         # 150.0
+
+# O valor devolvido pode entrar direto em outra expressão
+dobro = calcular_torcao(500, 0.3) * 2
+print(dobro)                             # 300.0
+```
+
+Pense assim: a chamada `calcular_torcao(500, 0.3)` **vale** `150.0` — em qualquer lugar onde você escreveria esse número, pode escrever a chamada.
+
 > **Parâmetro** é o nome na definição. **Argumento** é o valor na chamada.
+
+### Exercício 4.1 — Sua primeira função (média)
+
+**Contexto:** nas aulas 01 e 03 você calculou a média de três notas. Agora transforme esse cálculo em uma função reutilizável.
+
+**Tarefa:** crie a função `media(n1, n2, n3)` (com docstring) que **retorna** a média aritmética. Depois chame a função com `(8.0, 7.0, 6.0)` e exiba o resultado com `print(f"...")`.
+
+**Valores de teste:** `media(8.0, 7.0, 6.0)` → `7.0`
 
 ## Parâmetros com valor padrão
 
@@ -90,6 +114,16 @@ print(tensao_normal(5000, 0.002))         # 2500000.0
 
 > Parâmetros com valor padrão devem vir **depois** dos parâmetros obrigatórios.
 
+### Exercício 4.2 — Preço com desconto (valor padrão)
+
+**Contexto:** uma loja aplica 10% de desconto nas vendas à vista, mas vende pelo preço cheio no cartão. Em vez de dois cálculos separados, use uma função com desconto opcional.
+
+**Tarefa:** crie a função `preco_final(preco, desconto=0.0)` que retorna `preco × (1 − desconto)`. Depois exiba:
+- o preço de um produto de R$ 100,00 com 10% de desconto
+- o preço do mesmo produto sem informar o desconto
+
+**Valores de teste:** `preco_final(100, 0.10)` → `90.00`; `preco_final(100)` → `100.00`
+
 ## Múltiplos retornos
 
 Python permite retornar mais de um valor usando tuplas:
@@ -108,6 +142,16 @@ print(f"Área lateral: {al:.4f} m²")
 print(f"Volume: {vol:.6f} m³")
 print(f"Área total: {at:.4f} m²")
 ```
+
+### Exercício 4.3 — Bhaskara com dois retornos
+
+**Contexto:** a fórmula de Bhaskara produz **duas** raízes — o caso ideal para uma função com múltiplos retornos.
+
+**Tarefa:** crie a função `raizes(a, b, c)` que calcula o discriminante `Δ = b² − 4ac` e **retorna as duas raízes** `x1` e `x2` (use `math.sqrt` para a raiz quadrada). Depois desempacote o resultado em duas variáveis e exiba ambas.
+
+**Valores de teste:** `raizes(1, -5, 6)` → `x1 = 3.0`, `x2 = 2.0`
+
+> **Nota:** neste exercício, use valores com `Δ > 0` garantido. Tratar o caso `Δ < 0` com condicionais dentro da função fica como desafio.
 
 ## Funções + Condicionais
 
@@ -142,6 +186,17 @@ def fator_seguranca(limite, atuante):
 fs = fator_seguranca(250, 100)  # limite 250 MPa, atuante 100 MPa
 print(f"Fator de segurança: {fs:.2f}")  # 2.50
 ```
+
+### Exercício 4.4 — Triângulo como função
+
+**Contexto:** na aula 03 (exercício 3.2) você classificou triângulos com `if`/`elif`/`else`. Agora encapsule essa lógica em uma função.
+
+**Tarefa:** crie a função `tipo_triangulo(a, b, c)` que **retorna** `"Equilátero"`, `"Isósceles"` ou `"Escaleno"`. Depois chame a função para os três casos e exiba cada resultado.
+
+**Valores de teste:**
+- `tipo_triangulo(5, 5, 5)` → "Equilátero"
+- `tipo_triangulo(5, 5, 8)` → "Isósceles"
+- `tipo_triangulo(3, 4, 5)` → "Escaleno"
 
 ## Escopo de variáveis: locais vs. globais
 
@@ -202,6 +257,27 @@ print(resultado)   # None — não há return
 
 > Toda função em Python retorna `None` se não houver `return`.
 
+### Exercício 4.5 — Encontre os dois erros (escopo + `return`)
+
+**Contexto:** o código abaixo deveria exibir o preço com desconto, mas quebra ao executar. Há **dois** erros — um de `return` e um de escopo.
+
+```python
+preco = 200.0
+
+def aplicar_desconto(preco, taxa):
+    final = preco * (1 - taxa)
+
+valor = aplicar_desconto(preco, 0.1)
+print(f"Preço com desconto: R$ {valor:.2f}")
+print(f"Variável final: {final}")
+```
+
+**Tarefa:**
+1. Execute o código e observe **onde** ele quebra e **por quê**
+2. Corrija os dois erros para que o programa exiba o preço com desconto corretamente
+
+**Resultado esperado:** `Preço com desconto: R$ 180.00`
+
 ## Funções em um notebook (Colab)
 
 Em um notebook, funções ajudam a organizar a lógica de cálculo em células separadas, que podem ser reutilizadas em outras células do notebook:
@@ -222,9 +298,7 @@ print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
 
 A função `calcular_tensao` faz apenas o cálculo — os valores de entrada são definidos como variáveis no topo da célula. Isso facilita testar a função separadamente e reutilizá-la em outras células do notebook.
 
----
-
-## Exercício 4.1 — Conversor de Unidades
+## Exercício 4.6 — Conversor de Unidades
 
 **Contexto:** O laboratório de ensaios mecânicos recebe dados de máquinas de teste em unidades imperiais (psi, polegadas, °F) mas os relatórios devem ser em unidades SI (MPa, mm, °C). O técnico quer um programa que faça as conversões usando funções bem definidas, para que cada conversão possa ser reutilizada em outros scripts.
 
@@ -243,7 +317,7 @@ A função `calcular_tensao` faz apenas o cálculo — os valores de entrada sã
 - `2.5 pol` → `63.5 mm`
 - `212 °F` → `100.0 °C`
 
-## Exercício 4.2 — Classificador de Solda
+## Exercício 4.7 — Classificador de Solda
 
 **Contexto:** Uma empresa de estruturas metálicas precisa classificar a qualidade de soldas de filete com base na perna da solda medida. A especificação exige que a perna da solda esteja dentro de uma faixa tolerada em relação ao valor nominal.
 
@@ -268,7 +342,7 @@ A função `calcular_tensao` faz apenas o cálculo — os valores de entrada sã
 - `nominal = 6 mm`, `medida = 5.0 mm`, `tolerância = 10%` → desvio = -16.67%, Reprovada (insuficiente)
 - `nominal = 6 mm`, `medida = 7.5 mm`, `tolerância = 10%` → desvio = +25%, Reprovada (excessiva)
 
-## Mini-Projeto — Calculadora Técnica com Funções
+## Exercício 4.8 — Calculadora Técnica com Funções
 
 **Contexto:** O setor de engenharia de uma empresa precisa de uma calculadora técnica que reúna várias fórmulas de engenharia em um só lugar. Cada fórmula deve ser implementada como uma função separada, facilitando manutenção e reuso.
 
@@ -300,15 +374,50 @@ def potencia_mecanica(torque, rpm):
 
 **Dica para conversão de RPM para rad/s:** `ω = (2π · RPM) / 60`
 
+## Exercício 4.9 — Plano de Manutenção da Frota (nível avançado)
+
+**Contexto:** uma transportadora controla as revisões de cada caminhão: troca de óleo a cada 10.000 km, revisão de freios a cada 30.000 km e troca da correia a cada 60.000 km. O gestor quer um programa que, a partir da quilometragem atual e da última troca de cada item, informe a situação de cada um e a decisão geral. A mesma lógica de cálculo e de classificação deve ser **reaproveitada** para os três itens — sem repetir código.
+
+**Funções que devem ser criadas:**
+- `km_restantes(km_atual, km_ultima_troca, intervalo)` — retorna quantos km faltam para a próxima troca: `intervalo − (km_atual − km_ultima_troca)`
+- `status_item(km_rest)` — retorna a classificação:
+  - `km_rest <= 0` → `"VENCIDO"`
+  - `km_rest < 2000` → `"VENCE EM BREVE"`
+  - demais casos → `"EM DIA"`
+
+**Entradas do programa (todas com `input()` e `float()`):**
+- Quilometragem atual do caminhão
+- Km da última troca de óleo, da última revisão de freios e da última troca da correia
+
+**Decisão geral (use as mesmas funções para os três itens, depois combine):**
+- Algum item `"VENCIDO"` → `"MANUTENÇÃO URGENTE: há item vencido."`
+- Senão, algum item `"VENCE EM BREVE"` → `"Agendar revisão em breve."`
+- Senão → `"Frota em dia. Boa viagem!"`
+
+**O que o programa deve ter:**
+- As duas funções com docstring
+- Exibição, para cada item, dos km restantes e do status
+- A decisão geral exibida com `print()`
+
+**Valores de teste:**
+- `km = 85000`, óleo em `78000`, freios em `60000`, correia em `30000` → tudo "EM DIA" → "Frota em dia"
+- `km = 95000`, óleo em `86000`, freios em `70000`, correia em `40000` → óleo "VENCE EM BREVE" → "Agendar revisão"
+- `km = 95000`, óleo em `84000`, freios em `70000`, correia em `40000` → óleo "VENCIDO" → "MANUTENÇÃO URGENTE"
+
 ## Resumo da aula
 
 - Funções (`def`) organizam código em blocos nomeados e reutilizáveis
 - Parâmetros recebem valores de entrada; `return` devolve o resultado
+- Definir não executa: a chamada exige o nome com parênteses `nome(...)`; o valor devolvido volta para quem chamou e pode ser guardado em variável
 - Parâmetros com valor padrão tornam a chamada mais flexível
 - Múltiplos valores podem ser retornados como tupla
+- Funções que decidem (`if` dentro) encapsulam regras de classificação
 - Variáveis criadas dentro da função são locais — não existem fora
+- Sem `return`, a função devolve `None`
 - Constantes globais (MAIÚSCULAS) são aceitáveis; variáveis globais mutáveis devem ser evitadas
 - Em um notebook, funções organizam a lógica de cálculo em células reutilizáveis
+- Teste cada função isoladamente antes de integrá-la ao programa maior
+- Reaproveite a mesma função para vários itens e combine os resultados numa decisão geral
 
 ## Referências
 

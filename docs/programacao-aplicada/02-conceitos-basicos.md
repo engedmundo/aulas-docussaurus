@@ -3,16 +3,14 @@
 ## Roteiro
 
 1. Pensamento computacional
-2. Variáveis e tipos de dados
-3. Conversão de tipos
-4. Entrada e saída (`print` / `input`)
+2. Configuração do Google Colab
+3. Primeiro comando: `print()`
+4. Variáveis e tipos de dados
 5. Operadores matemáticos
-6. Configuração do Google Colab
-7. Notebooks: primeiros passos (células, Markdown, saída formatada)
-8. Entrada de dados no notebook: variáveis, `input()`, `float()` / `int()`
-9. Exemplo completo: Calculadora de Tensão
-10. Exercícios no notebook
-11. **Mini-projeto:** Calculadora de Usinagem
+6. Formatação de saída (f-strings)
+7. Entrada de dados (`input`) e conversão de tipos
+8. Exemplo completo: Calculadora de Tensão
+9. Mini-projeto: Calculadora de Usinagem
 
 ## Pensamento Computacional
 
@@ -27,34 +25,83 @@ Ele se apoia em quatro pilares:
 | **Abstração** | Focar no essencial, ignorar o irrelevante | Para calcular σ = F/A, não importa a cor da peça |
 | **Algoritmos** | Sequência de passos para resolver o problema | Receber F → receber A → calcular → exibir resultado |
 
-### Da aula 01 para a aula 02
+## Configuração do Google Colab
 
-Na aula 01 você escreveu seu primeiro algoritmo para calcular tensão:
+Para executar os exemplos desta aula não é preciso instalar nada. O **Google Colab** é um serviço gratuito que roda Python no navegador. É aqui que você escreverá seus **primeiros códigos Python** da disciplina.
+
+**Primeiros passos:**
+
+1. Acesse **colab.research.google.com** e faça login com sua conta Google
+2. Clique em **Novo notebook**
+3. Em cada célula de código, digite o Python e execute com **Shift+Enter**
+4. O resultado aparece imediatamente abaixo da célula
+
+> Ao contrário de instalar um ambiente local, o Colab já vem com Python e as principais bibliotecas de engenharia prontas. Nesta aula usaremos apenas Python puro.
+
+### Células e notebook
+
+O Colab organiza o código em **células** dentro de um **notebook**:
 
 ```
-1. Receber F (N)
-2. Receber A (m²)
-3. sigma = F / A
-4. Exibir resultado
+escrever uma célula  ──>  Shift+Enter  ──>  ver o resultado na hora, célula por célula
 ```
 
-Agora você vai aprender a escrever cada um desses passos em Python com precisão: como **guardar valores** (variáveis), como **recebê-los do usuário** (`input`) e como **calculá-los** (operadores).
+- Cada **célula de código** roda Python **de cima para baixo** como uma receita executada passo a passo
+- Você escreve Python puro, o Colab cuida do ambiente
+- Uma célula pode usar as **variáveis das células anteriores**, pois elas ficam na memória do notebook
+- Para criar um novo bloco, use o botão **+ Código**
+- Você também pode adicionar **células de texto** (Markdown) para documentar, com **negrito**, *itálico* e títulos, sem executar código
 
-## Variáveis em Python
+## Primeiro comando: `print()`
 
-Uma variável é um **nome que guarda um valor na memória**. Pense na RAM do computador como uma bancada de laboratório com etiquetas — cada etiqueta é uma variável, e o valor é o que está sobre a bancada naquela posição.
+O comando mais importante para começar é o `print()`. Ele **exibe valores na tela** e é assim que você vai *ver* o resultado de qualquer programa.
+
+```python
+print("Olá, mundo!")             # texto literal entre aspas
+print(42)                        # um número
+print("Tensão:", 250, "MPa")     # vários valores separados por vírgula
+```
+
+- **Texto** vai sempre entre aspas simples `'...'` ou duplas `"..."`
+- **Números** vão sem aspas
+- Vários valores podem ser exibidos na mesma linha, separados por vírgula
+
+> Em Python, o símbolo `#` inicia um **comentário**. Tudo à direita dele naquela linha é ignorado pelo computador — serve para explicar o código para outros humanos.
+
+---
+
+### Exercício 2.1 — Hello World
+
+Este é o primeiro código Python da disciplina. No Colab, crie uma nova célula e escreva um programa que exiba:
+
+```
+Hello, World!
+Bem-vindo à Programação Aplicada!
+```
+
+Depois, **adicione uma terceira linha** que exiba o seu nome. Execute com **Shift+Enter** e confira que as três mensagens aparecem na tela.
+
+**Teste:** altere o texto entre aspas e execute de novo — repare que o `print()` exibe exatamente o que está escrito.
+
+---
+
+## Variáveis e tipos de dados
+
+### Variáveis em Python
+
+Uma variável é um **nome que guarda um valor na memória**. Pense na RAM do computador como uma bancada de laboratório com gavetas — cada gaveta é uma variável, e o valor é o que está sobre a bancada naquela posição.
 
 ```python
 # Sintaxe: nome_da_variavel = valor
-forca = 5000.0       # guarda o número 5000.0 com o nome "forca"
-material = "Aço 1020"  # guarda um texto com o nome "material"
+forca = 5000.0          # guarda o número 5000.0 com o nome "forca"
+material = "Aço 1020"   # guarda um texto com o nome "material"
 ```
 
-O sinal `=` em Python não é igualdade matemática — é uma **atribuição**: "coloque este valor neste nome".
+O sinal `=` em Python não é igualdade matemática, é uma **atribuição**: "coloque este valor neste nome".
 
 ### Regras para nomear variáveis
 
-- Apenas letras, números e `_` — sem espaços ou acentos
+- Apenas letras, números e `_`, sem espaços ou acentos
 - Não pode começar com número: `1forca` é inválido, `forca1` é válido
 - **Case-sensitive**: `Forca` e `forca` são variáveis diferentes
 - Use **snake_case** para nomes compostos: `temperatura_maxima`, `forca_axial`
@@ -70,10 +117,28 @@ nome_material = "Aço SAE 4340"
 # Nomes ruins — evite
 x = 5000.0       # o que é x?
 tmp = 850.0      # ambíguo
-F = 5000.0       # aceitável em fórmulas curtas, mas prefira por extenso
 ```
 
-## Tipos de Dados Básicos
+---
+
+### Exercício 2.2 — Criando e exibindo variáveis
+
+Crie uma célula com as quatro variáveis abaixo e, em seguida, exiba cada uma com `print()`:
+
+| Variável | Valor |
+|---|---|
+| `num_pecas` | `150` |
+| `pressao` | `2.5` |
+| `material` | `"Aço 1020"` |
+| `sensor_ok` | `True` |
+
+Depois, crie uma quinta variável `forca = 8000` e exiba uma mensagem no formato: `A força aplicada é 8000 N`.
+
+**Dica:** para misturar texto e variável sem complicação, use `print("texto", variavel)`.
+
+---
+
+### Tipos de Dados Básicos
 
 Python reconhece automaticamente o tipo de dado a partir do valor atribuído. Os quatro tipos fundamentais são:
 
@@ -114,114 +179,24 @@ alpha = 11.7e-6      # Coef. de dilatação: 11.7 × 10⁻⁶ m/(m·°C)
 sigma_esc = 250e6    # Limite de escoamento: 250 × 10⁶ Pa = 250 MPa
 ```
 
-## Conversão de Tipos
+---
 
-Frequentemente você precisará converter um tipo em outro. Isso é chamado de **casting**:
+### Exercício 2.3 — Descobrindo o tipo
 
-| Função | Converte para | Exemplo |
-|---|---|---|
-| `int(x)` | inteiro | `int(3.9)` → `3` (trunca, não arredonda) |
-| `float(x)` | decimal | `float(5)` → `5.0` |
-| `str(x)` | texto | `str(250)` → `"250"` |
-| `round(x, n)` | arredonda | `round(3.14159, 2)` → `3.14` |
+Para cada valor abaixo, escreva um código que use `print(type(...))` para exibir o tipo correspondente:
 
 ```python
-# Exemplo prático — leitura de terminal
-entrada = input("Digite a força (N): ")   # input() SEMPRE retorna str
-print(type(entrada))                       # <class 'str'>
-
-forca = float(entrada)                     # converte para número
-print(type(forca))                         # <class 'float'>
-
-# Erro comum: tentar calcular sem converter
-# resultado = entrada / 0.002   ← TypeError: não dá para dividir str
+150
+2.5
+"Aço 1020"
+True
+1e-3
+"150"
 ```
 
-### Por que `int(3.9)` não arredonda?
+**Pergunta:** qual a diferença entre o `150` (número) e o `"150"` (texto)? Por que o tipo importa?
 
-```python
-print(int(3.9))    # → 3  (trunca)
-print(int(-3.9))   # → -3 (trunca em direção a zero)
-print(round(3.9))  # → 4  (arredonda para o inteiro mais próximo)
-```
-
-Para arredondar corretamente, use `round()`. O `int()` apenas descarta a parte decimal.
-
-## Comando de Saída — `print()`
-
-`print()` exibe valores no terminal. É a principal ferramenta para depuração e saída de resultados.
-
-```python
-print("Olá, mundo!")             # texto literal
-print(42)                        # número
-print("Tensão:", 250, "MPa")     # múltiplos valores separados por vírgula
-```
-
-### f-strings — a forma moderna de formatar saída
-
-f-strings (Python 3.6+) permitem inserir variáveis e expressões diretamente dentro de texto:
-
-```python
-forca = 5000.0
-area = 0.002
-sigma = forca / area
-
-# Sem f-string — verboso
-print("Tensão: " + str(sigma) + " Pa")
-
-# Com f-string — legível
-print(f"Tensão: {sigma} Pa")
-```
-
-### Formatação de casas decimais
-
-Em engenharia, o número de casas decimais importa. Use especificadores de formato dentro das chaves `{}`:
-
-| Especificador | Significado | Exemplo | Saída |
-|---|---|---|---|
-| `:.2f` | 2 casas decimais (fixo) | `f"{3.14159:.2f}"` | `3.14` |
-| `:.4f` | 4 casas decimais | `f"{3.14159:.4f}"` | `3.1416` |
-| `:.3e` | notação científica | `f"{0.000117:.3e}"` | `1.170e-04` |
-| `:,.2f` | separador de milhar | `f"{1849.5:,.2f}"` | `1,849.50` |
-| `:.1%` | percentual | `f"{0.7849:.1%}"` | `78.5%` |
-
-```python
-sigma = 2_500_000.0   # Pa
-
-print(f"Tensão: {sigma:.0f} Pa")           # Tensão: 2500000 Pa
-print(f"Tensão: {sigma/1e6:.2f} MPa")      # Tensão: 2.50 MPa
-print(f"Tensão: {sigma:.3e} Pa")           # Tensão: 2.500e+06 Pa
-```
-
-## Comando de Entrada — `input()`
-
-`input()` pausa o programa e aguarda o usuário digitar algo. **Sempre retorna uma string**, independentemente do que for digitado.
-
-```python
-nome = input("Qual é o seu nome? ")
-print(f"Olá, {nome}!")
-```
-
-Para receber números, converta com `int()` ou `float()`:
-
-```python
-# Leitura de dados de um ensaio
-forca_str = input("Força aplicada (N): ")
-forca = float(forca_str)
-
-diam_str = input("Diâmetro da barra (mm): ")
-diametro = float(diam_str)
-
-# Cálculo
-import math
-area = math.pi * (diametro / 1000) ** 2 / 4
-sigma = forca / area
-
-print(f"Área da seção: {area * 1e6:.2f} mm²")
-print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
-```
-
-> **Nota:** Ao executar uma célula no Google Colab, a função `input()` permite entrar com dados pelo teclado — o programa pausa, aguarda o valor digitado e depois continua. Esse é o principal mecanismo para interatividade no notebook.
+---
 
 ## Operadores Matemáticos
 
@@ -235,11 +210,15 @@ print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
 | `%` | Módulo (resto) | `10 % 3` | `1` |
 | `**` | Exponenciação | `10 ** 3` | `1000` |
 
+> Para usar o valor de π, importe o módulo de matemática no topo da célula com `import math` e acesse `math.pi`.
+
 ### Precedência e um erro clássico
 
 A precedência em Python segue a matemática: `()` > `**` > `*` `/` > `+` `-`
 
 ```python
+import math
+
 # Correto: ** tem prioridade sobre *, então π * (r²)
 r = 0.025
 A = math.pi * r ** 2   # equivale a math.pi * (r ** 2) → CERTO
@@ -276,183 +255,169 @@ V = (4/3) * math.pi * r**3
 print(f"Volume: {V:.6f} m³")
 ```
 
-## Configuração do Google Colab
+---
 
-Para executar os exemplos desta aula não é preciso instalar nada. O **Google Colab** é um serviço gratuito que roda Python no navegador, no qual cada bloco de código (chamado **célula**) é executado ao vivo.
+### Exercício 2.4 — Área de um círculo
 
-**Primeiros passos:**
+Calcule a **área da seção transversal** de uma barra circular de diâmetro `d = 50 mm`, usando a fórmula:
 
-1. Acesse **colab.research.google.com**
-2. Clique em **Novo notebook**
-3. Em cada célula de código, digite o Python e execute com **Shift+Enter**
-4. O resultado aparece imediatamente abaixo da célula
+$$A = \frac{\pi \cdot d^2}{4}$$
+
+**Tarefa:** escreva um código que:
+1. Importe `math`
+2. Guarde o diâmetro em uma variável (o valor pode ser fixo — ainda não usamos `input`)
+3. Calcule a área com os operadores `**`, `*` e `/`
+4. Exiba o resultado com `print(...)`
+
+**Dica:** lembre-se de converter mm → m (dividindo por 1000) antes de calcular, se quiser o resultado em m².
+
+**Valores de teste:** `d = 50 mm` → `A ≈ 0.001963 m²` (ou `1963.50 mm²`).
+
+---
+
+## Formatação de saída (f-strings)
+
+Quando você calcula algo, o `print()` mostra o valor "cru". As **f-strings** (Python 3.6+) permitem inserir variáveis e expressões **dentro do texto**:
 
 ```python
-# Sua primeira célula no Colab
-print("Olá, turma de Eng. Mecânica!")
-print("Python já está pronto — sem instalação!")
-```
-
-Execute com **Shift+Enter**: a saída aparece logo abaixo da célula. Para criar um novo bloco, use o botão **+ Código**. Você também pode adicionar **células de texto** (Markdown) para documentar o notebook — nelas, o texto é formatado com **negrito**, *itálico* e títulos, sem executar código.
-
-> Ao contrário de instalar um ambiente local, o Colab já vem com Python e as principais bibliotecas de engenharia prontas. Nesta aula usaremos apenas Python puro e, se precisar de gráficos, o `matplotlib`.
-
-## Python Interativo — Notebook vs. terminal
-
-Até agora os programas rodaram com `print()` e `input()`. O Colab organiza o código em **células** dentro de um **notebook**:
-
-```
-Célula de código ──> Shift+Enter ──> Python executa ──> saída exibida abaixo
-```
-
-**Tradicional (terminal):**
-```
-escrever arquivo  ──>  executar o arquivo inteiro  ──>  ver a saída no final
-```
-
-**Notebook (Colab):**
-```
-escrever uma célula  ──> Shift+Enter  ──> ver o resultado na hora, célula por célula
-```
-
-### Anatomia de um notebook
-
-```
-# Célula 1 — código com programa simples
 forca = 5000.0
-print(f"Força: {forca} N")
-     ↓
-Shift+Enter executa de cima para baixo
-     ↓
-Resultado impresso abaixo da célula
-```
-
-- Cada **célula de código** roda Python de cima para baixo
-- Você escreve Python puro — o Colab cuida do ambiente
-- Uma **célula pode usar as variáveis das células anteriores**, pois elas ficam na memória do notebook
-
-### Elementos de um notebook
-
-```python
-# Texto e saída
-print("Texto com resultado numérico:", 250)
-
-# Saída formatada com f-string
-sigma = 2_500_000.0
-print(f"Tensão: {sigma/1e6:.2f} MPa")
-
-# Código formatado em célula de texto (ou comentário)
-codigo = "print('Olá')"
-print(codigo)
-```
-
-Para separar seções, use células de texto (Markdown) ou uma linha `---` em uma delas.
-
-### Exibindo resultados e resumo numérico
-
-No notebook, basta usar `print()` — tanto para números como para mensagens de status:
-
-```python
-print("== Resultado do Cálculo ==")
-
-# Resumo dos valores calculados
-print(f"Tensão (MPa):       {250:.1f}")
-print(f"Deformação (%):     {0.12:.2f}")
-print(f"Fator de segurança: {2.5:.1f}")
-
-# Mensagens de estado
-print("INFO: o material está dentro dos limites de segurança.")
-print("ATENÇÃO: a temperatura está próxima do limite.")
-print("ERRO: tensão acima do limite de escoamento!")
-print("OK: cálculo concluído com sucesso!")
-```
-
-## Entrada de dados no notebook
-
-Agora que você já sabe estruturar um notebook, vamos usar a entrada de dados interativa. A função `input()` pausa a célula e aguarda o usuário digitar algo no teclado.
-
-### Comparação: valores fixos vs. entrada pelo teclado
-
-```python
-# Valores definidos no topo da célula
-forca = 5000.0
-material = "Aço 1020"
-
-# Entrada pelo teclado com input()
-forca = float(input("Força (N): "))
-material = input("Material: ")
-```
-
-A lógica é a mesma: receber um valor e guardar em uma variável. A diferença é quem fornece o valor — o código (fixo) ou o usuário (via teclado).
-
-### `input()` — entrada numérica
-
-No notebook, para receber números do usuário usamos `input()` que **sempre retorna string**, por isso convertemos com `int()` ou `float()`:
-
-```python
-# Inteiro
-num_pecas = int(input("Quantidade de peças: "))
-
-# Decimal com 2 casas
-forca = float(input("Força aplicada (N): "))
-```
-
-> `input()` retorna sempre `str` — use `float()` ou `int()` para converter e poder calcular.
-
-### Explorando uma faixa de valores
-
-Quando o usuário precisa experimentar com uma faixa de valores, o mais simples é usar `input()` e permitir qualquer número:
-
-```python
-temperatura = float(input("Temperatura de operação (°C): "))
-print(f"Temperatura informada: {temperatura:.0f} °C")
-```
-
-Aqui o usuário digita o valor livremente pelo teclado.
-
-### Seleção de opções
-
-Para escolhas pré-definidas, guarde as opções em uma lista e deixe o usuário digitar uma delas:
-
-```python
-materiais = ["Aço 1020", "Aço 4340", "Alumínio 6061", "Latão"]
-print("Opções de material:", materiais)
-material = input("Digite o material: ")
-
-diametros = [6, 8, 10, 12, 16, 20, 25]
-print("Diâmetro da broca (mm):", diametros)
-diametro = int(input("Digite o diâmetro (mm): "))
-```
-
-### Calculando sob demanda
-
-Como as células executam na ordem em que você as roda, defina os valores primeiro e execute o cálculo na célula seguinte (ou na mesma); o resultado é impresso quando você quiser:
-
-```python
-forca = float(input("Força (N): "))
-area  = float(input("Área (m²): "))
-
+area = 0.002
 sigma = forca / area
-print(f"Tensão normal: {sigma/1e6:.2f} MPa")
+
+# Sem f-string — verboso
+print("Tensão: " + str(sigma) + " Pa")
+
+# Com f-string — legível
+print(f"Tensão: {sigma} Pa")
 ```
 
-**Por que executar assim?** No terminal o cálculo roda uma vez por execução. No notebook, você pode editar os valores e reexecutar a célula quantas vezes quiser.
+Basta colocar a letra `f` antes das aspas e escrever a variável entre `{ }`.
 
-### Organizando a entrada — células separadas
+### Formatação de casas decimais
 
-Não é preciso nenhum layout especial; apenas organize a entrada em células ou linhas:
+Em engenharia, o número de casas decimais importa. Use especificadores de formato dentro das chaves `{}`:
+
+| Especificador | Significado | Exemplo | Saída |
+|---|---|---|---|
+| `:.2f` | 2 casas decimais (fixo) | `f"{3.14159:.2f}"` | `3.14` |
+| `:.4f` | 4 casas decimais | `f"{3.14159:.4f}"` | `3.1416` |
+| `:.3e` | notação científica | `f"{0.000117:.3e}"` | `1.170e-04` |
+| `:,.2f` | separador de milhar | `f"{1849.5:,.2f}"` | `1,849.50` |
+| `:.1%` | percentual | `f"{0.7849:.1%}"` | `78.5%` |
 
 ```python
-# Célula de entrada
-forca = float(input("Força (N): "))
-area  = float(input("Área (m²): "))
+sigma = 2_500_000.0   # Pa
 
-# (na mesma célula ou em outra) o cálculo
-sigma = forca / area
-print(f"Tensão: {sigma/1e6:.2f} MPa")
+print(f"Tensão: {sigma:.0f} Pa")           # Tensão: 2500000 Pa
+print(f"Tensão: {sigma/1e6:.2f} MPa")      # Tensão: 2.50 MPa
+print(f"Tensão: {sigma:.3e} Pa")           # Tensão: 2.500e+06 Pa
 ```
 
-### Exemplo completo: Calculadora de Tensão
+---
+
+### Exercício 2.5 — Formatando resultados
+
+Uma tensão calculada vale `sigma = 2_500_000.0` Pa. Escreva um código que, usando f-strings, exiba **quatro linhas** mostrando a tensão em:
+
+1. Pa, sem casas decimais
+2. MPa, com 2 casas decimais
+3. kPa, com 1 casa decimal
+4. notação científica em Pa, com 3 casas
+
+**Valores de teste:** a linha em MPa deve sair `Tensão: 2.50 MPa`.
+
+---
+
+## Entrada de dados (`input`) e conversão de tipos
+
+Até aqui os valores estavam **fixos no código**. Para tornar o programa interativo, usamos o `input()`, que **pausa o programa e aguarda o usuário digitar algo**.
+
+```python
+nome = input("Qual é o seu nome? ")
+print(f"Olá, {nome}!")
+```
+
+### `input()` sempre retorna texto
+
+O ponto mais importante: `input()` **sempre devolve uma string**, mesmo que o usuário digite um número. Por isso, para calcular, precisamos **converter** o texto em número.
+
+### Conversão de tipos (casting)
+
+| Função | Converte para | Exemplo |
+|---|---|---|
+| `int(x)` | inteiro | `int(3.9)` → `3` (trunca, não arredonda) |
+| `float(x)` | decimal | `float(5)` → `5.0` |
+| `str(x)` | texto | `str(250)` → `"250"` |
+| `round(x, n)` | arredonda | `round(3.14159, 2)` → `3.14` |
+
+```python
+# Leitura de dados de um ensaio
+forca_str = input("Força aplicada (N): ")   # input() SEMPRE retorna str
+forca = float(forca_str)                    # converte texto → número decimal
+
+diam_str = input("Diâmetro da barra (mm): ")
+diametro = float(diam_str)
+
+# Cálculo
+import math
+area = math.pi * (diametro / 1000) ** 2 / 4
+sigma = forca / area
+
+print(f"Área da seção: {area * 1e6:.2f} mm²")
+print(f"Tensão normal: {sigma / 1e6:.2f} MPa")
+```
+
+> Ao executar uma célula no Google Colab, a função `input()` permite entrar com os dados pelo teclado: o programa pausa, aguarda o valor e depois continua. Esse é o principal mecanismo de interatividade no notebook.
+
+### Por que `int(3.9)` não arredonda?
+
+```python
+print(int(3.9))    # → 3  (trunca)
+print(int(-3.9))   # → -3 (trunca em direção a zero)
+print(round(3.9))  # → 4  (arredonda para o inteiro mais próximo)
+```
+
+Para arredondar corretamente, use `round()`. O `int()` apenas descarta a parte decimal.
+
+---
+
+### Exercício 2.6 — Média de Dureza Rockwell
+
+**Contexto:** O setor de controle de qualidade de uma metalúrgica recebe lotes de eixos de aço temperado que passam por tratamento térmico de têmpera e revenimento. A especificação técnica exige que a dureza Rockwell C (HRC) seja de no mínimo 40 HRC para garantir a resistência ao desgaste adequada. O técnico de qualidade realiza três medições em pontos diferentes de cada eixo e precisa calcular a média para decidir se o lote é aprovado ou rejeitado.
+
+**Fórmula:**
+
+$$\text{media} = \frac{d_1 + d_2 + d_3}{3}$$
+
+**O que o exercício deve ter:**
+- Título e descrição da especificação mínima
+- Três entradas de medições (HRC) com `input()` e `float()`
+- Cálculo da média e exibição do resultado com `print(f"...")`
+
+**Valores de teste:** `d1 = 41.5`, `d2 = 43.0`, `d3 = 43.0` → média esperada: `42.50 HRC`
+
+> **Próxima aula:** em `03 — Condicionais` você adicionará a aprovação/rejeição do lote com `if media >= 40: print("aprovado") else: print("reprovado")`.
+
+---
+
+### Exercício 2.7 — Relação de Transmissão
+
+**Contexto:** Uma indústria de papel e celulose precisa projetar um redutor de velocidade para um transportador de rolos que leva bobinas de papel entre as seções da máquina. O motor elétrico disponível opera a 1750 RPM, mas o transportador precisa girar a uma velocidade bem menor para não danificar o material. O engenheiro de manutenção precisa calcular a relação de transmissão e a rotação de saída do redutor.
+
+**Fórmulas:**
+
+$$i = \frac{z_{movida}}{z_{motriz}} \qquad n_{saida} = \frac{n_{motor}}{i}$$
+
+**O que o exercício deve ter:**
+- Entrada para a rotação do motor (RPM) com `input()` e `float()`
+- Duas entradas para os dentes das engrenagens (motriz e movida)
+- Cálculo e impressão dos dois resultados: relação de transmissão e rotação de saída
+
+**Valores de teste:** `z_motriz = 20 dentes`, `z_movida = 70 dentes`, `n_motor = 1750 RPM` → `i = 3.50`, `n_saída = 500.00 RPM`
+
+---
+
+## Exemplo completo: Calculadora de Tensão
 
 Veja como integrar entrada, cálculo e formatação em um notebook funcional de engenharia:
 
@@ -483,45 +448,7 @@ Rode a célula com **Shift+Enter**, digite os valores e observe o resultado — 
 
 ---
 
-## Exercício 2.1 — Média de Dureza Rockwell
-
-**Contexto:** O setor de controle de qualidade de uma metalúrgica recebe lotes de eixos de aço temperado que passam por tratamento térmico de têmpera e revenimento. A especificação técnica exige que a dureza Rockwell C (HRC) seja de no mínimo 40 HRC para garantir a resistência ao desgaste adequada. O técnico de qualidade realiza três medições em pontos diferentes de cada eixo e precisa calcular a média para decidir se o lote é aprovado ou rejeitado.
-
-**Fórmula:**
-
-$$media = \frac{d_1 + d_2 + d_3}{3}$$
-
-**O que o exercício deve ter:**
-- Título e descrição da especificação mínima
-- Três entradas de medições (HRC) com `input()` e `float()`
-- Cálculo da média e exibição do resultado com `print(f"...")`
-
-**Valores de teste:** `d1 = 41.5`, `d2 = 43.0`, `d3 = 43.0` → média esperada: `42.50 HRC`
-
-> **Próxima aula:** em `03 — Condicionais` você adicionará a aprovação/rejeição do lote com `if media >= 40: print("aprovado") else: print("reprovado")`, e um campo opcional de 4ª medição solicitada com `input()`.
-
-## Exercício 2.3 — Relação de Transmissão
-
-**Contexto:** Uma indústria de papel e celulose precisa projetar um redutor de velocidade para um transportador de rolos que leva bobinas de papel entre as seções da máquina. O motor elétrico disponível opera a 1750 RPM, mas o transportador precisa girar a uma velocidade bem menor para não danificar o material. O engenheiro de manutenção precisa calcular a relação de transmissão e a rotação de saída do redutor.
-
-**Fórmulas:**
-
-$$i = \frac{z_{movida}}{z_{motriz}} \qquad n_{saida} = \frac{n_{motor}}{i}$$
-
-**O que o exercício deve ter:**
-- Entrada para a rotação do motor (RPM) com `input()` e `float()`
-- Duas entradas para os dentes das engrenagens (motriz e movida)
-- Cálculo e impressão dos dois resultados: relação de transmissão e rotação de saída
-
-**Valores de teste:** `z_motriz = 20 dentes`, `z_movida = 70 dentes`, `n_motor = 1750 RPM` → `i = 3.50`, `n_saída = 500.00 RPM`
-
-> **Desafios opcionais:** pratique mais com os exercícios a seguir:
-> - **IMC do Operador** — mesmo padrão da calculadora de tensão, aplicado à ergonomia (NR-17)
-> - **Cilindro com Desperdício** — combine geometria, densidade e custo em um único notebook
-> - **Dilatação Térmica** — selecione o material a partir de uma lista digitada com `input()`
-> - **Custo Operacional de Fresadora** — receba horas/dia com `input()` e calcule impostos
-
-## Exercício 2.7 — Pressão de Pistão Hidráulico
+### Exercício 2.8 — Pressão de Pistão Hidráulico
 
 **Contexto:** Uma empresa de equipamentos hidráulicos precisa de uma ferramenta rápida para que seus técnicos dimensionem pistões. O engenheiro responsável pelo setor de projetos quer que os técnicos consigam verificar a pressão de trabalho de qualquer pistão apenas informando a força aplicada e o diâmetro do êmbolo — sem precisar abrir uma planilha ou fazer contas no papel.
 
@@ -539,6 +466,14 @@ $$P = \frac{F}{A} \qquad A = \frac{\pi \cdot d^2}{4}$$
 
 **Dica:** importe `math` para usar `math.pi`, e lembre de converter `d` de mm para m antes de calcular a área em m².
 
+> **Desafios opcionais:** pratique mais com os exercícios a seguir (gabarito no arquivo de exercícios):
+> - **IMC do Operador** — mesmo padrão da calculadora de tensão, aplicado à ergonomia (NR-17)
+> - **Cilindro com Desperdício** — combine geometria, densidade e custo em um único notebook
+> - **Dilatação Térmica** — selecione o material a partir de uma lista digitada com `input()`
+> - **Custo Operacional de Fresadora** — receba horas/dia com `input()` e calcule impostos
+
+---
+
 ## Mini-Projeto — Calculadora de Usinagem
 
 **Contexto:** A engenharia de processo de uma fábrica de componentes automotivos precisa de uma ferramenta interna para calcular rapidamente os parâmetros de corte e o custo de operações de torneamento cilíndrico externo. A ferramenta será usada pelos técnicos de chão de fábrica para verificar se os parâmetros de usinagem estão adequados antes de iniciar a produção de um lote.
@@ -551,7 +486,7 @@ $$t = \frac{L}{f \cdot n} \quad \text{(tempo de corte, min)}$$
 
 $$m = \frac{\pi \cdot d^2}{4} \cdot L \cdot \rho \cdot 10^{-9} \quad \text{(massa da peça, kg)}$$
 
-$$custo = \left(t \cdot \frac{custo_{hora}}{60}\right) + (m \cdot preco_{kg})$$
+$$\text{custo} = \left(t \cdot \frac{custo_{hora}}{60}\right) + (m \cdot preco_{kg})$$
 
 **Parâmetros:**
 - `d` — diâmetro da peça (mm)
@@ -587,16 +522,14 @@ rho = densidades[material]
 
 ## Resumo da aula
 
-- Pensamento computacional: decomposição, padrões, abstração, algoritmos
+- Use `print()` para exibir valores; texto vai entre aspas, números não
 - Variáveis guardam valores na memória; tipos básicos: `int`, `float`, `str`, `bool`
-- Use `int()`, `float()`, `str()`, `round()` para converter entre tipos
-- `input()` sempre retorna `str` — converta para número antes de calcular
+- `type(variavel)` revela o tipo de qualquer valor
+- Operadores: `+ - * / // % **`; precedência `()` > `**` > `*` `/` > `+` `-`
 - f-strings formatam saída: `f"Valor: {variavel:.2f}"`
-- Precedência: `()` > `**` > `*` `/` > `+` `-` — use parênteses para evitar ambiguidade
+- `input()` sempre retorna `str` — converta com `int()` ou `float()` antes de calcular
+- `int()` trunca; `round()` arredonda
 - O Google Colab roda Python no navegador, sem instalação: células executadas com Shift+Enter
-- Células de texto (Markdown) documentam o notebook; células de código executam Python
-- Entrada de dados interativa: `input()` sempre retorna `str` — converta com `int()`/`float()`
-- Fórmulas de engenharia: defina valores (ou `input()`), calcule e exiba com `print(f"...")`
 
 ## Referências
 

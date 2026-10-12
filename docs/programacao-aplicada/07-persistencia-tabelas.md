@@ -2,17 +2,20 @@
 
 ## Roteiro
 
-1. Por que persistir dados?
-2. JSON: salvar e carregar dados
-3. CSV: formato tabular para dados de engenharia
-4. Exibindo tabelas com Pandas (`df.head()`, `df.style`)
-5. Exercícios
-6. **Exercício 7.3:** Vitórias por Piloto na F1 (dataset Kaggle)
-7. **Mini-projeto:** Monitor de Sensores
+1. Por que persistir dados? (JSON vs CSV)
+2. JSON: salvar e carregar (`json.dump` / `json.load`)
+3. Funções `carregar` / `salvar` com JSON
+4. CSV com o módulo `csv` (`writer` / `DictReader`)
+5. CSV com Pandas (`read_csv` / `to_csv`) + exibição (`head`, `info`)
+6. Criando DataFrames de diferentes fontes
+7. Estilo (`df.style`) e resumo (`describe()`)
+8. **Exercício 7.6:** Controle de Estoque com JSON
+9. **Exercício 7.7:** Vitórias por Piloto na F1 (dataset Kaggle)
+10. **Exercício 7.8:** Fatura de Luz com Tabela de Tarifas
 
 ## Por que persistir dados?
 
-Até agora, todos os dados que seu programa criava desapareciam quando ele terminava de executar. No Colab, as variáveis duram enquanto o **kernel** (o núcleo que executa o Python) estiver ativo: você pode reutilizá-las na próxima célula, mas elas se perdem se o kernel for reiniciado (`Menu → Ambiente de execução → Reiniciar ambiente de execução`). **Persistência** é a capacidade de salvar dados de forma que sobrevivam também à reinicialização do kernel — geralmente gravando-os em arquivos. Isso é essencial para aplicações reais de engenharia.
+Até agora, todos os dados que seu programa criava desapareciam quando ele terminava de executar. No Colab, as variáveis duram enquanto o **kernel** (o núcleo que executa o Python) estiver ativo: você pode reutilizá-las na próxima célula, mas elas se perdem se o kernel for reiniciado (`Menu → Ambiente de execução → Reiniciar ambiente de execução`). **Persistência** é a capacidade de salvar dados de forma que sobrevivam também à reinicialização do kernel — geralmente gravando-os em arquivos. Isso é essencial para aplicações reais.
 
 Nesta aula você aprenderá dois formatos de arquivo e como exibir dados tabulares em um notebook Colab.
 
@@ -24,6 +27,7 @@ Nesta aula você aprenderá dois formatos de arquivo e como exibir dados tabular
 | **Dados heterogêneos** | ✓ (arrays, objetos, valores) | ✗ (tipicamente homogêneos por coluna) |
 | **Legibilidade** | Boa com formatação | Excelente para visualização rápida |
 | **Tamanho de arquivo** | Maior | Menor |
+| **Casos cotidianos** | Perfil de usuário, configurações de app | Lista de gastos, notas em planilha |
 | **Casos de engenharia** | Configurações, metadata, dados complexos | Ensaios, leituras de sensores, relatórios |
 | **Exemplo** | Catálogo com produtos heterogêneos | Tabela de resultados de tração |
 
@@ -57,7 +61,30 @@ print(dados_carregados["leituras"])   # [350.0, 355.2, 348.7, 352.1]
 
 > `with open(...) as f:` garante que o arquivo é fechado automaticamente, mesmo se ocorrer um erro.
 
-### Caso de uso: persistir catálogo de materiais
+### Exercício 7.1 — Ficha de leitura
+
+**Contexto:** um app de leitura quer salvar o perfil do leitor em JSON para não perder os dados ao fechar o programa.
+
+**Tarefa:** com o dicionário abaixo (valores fixos), salve em `leitor.json` com `json.dump(..., indent=4)`, carregue de volta com `json.load()` e exiba `nome`, `livro atual` e a quantidade de livros já lidos com `len()`.
+
+```python
+leitor = {
+    "nome": "Marina",
+    "livro_atual": "Dom Casmurro",
+    "paginas_lidas": 120,
+    "lidos": ["Capitães da Areia", "O Hobbit", "1984"],
+}
+```
+
+**Saída esperada:**
+```
+Marina está lendo Dom Casmurro (120 páginas lidas).
+Livros concluídos: 3
+```
+
+### Caso de uso: persistir catálogo com funções
+
+Quando o programa precisa ler e gravar várias vezes, isole o acesso ao arquivo em duas funções:
 
 ```python
 import json
@@ -76,9 +103,35 @@ def salvar_catalogo(catalogo):
         json.dump(catalogo, f, indent=4)
 ```
 
-### CSV — formato tabular para dados de engenharia
+> `os.path.exists()` evita erro ao abrir um arquivo que ainda não foi criado — na primeira execução, retornamos um dicionário vazio.
 
-CSV (Comma-Separated Values) é o formato mais comum para dados tabulares em engenharia — ensaios de tração, leituras de sensores, dados de CEP. Python lê/escreve CSV sem instalar bibliotecas extras:
+### Exercício 7.2 — Boletim da turma em JSON
+
+**Contexto:** um professor quer guardar o boletim da turma em JSON e recalcular as médias ao reabrir o programa.
+
+**Tarefa:** use as funções `carregar_boletim()` / `salvar_boletim(boletim)` (mesmo padrão do catálogo acima, arquivo `boletim.json`):
+1. Carregue o boletim (se o arquivo não existir, comece com `{}`).
+2. Cadastre os 3 alunos abaixo (chave = nome, valor = lista de notas).
+3. Salve em JSON, carregue de volta e exiba `nome: média` com 1 casa decimal usando `sum()`/`len()`.
+
+```python
+novos = {
+    "Ana": [8.0, 7.5, 9.0],
+    "Bruno": [6.0, 5.5, 7.0],
+    "Carla": [10.0, 9.5, 9.0],
+}
+```
+
+**Saída esperada:**
+```
+Ana: 8.2
+Bruno: 6.2
+Carla: 9.5
+```
+
+## CSV — formato tabular
+
+CSV (Comma-Separated Values) é o formato mais comum para dados tabulares — ensaios de tração, leituras de sensores, gastos mensais. Python lê/escreve CSV sem instalar bibliotecas extras:
 
 ```python
 import csv
@@ -97,7 +150,33 @@ with open("dados_ensaio.csv", "r") as f:
         print(linha)
 ```
 
-#### Lendo e escrevendo CSV com Pandas
+### Exercício 7.3 — Gastos do mês em CSV
+
+**Contexto:** uma pessoa quer registrar os gastos do mês num arquivo CSV e depois somar o total por categoria.
+
+**Tarefa:**
+1. Escreva `gastos.csv` com cabeçalho `["data", "categoria", "valor"]` e as 5 linhas abaixo, usando `csv.writer`.
+2. Leia de volta com `csv.DictReader`, some os valores com `float()` e exiba cada linha como `data — categoria: R$ ...` mais o total.
+
+```python
+linhas = [
+    ["2026-09-01", "mercado",   250.0],
+    ["2026-09-03", "transporte", 80.0],
+    ["2026-09-05", "mercado",   120.5],
+    ["2026-09-10", "lazer",      90.0],
+    ["2026-09-12", "transporte", 45.0],
+]
+```
+
+**Saída esperada (trecho final):**
+```
+Total do mês: R$ 585.50
+Gasto com mercado: R$ 370.50
+```
+
+> Dica: acumule dois totalizadores no laço — `total` e `total_mercado` (some só quando `linha["categoria"] == "mercado"`).
+
+## CSV com Pandas + exibindo tabelas
 
 Com Pandas, a leitura de CSV é muito mais simples e poderosa:
 
@@ -114,13 +193,7 @@ df.to_csv("dados_ensaio_novo.csv", index=False)
 
 > **Por que `index=False`?** Por padrão, `to_csv()` escreve o índice do DataFrame como primeira coluna. Use `index=False` para evitar isso.
 
-**Vantagem:** Com Pandas, você pode filtrar, transformar e analisar dados muito mais facilmente do que com `csv.reader`/`csv.writer`.
-
-## Exibindo tabelas com Pandas
-
-No Colab, a forma mais comum de exibir dados tabulares é com um `DataFrame` do Pandas — basta colocar o `df` como última linha da célula (o notebook o renderiza como tabela) ou usar `df.head()`.
-
-### Exibindo um DataFrame
+No Colab, a forma mais comum de exibir dados tabulares é com um `DataFrame` — basta colocar o `df` como última linha da célula (o notebook o renderiza como tabela) ou usar `df.head()`.
 
 ```python
 import pandas as pd
@@ -145,32 +218,31 @@ df.info()          # tipos de dados e memória
 - `df.head()`: seguro para DataFrames muito grandes (mostra só as primeiras 5 linhas)
 - `df.info()`: entender a estrutura de dados e tipos antes de processar
 
-### Estilizando a exibição com `df.style`
+### Exercício 7.4 — Cardápio da cantina vai e volta
 
-O objeto `df.style` permite colorir, destacar e formatar tabelas no notebook:
+**Contexto:** a cantina da escola guarda o cardápio da semana num DataFrame e precisa salvar em CSV e conferir se a leitura voltou igual.
+
+**Tarefa:** com o dicionário abaixo (valores fixos):
+1. Crie o DataFrame, exiba `df.shape` e `df.head(3)`.
+2. Salve em `cardapio.csv` com `index=False` e leia de volta com `pd.read_csv()`.
+3. Exiba o preço médio com `df["preco"].mean()` e o prato mais caro com `df.loc[df["preco"].idxmax()]`.
 
 ```python
-# Colorir células por valor (gradient)
-# cmap="coolwarm": azul (baixo) → vermelho (alto)
-# cmap="viridis": roxo (baixo) → amarelo (alto)
-df.style.background_gradient(cmap="coolwarm")
-
-# Destacar valores máximos em verde
-df.style.highlight_max(color="lightgreen")
-
-# Destacar valores mínimos em vermelho
-df.style.highlight_min(color="lightcoral")
-
-# Formatar números (ex: 2 casas decimais)
-df.style.format("{:.2f}")
-
-# Combinar: gradient + formato
-df.style.background_gradient(cmap="coolwarm").format("{:.1f}")
+cardapio = {
+    "dia": ["seg", "ter", "qua", "qui", "sex"],
+    "prato": ["Pizza", "Lasanha", "Salada", "Feijoada", "Suco + Pão"],
+    "preco": [18.0, 22.0, 15.0, 25.0, 12.0],
+}
 ```
 
-**Importante:** `df.style` é apenas visual (não modifica os dados). Use para relatórios e apresentações. Não salva em CSV/JSON — se precisar dos dados processados, salve o DataFrame com `df.to_csv()` antes de estilizar.
+**Saída esperada:**
+```
+(5, 3)
+Preço médio: R$ 18.40
+Prato mais caro: Feijoada (R$ 25.00)
+```
 
-### Criando DataFrames — diferentes fontes
+## Criando DataFrames — diferentes fontes
 
 **Opção 1: A partir de um dicionário de listas (mais comum)**
 
@@ -214,7 +286,32 @@ df
 - **Opção 2:** Dados que vêm como registros individuais (API, banco de dados)
 - **Opção 3:** Dicionário simples `{chave: valor}` como catálogo ou estoque
 
-### Resumo de métricas com `describe()`
+## Estilo e resumo estatístico
+
+O objeto `df.style` permite colorir, destacar e formatar tabelas no notebook:
+
+```python
+# Colorir células por valor (gradient)
+# cmap="coolwarm": azul (baixo) → vermelho (alto)
+# cmap="viridis": roxo (baixo) → amarelo (alto)
+df.style.background_gradient(cmap="coolwarm")
+
+# Destacar valores máximos em verde
+df.style.highlight_max(color="lightgreen")
+
+# Destacar valores mínimos em vermelho
+df.style.highlight_min(color="lightcoral")
+
+# Formatar números (ex: 2 casas decimais)
+df.style.format("{:.2f}")
+
+# Combinar: gradient + formato
+df.style.background_gradient(cmap="coolwarm").format("{:.1f}")
+```
+
+**Importante:** `df.style` é apenas visual (não modifica os dados). Use para relatórios e apresentações. Não salva em CSV/JSON — se precisar dos dados processados, salve o DataFrame com `df.to_csv()` antes de estilizar.
+
+Resumo de métricas com `describe()`:
 
 ```python
 print(f"Temp. máxima: {df['Temperatura (°C)'].max():.1f} °C")
@@ -241,39 +338,35 @@ max          162.500000       5.800000
 - **std:** desvio padrão (variação dos dados)
 - **min, 25%, 50%, 75%, max:** quartis (distribuição percentual dos dados)
 
----
+### Exercício 7.5 — Boletim com estilo e estatísticas
 
-## Exercício 7.1 — Custo de Combustível da Frota
+**Contexto:** o professor do Exercício 7.2 agora quer apresentar o boletim como tabela estilizada e conferir as estatísticas da turma.
 
-**Contexto:** O departamento de logística de uma empresa quer calcular o custo mensal de combustível de sua frota de veículos. Cada veículo tem um consumo médio (km/L) e percorre uma distância mensal diferente.
-
-**O que o programa deve ter:**
-- Um dicionário com pelo menos 3 veículos, cada um com: nome, consumo (km/L), distância mensal (km)
-- Uma variável com o preço do combustível (R$/L)
-- Para cada veículo: litros consumidos e custo mensal
-- Custo total da frota
-- Exibir os resultados com `print(f"...")`
-
-**Dados de entrada:**
+**Tarefa:** com o dicionário abaixo (valores fixos):
+1. Monte o DataFrame pela **Opção 2** (lista de dicionários, um por aluno).
+2. Exiba `df.describe()` e a média da turma em Português com `df["media"].mean()`.
+3. Exiba a tabela estilizada com `df.style.background_gradient(cmap="viridis").format("{:.1f}")` (só colunas numéricas).
 
 ```python
-frota = [
-    {"nome": "Caminhão A", "consumo_kmL": 6.0,  "distancia_km": 3000},
-    {"nome": "Van B",      "consumo_kmL": 9.0,  "distancia_km": 2000},
-    {"nome": "Carro C",    "consumo_kmL": 12.0, "distancia_km": 1500},
+alunos = [
+    {"nome": "Ana", "P1": 8.0, "P2": 7.5, "P3": 9.0},
+    {"nome": "Bruno", "P1": 6.0, "P2": 5.5, "P3": 7.0},
+    {"nome": "Carla", "P1": 10.0, "P2": 9.5, "P3": 9.0},
+    {"nome": "Diego", "P1": 4.0, "P2": 5.0, "P3": 6.0},
 ]
-preco_litro = 5.50  # R$/L
 ```
 
-**Resultado esperado:**
+**Passos:** calcule a coluna `media` antes com `sum()`/`len()` ou `(P1+P2+P3)/3` num laço ou compreensão de listas.
+
+**Saída esperada:**
 ```
-Caminhão A: 500.0 L → R$ 2750.00
-Van B: 222.2 L → R$ 1222.22
-Carro C: 125.0 L → R$ 687.50
-Custo total da frota: R$ 4659.72
+Média da turma: 7.21
+Maior média: Carla (9.50)
 ```
 
-## Exercício 7.2 — Controle de Estoque com JSON
+---
+
+## Exercício 7.6 — Controle de Estoque com JSON
 
 **Contexto:** O almoxarifado da empresa precisa de um sistema simples para controlar o estoque de itens de consumo (EPIs, ferramentas, materiais). Os dados devem ser persistidos em JSON para não se perderem entre execuções.
 
@@ -318,7 +411,7 @@ Colete refletivo             40
 
 **Dica:** o estoque pode ser um dicionário `{"item": quantidade}`.
 
-## Exercício 7.3 — Vitórias por Piloto na Fórmula 1
+## Exercício 7.7 — Vitórias por Piloto na Fórmula 1
 
 **Contexto:** O Kaggle hospeda o dataset *Formula 1 World Championship (1950–2024)*, de Rohan Rao, com dados reais de todas as corridas de F1. Neste exercício você vai baixar dois arquivos CSV desse dataset e usá-los para descobrir quais pilotos mais venceram na história da categoria.
 
@@ -399,49 +492,71 @@ Para cruzar os dois DataFrames pelo `driverId`, use:
 df = pd.merge(vitorias, pilotos[["driverId", "nome"]], on="driverId")
 ```
 
-## Mini-Projeto — Monitor de Sensores
+## Exercício 7.8 — Fatura de Luz com Tabela de Tarifas
 
-**Contexto:** O engenheiro de manutenção quer um script que monitore 10 sensores de temperatura e pressão. Como não há sensores reais conectados, os dados são simulados.
+**Contexto:** Uma concessionária de energia cobra a fatura a partir de uma **tabela de referência de tarifas** (faixa de consumo → R$/kWh). A cada mês, as leituras dos medidores chegam num segundo arquivo. O programa precisa cruzar os dois arquivos, calcular a fatura de cada cliente e salvar o relatório final — o fluxo típico de qualquer sistema que usa tabela de preços (energia, frete, impostos, convênios).
 
-**O que o programa deve ter:**
-- 10 sensores de temperatura (faixa normal: 140-170 °C, limite: 180 °C)
-- 10 sensores de pressão (faixa normal: 4.5-6.0 bar, limite: 7.0 bar)
-- Gerar novos valores para todos os sensores
-- Tabela (DataFrame) com: sensor, temperatura, pressão
-- Métricas destacadas: temperatura média, pressão média, sensores em alerta
-- Alertas (`print`) para sensores acima do limite
-- Salvar as leituras atuais para JSON
-
-**Dados de entrada:**
+**Arquivos de entrada (execute este bloco primeiro para criá-los):**
 
 ```python
-import random
+import pandas as pd
 
-nomes_sensores = [f"TMP-{i:02d}" for i in range(1, 11)]  # TMP-01 … TMP-10
-nomes_pressao  = [f"PRS-{i:02d}" for i in range(1, 11)]  # PRS-01 … PRS-10
+# Tabela de referência (preço por faixa de consumo)
+pd.DataFrame([
+    {"faixa": "social",      "consumo_min": 0,   "consumo_max": 100,    "tarifa_kwh": 0.65},
+    {"faixa": "residencial", "consumo_min": 101, "consumo_max": 220,    "tarifa_kwh": 0.85},
+    {"faixa": "alta",        "consumo_min": 221, "consumo_max": 999999, "tarifa_kwh": 1.10},
+]).to_csv("tarifas.csv", index=False)
 
-LIMITE_TEMP  = 180.0   # °C
-LIMITE_PRESS = 7.0     # bar
-
-# Para simular falhas: ~20% de chance de gerar valor fora da faixa
-def gerar_temperatura():
-    if random.random() < 0.2:
-        return round(random.uniform(180.0, 210.0), 1)   # valor em alerta
-    return round(random.uniform(140.0, 170.0), 1)
-
-def gerar_pressao():
-    if random.random() < 0.2:
-        return round(random.uniform(7.0, 9.0), 2)       # valor em alerta
-    return round(random.uniform(4.5, 6.0), 2)
+# Leituras dos medidores no mês
+pd.DataFrame([
+    {"cliente": "Ana",    "consumo_kwh": 85},
+    {"cliente": "Bruno",  "consumo_kwh": 120},
+    {"cliente": "Carla",  "consumo_kwh": 190},
+    {"cliente": "Diego",  "consumo_kwh": 210},
+    {"cliente": "Elisa",  "consumo_kwh": 250},
+    {"cliente": "Fabio",  "consumo_kwh": 320},
+    {"cliente": "Gabi",   "consumo_kwh": 95},
+    {"cliente": "Heitor", "consumo_kwh": 230},
+]).to_csv("leituras.csv", index=False)
 ```
 
-**Dica:** use `import random` e `random.uniform(min, max)` para gerar valores. Para simular falhas, ocasionalmente gere valores fora da faixa normal.
+**Regras de cálculo:**
+- `valor_energia = consumo_kwh × tarifa_kwh` (tarifa vem da faixa em `tarifas.csv`)
+- `taxa_fixa = R$ 15,00` para todos
+- Bandeira: se `consumo_kwh > 200`, `acrescimo = consumo_kwh × 0,05`; senão `0`
+- `total = valor_energia + taxa_fixa + acrescimo`
+- `perfil`: `≤ 100` → `"economico"`; `≤ 220` → `"normal"`; senão `"alto consumo"`
+- `alerta`: `consumo_kwh > 220` → `"revisar instalacao"`; senão `"ok"`
+
+**O que o programa deve fazer:**
+1. Ler os dois arquivos com `pd.read_csv()` (`tarifas.csv` é a tabela de referência, `leituras.csv` são os dados do mês).
+2. Para cada cliente, localizar a faixa na tabela de referência (`consumo_min ≤ consumo ≤ consumo_max`) e aplicar as regras acima (use uma função `buscar_tarifa(consumo)` + laço sobre `leituras.iterrows()`).
+3. Montar um DataFrame relatório com as colunas `cliente, consumo_kwh, faixa, tarifa_kwh, valor_energia, acrescimo_bandeira, total, perfil, alerta`, ordenado por `total` decrescente (`sort_values`).
+4. Exibir o relatório, `df.describe()` e a contagem por perfil (`value_counts()`); estilizar a coluna `total` com `background_gradient`.
+5. Salvar o relatório em `relatorio_faturas.csv` (`index=False`) e um resumo em `resumo_faturas.json` com `total_arrecadado`, `ticket_medio`, `maior_fatura {cliente, valor}` e `contagem_perfil`.
+6. Recarregar `relatorio_faturas.csv` para provar que a persistência funcionou.
+
+**Resultado esperado (trecho):**
+```
+cliente  consumo_kwh  faixa  total  perfil
+Fabio    320          alta   383.00 alto consumo
+Elisa    250          alta   302.50 alto consumo
+...
+Ana      85           social  70.25 economico
+Total arrecadado: R$ 1609.50
+Ticket médio: R$ 201.19
+Maior fatura: Fabio (R$ 383.00)
+Perfis: {'alto consumo': 3, 'normal': 3, 'economico': 2}
+```
+
+**Dica:** a busca na tabela pode ser um laço sobre `tarifas.iterrows()` retornando `(faixa, tarifa)` da primeira linha cuja faixa contém o consumo. O resumo JSON é um dicionário comum gravado com `json.dump(..., indent=4)`.
 
 ## Resumo da aula
 
 **Persistência e Formatos:**
 - JSON (`json.dump` / `json.load`) persiste dados estruturados em arquivos legíveis — use para configurações e dados hierárquicos
-- CSV (`csv.writer` / `csv.DictReader`) é o formato padrão para dados tabulares de engenharia
+- CSV (`csv.writer` / `csv.DictReader`) é o formato padrão para dados tabulares
 - Pandas simplifica CSV: `pd.read_csv()` e `df.to_csv(index=False)`
 - `with open(...) as f:` gerencia abertura e fechamento automático de arquivos
 

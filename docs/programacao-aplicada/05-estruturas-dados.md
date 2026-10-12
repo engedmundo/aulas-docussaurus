@@ -4,13 +4,12 @@
 
 1. Por que estruturas de dados?
 2. Listas: criação, indexação, fatiamento
-3. Métodos de lista
-4. `enumerate()`, `zip()`, list comprehensions
+3. Métodos de lista (comportamento mutável)
+4. Criação automatizada: `range()`, `enumerate()`, `zip()`, `split()`
 5. Tuplas: dados imutáveis
-6. Dicionários: chave → valor
-7. Conjuntos: operações de comparação
-8. Exercícios: temperaturas, materiais, certificações
-9. **Mini-projeto:** Catálogo de Materiais
+6. Dicionários: chave → valor (simples e aninhados)
+7. Conjuntos: operações entre grupos
+8. **Mini-projeto:** Catálogo de Materiais Interativo
 
 ## Por que estruturas de dados?
 
@@ -22,7 +21,7 @@ area = 0.002
 sigma = forca / area
 ```
 
-Mas na engenharia real, lidamos com **coleções** de dados:
+Mas na vida real, lidamos com **coleções** de dados:
 
 - 50 leituras de temperatura de um ensaio
 - 12 materiais no catálogo de projetos
@@ -37,6 +36,8 @@ Mas na engenharia real, lidamos com **coleções** de dados:
 | **Tupla** `()` | Sim | Não | Sim | Coordenadas fixas |
 | **Dicionário** `{}` | Não | Sim | Chaves únicas | Propriedades de material |
 | **Conjunto** `{}` | Não | Sim | Não | Comparar grupos |
+
+> Nesta aula você vai **criar** cada estrutura de vários jeitos (inclusive de forma automatizada) e observar o **comportamento** de cada uma. Nada de laços `for`/`while` por enquanto — eles chegam na aula 06.
 
 ## Listas
 
@@ -72,9 +73,19 @@ leituras[::-1]    # [80, 70, 60, 50, 40, 30, 20, 10] — invertida
 
 > O índice `fim` é **sempre exclusivo** — `[0:3]` pega 0, 1, 2 (não inclui 3).
 
+### Exercício 5.1 — Playlist
+
+**Contexto:** um app de música guarda a fila de reprodução numa lista. Você precisa consultar posições e trechos dela.
+
+**Tarefa:** crie a lista `playlist` com 5 nomes de músicas (valores fixos) e exiba **trechos** dela com fatiamento:
+- as três primeiras (`[:3]`)
+- as duas últimas (`[-2:]`)
+- do meio (`[1:4]`)
+- a playlist invertida (`[::-1]`)
+
 ## Métodos de Lista
 
-Listas têm métodos embutidos para manipulação:
+Listas têm métodos embutidos para manipulação. Repare no **comportamento**: cada método **altera a própria lista** (ela é mutável):
 
 ```python
 sensores = [10, 20, 30]
@@ -107,66 +118,74 @@ print(f"Mínima: {min(leituras):.1f} °C")
 print(f"Amplitude: {max(leituras) - min(leituras):.1f} °C")
 ```
 
-## `enumerate()` — índice + valor
+### Exercício 5.2 — Fila de atendimento
 
-Quando você precisa do **índice** e do **valor** ao mesmo tempo:
+**Contexto:** a recepção de uma clínica controla a ordem de atendimento numa lista: quem chega entra no fim (`append`), caso prioritário fura a fila (`insert`) e o próximo é chamado e sai da lista (`pop`).
+
+**Tarefa:** comece com `fila = ["Ana", "Bruno"]` e execute nesta ordem:
+1. `"Carla"` chega → entra no fim da fila
+2. `"Seu José"` (prioritário) → entra na posição `0`
+3. Chame o próximo (`pop(0)`) e guarde o nome numa variável
+4. Exiba quem está em atendimento, a fila atual e quantas pessoas aguardam (`len()`)
+
+**Resultado esperado:** em atendimento `Seu José`; fila `["Ana", "Bruno", "Carla"]`; aguardando `3`.
+
+## Criação automatizada de estruturas
+
+Digitar dezenas de valores à mão não é prático. Python cria estruturas **automaticamente** a partir de regras:
 
 ```python
-sensores = ["PT-01", "PT-02", "PT-03", "PT-04"]
+# range() gera sequências numéricas — list() materializa em lista
+matriculas = list(range(101, 106))   # [101, 102, 103, 104, 105]
+pares = list(range(0, 21, 2))        # [0, 2, 4, ..., 20]
 
-# Sem enumerate — verboso
-for i in range(len(sensores)):
-    print(f"Sensor {i+1}: {sensores[i]}")
+# Repetição com * cria vários elementos iguais
+vagas = ["livre"] * 5                # ['livre', 'livre', 'livre', 'livre', 'livre']
 
-# Com enumerate — limpo
-for i, nome in enumerate(sensores, start=1):
-    print(f"Sensor {i}: {nome}")
+# split() quebra um texto em lista
+nomes = "Ana,Bruno,Carla".split(",")  # ['Ana', 'Bruno', 'Carla']
 ```
 
-## `zip()` — combinar listas
+### `enumerate()` — numerar automaticamente
 
-Quando você tem duas listas relacionadas e quer percorrê-las juntas:
+`enumerate()` combina cada elemento com sua posição, criando uma sequência de **tuplas** (número, valor):
 
 ```python
 sensores = ["PT-01", "PT-02", "PT-03"]
-leituras = [150.0, 162.5, 148.3]
 
-for nome, valor in zip(sensores, leituras):
-    print(f"{nome}: {valor} °C")
+print(list(enumerate(sensores, start=1)))
+# [(1, 'PT-01'), (2, 'PT-02'), (3, 'PT-03')]
 ```
 
-Saída:
-```
-PT-01: 150.0 °C
-PT-02: 162.5 °C
-PT-03: 148.3 °C
-```
+### `zip()` — combinar listas e montar dicionários
 
-## List Comprehensions
-
-Forma concisa de criar listas a partir de outras listas. É um dos recursos mais poderosos do Python:
+`zip()` emparelha duas listas posição a posição. Com `list()` vira lista de tuplas; com `dict()` vira **dicionário pronto**:
 
 ```python
-temperaturas_c = [25, 100, 200, 350, 500]
+nomes = ["Ana", "Bruno", "Carla"]
+notas = [8.5, 7.0, 9.0]
 
-# Converter tudo para Kelvin — forma tradicional
-temperaturas_k = []
-for t in temperaturas_c:
-    temperaturas_k.append(t + 273.15)
+print(list(zip(nomes, notas)))
+# [('Ana', 8.5), ('Bruno', 7.0), ('Carla', 9.0)]
 
-# Com list comprehension — uma linha
-temperaturas_k = [t + 273.15 for t in temperaturas_c]
+boletim = dict(zip(nomes, notas))
+# {'Ana': 8.5, 'Bruno': 7.0, 'Carla': 9.0}
 
-# Filtrar apenas temperaturas acima de 200°C
-altas = [t for t in temperaturas_c if t > 200]
-# Resultado: [350, 500]
-
-# Filtrar e transformar
-altas_k = [t + 273.15 for t in temperaturas_c if t > 200]
-# Resultado: [623.15, 773.15]
+print(boletim["Bruno"])   # 7.0
 ```
 
-> **Regra prática:** se você está criando uma lista vazia, fazendo `for` e `append()`, provavelmente pode usar list comprehension.
+> Na aula 06 você usará `enumerate()` e `zip()` dentro de laços. Por ora, use-os como **fábricas de estruturas**: eles constroem listas e dicionários de uma vez, sem repetição manual.
+
+### Exercício 5.3 — Tabela de preços montada de uma vez
+
+**Contexto:** uma padaria tem os produtos num texto separado por vírgulas e quer gerar os códigos e a tabela de preços sem digitar um por um.
+
+**Tarefa:**
+1. Gere `codigos` com `list(range(101, 105))`
+2. Gere `produtos` com `"Pão,Leite,Café,Açúcar".split(",")`
+3. Crie `precos = [5.50, 6.00, 12.00, 4.50]` (valores fixos)
+4. Monte `tabela = dict(zip(produtos, precos))`
+5. Exiba os códigos, os produtos, o preço do `"Café"` (acesso direto) e a tabela completa como lista de tuplas (`list(tabela.items())`)
 
 ## Tuplas
 
@@ -199,6 +218,16 @@ print(f"{nome} mediu {valor} {unidade}")
 | Registro histórico de ensaio | Tupla `()` | Dados imutáveis por integridade |
 | Catálogo de materiais | Lista de dicts | Pode adicionar/remover materiais |
 
+### Exercício 5.4 — Cor RGB
+
+**Contexto:** um programa de desenho guarda cada cor como uma tupla `(vermelho, verde, azul)` — os valores nunca devem mudar depois de definidos.
+
+**Tarefa:**
+1. Crie `cor = (255, 128, 0)` (laranja)
+2. Desempacote em `r, g, b` e exiba cada canal
+3. Exiba o primeiro canal por índice
+4. Tente executar `cor[0] = 100` (pode deixar comentado) e anote o erro: o que o Python diz? Por que isso é **útil** para uma cor?
+
 ## Dicionários
 
 Coleção de pares **chave → valor**. Ideal para representar objetos com propriedades.
@@ -229,31 +258,29 @@ if "dureza_hb" in material:
     print(f"Dureza: {material['dureza_hb']} HB")
 ```
 
-### Percorrendo dicionários
+### Inspecionando dicionários (sem laços)
+
+Para ver o conteúdo sem percorrer com laço (laços chegam na aula 06), converta as visões em listas:
 
 ```python
-for chave in material:
-    print(chave)                          # só as chaves
-
-for valor in material.values():
-    print(valor)                          # só os valores
-
-for chave, valor in material.items():
-    print(f"{chave}: {valor}")            # chaves e valores
+print(list(material.keys()))     # ['nome', 'densidade', ...] — só as chaves
+print(list(material.values()))   # ['Aço 1020', 7850, ...] — só os valores
+print(list(material.items()))    # [('nome', 'Aço 1020'), ...] — lista de tuplas!
 ```
+
+Repare: `items()` devolve pares `(chave, valor)` — o mesmo formato que o `zip()` produz. Dicionários, listas e tuplas se conectam.
 
 ### Dicionários na prática — o que você já viu
 
-Na aula 03, usamos um dicionário para mapear materiais a densidades:
+Na aula 02, usamos um dicionário para mapear materiais a densidades:
 
 ```python
 densidades = {
-    "Aço 1020 (7850)": 7850,
-    "Alumínio 6061 (2700)": 2700,
-    "Latão (8500)": 8500,
+    "Aço 1020": 7850,
+    "Alumínio 6061": 2700,
+    "Latão": 8500,
 }
-material = "Aço 1020 (7850)"
-rho = densidades[material]
+print(densidades["Aço 1020"])   # 7850
 ```
 
 Agora vamos aprofundar: dicionários podem armazenar **qualquer tipo** como valor, incluindo listas e outros dicionários:
@@ -272,9 +299,41 @@ catalogo = {
     },
 }
 
-# Acesso aninhado
+# Acesso aninhado: navegue camada por camada
 print(catalogo["aco_1020"]["propriedades"]["E"])   # 210000
 ```
+
+### Exercício 5.5 — Ficha cadastral
+
+**Contexto:** o sistema de uma biblioteca guarda cada leitor num dicionário — incluindo uma **lista** de telefones dentro dele.
+
+**Tarefa:** crie o dicionário abaixo e, em seguida:
+1. Exiba o nome com acesso direto (`["nome"]`)
+2. Exiba o e-mail com `.get()` e valor padrão `"não informado"` (a chave não existe — repare que não dá erro)
+3. Atualize a idade para `29` e adicione a chave `"email"`
+4. Verifique com `in` se existe a chave `"cnh"` e exiba o resultado
+5. Exiba a lista de telefones e a lista de chaves (`list(...)`)
+
+```python
+pessoa = {
+    "nome": "Mariana",
+    "idade": 28,
+    "cidade": "Passo Fundo",
+    "telefones": ["54-99911-2233"],
+}
+```
+
+### Exercício 5.6 — Boletim aninhado
+
+**Contexto:** o boletim da turma é um dicionário onde cada chave (nome) guarda uma **lista** de notas. É a combinação de dois tipos compostos.
+
+**Tarefa:** partindo de `turma = {"Ana": [8.0, 7.0, 9.0], "Bruno": [6.0, 5.0, 7.0]}`:
+1. Exiba a primeira nota da Ana com acesso aninhado (`turma["Ana"][0]`)
+2. Calcule e exiba a média de cada aluno com `sum()` e `len()` (sem laços!)
+3. Adicione `"Carla"` com a lista `[10.0, 9.5, 9.0]`
+4. Exiba a lista de alunos (`list(turma.keys())`)
+
+**Valores de teste:** média da Ana `8.0`; média do Bruno `6.0`.
 
 ## Conjuntos (set)
 
@@ -306,9 +365,16 @@ if comum:
     print(f"Operadores em ambos os turnos: {comum}")
 ```
 
----
+### Exercício 5.7 — O que falta na despensa?
 
-## Exercício 5.1 — Análise de Temperaturas
+**Contexto:** você quer fazer um bolo. A receita pede um conjunto de ingredientes e a despensa tem outro — conjuntos respondem tudo sem laços.
+
+**Tarefa:** com `receita = {"farinha", "ovos", "leite", "açúcar", "fermento"}` e `despensa = {"farinha", "ovos", "café", "sal"}`, exiba:
+1. O que falta comprar (diferença `receita - despensa`)
+2. O que você já tem (interseção)
+3. Todos os itens envolvidos (união)
+
+## Exercício 5.8 — Análise de Temperaturas
 
 **Contexto:** Um ensaio térmico registrou temperaturas (°C) em intervalos regulares durante o aquecimento de uma peça. O engenheiro precisa analisar rapidamente os dados para verificar se o perfil de aquecimento está conforme a especificação.
 
@@ -327,21 +393,21 @@ temperaturas = [300, 320, 315, 310, 290]
 
 **Dica:** use `temperaturas[0]`, `temperaturas[-1]`, `sum()`, `max()`, `min()` e `len()`.
 
-## Exercício 5.2 — Cadastro de Materiais
+## Exercício 5.9 — Cadastro de Materiais
 
 **Contexto:** O setor de engenharia de materiais quer manter um catálogo digital de materiais com suas propriedades mecânicas. Cada material é representado por um dicionário, e o catálogo é uma lista de dicionários.
 
 **O que o programa deve ter:**
 - Três dicionários de materiais (Aço 1020, Alumínio 6061, Latão) com: nome, densidade, módulo de elasticidade (E), limite de escoamento
 - Uma lista contendo os três materiais
-- Exibição do catálogo usando mostrando cada material com seu número e propriedades formatadas
+- Exibição de cada material (índices `0`, `1`, `2`) com nome e propriedades formatadas — sem laços, acessando posição por posição
 
 **Valores de teste:**
 - Material 1: Aço 1020, ρ = 7850 kg/m³, E = 210 000 MPa, σ_y = 350 MPa
 - Material 2: Alumínio 6061, ρ = 2700 kg/m³, E = 69 000 MPa, σ_y = 276 MPa
 - Material 3: Latão, ρ = 8500 kg/m³, E = 100 000 MPa, σ_y = 250 MPa
 
-## Exercício 5.3 — Certificações de Operadores
+## Exercício 5.10 — Certificações de Operadores
 
 **Contexto:** O gerente de produção de uma metalúrgica precisa identificar quais operadores são polivalentes (certificados em Torno **e** Fresa), quais são exclusivos de cada máquina, e quem são todos os operadores da seção.
 
@@ -363,20 +429,44 @@ operadores = {
   - Operadores polivalentes (interseção)
   - Operadores exclusivos do torno (diferença)
   - Operadores exclusivos da fresa (diferença)
-  - Total de operadores na seção (união)
-- Para cada grupo, exibir os nomes usando o dicionário `operadores`
+  - Total de operadores na seção (união + `len()`)
+- Para cada grupo, exibir os nomes **ordenados** com `sorted()` e `map()` (ver dica)
 
 **Valores de teste:**
 - Polivalentes: Ana, Carlos, Ivo
 - Exclusivos do torno: João, Maria, Pedro, Rui
 - Exclusivos da fresa: Lucas, Sofia, Eva
 
+
+## Exercício 5.11 — Carrinho de compras
+
+**Contexto:** uma loja online guarda o carrinho num dicionário onde cada chave (produto) contém outro dicionário com `preco` e `qtd`. A regra de negócio: frete **grátis** para subtotal a partir de R$ 100,00, senão frete fixo de R$ 15,00. Tudo deve ser calculado por acesso direto — item a item, sem laços.
+
+**Dados:**
+```python
+carrinho = {
+    "Pão": {"preco": 5.50, "qtd": 4},
+    "Café": {"preco": 12.00, "qtd": 2},
+    "Leite": {"preco": 6.00, "qtd": 3},
+}
+```
+
+**Tarefa:**
+1. Calcule o `subtotal` somando `preco × qtd` de cada produto com acesso aninhado (`carrinho["Pão"]["preco"]`, ...)
+2. Defina o `frete` com `if`/`else` (grátis se `subtotal >= 100`)
+3. Exiba subtotal, frete e total com `print(f"...")`
+4. Depois adicione `"Açúcar"` (`{"preco": 4.50, "qtd": 10}`) ao carrinho, recalcule e exiba de novo
+
+**Valores de teste:**
+- Carrinho inicial → subtotal R$ 64,00, frete R$ 15,00, total R$ 79,00
+- Com o açúcar → subtotal R$ 109,00, frete grátis, total R$ 109,00
+
 ## Mini-Projeto — Catálogo de Materiais Interativo
 
-**Contexto:** A engenharia de projetos quer uma ferramenta para consultar propriedades de materiais e comparar dois materiais lado a lado. O catálogo deve ser construído com dicionários.
+**Contexto:** A engenharia de projetos quer uma ferramenta para consultar propriedades de materiais e comparar dois materiais lado a lado. O catálogo deve ser construído com dicionários **chaveados pelo nome do material**.
 
 **O que o programa deve fazer:**
-- Um dicionário com pelo menos 4 materiais, cada um com: nome, densidade, módulo de elasticidade (E), limite de escoamento, coeficiente de dilatação
+- Um dicionário com pelo menos 4 materiais (chave = nome), cada um com: densidade, módulo de elasticidade (E), limite de escoamento, coeficiente de dilatação
 - Uma variável com o nome do material principal a consultar
 - Uma variável opcional com o nome do material de comparação
 - Imprima as propriedades do material selecionado com `print(f"...")`
@@ -394,11 +484,15 @@ operadores = {
 ## Resumo da aula
 
 - Listas `[]`: ordenadas, mutáveis, aceitam duplicatas — mais usadas no dia a dia
-- Tuplas `()`: ordenadas, imutáveis — ideais para coordenadas e dados fixos
-- Dicionários `{}`: chave → valor, acesso rápido por nome — ideais para propriedades de materiais
-- Conjuntos `{}`: não ordenados, sem duplicatas — úteis para comparar grupos
-- List comprehensions: `[x*2 for x in dados]` — forma concisa de criar listas
-- `enumerate()`: percorre lista com índice e valor simultaneamente
+- Métodos como `append()`/`pop()` **alteram a própria lista**; `len()`/`sum()`/`max()`/`min()` apenas consultam
+- Criação automatizada: `list(range(...))`, `["x"] * n`, `split()`, `dict(zip(...))`, `set(lista)`
+- `enumerate()` numera e `zip()` emparelha — aqui, como fábricas de estruturas (com laços, na aula 06)
+- Tuplas `()`: ordenadas, **imutáveis** — qualquer tentativa de alteração gera `TypeError`
+- Dicionários `{}`: chave → valor; `[]` gera `KeyError` se faltar, `.get()` é seguro; `in` testa chaves
+- Dicionários aninhados e listas de dicionários combinam tipos compostos — navegue camada por camada
+- Conjuntos `{}`: não ordenados, sem duplicatas — `|`, `&`, `-`, `^` comparam grupos
+- Sem laços: inspecione com `list(...)`, `sorted()` e acesso direto por índice/chave
+- Combine tipos compostos e decisões para regras de negócio (ex.: carrinho aninhado + frete)
 
 ## Referências
 
